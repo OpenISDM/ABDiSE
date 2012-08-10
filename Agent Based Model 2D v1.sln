@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual C# Express 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agent Based Model 2D v1", "Agent Based Model 2D v1\Agent Based Model 2D v1.csproj", "{171920C4-7EE8-44BB-83B0-BF67B28975AA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{171920C4-7EE8-44BB-83B0-BF67B28975AA}.Debug|x86.ActiveCfg = Debug|x86
+		{171920C4-7EE8-44BB-83B0-BF67B28975AA}.Debug|x86.Build.0 = Debug|x86
+		{171920C4-7EE8-44BB-83B0-BF67B28975AA}.Release|x86.ActiveCfg = Release|x86
+		{171920C4-7EE8-44BB-83B0-BF67B28975AA}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
