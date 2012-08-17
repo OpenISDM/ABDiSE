@@ -1,4 +1,4 @@
-﻿namespace WindowsFormsApplication1
+﻿namespace AgentBasedModel
 {
     partial class MainWindow
     {
@@ -31,7 +31,6 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             this.buttonCreate = new System.Windows.Forms.Button();
-            this.panel1 = new System.Windows.Forms.Panel();
             this.buttonStart = new System.Windows.Forms.Button();
             this.buttonPause = new System.Windows.Forms.Button();
             this.SimulationTimer = new System.Windows.Forms.Timer(this.components);
@@ -46,19 +45,10 @@
             this.textBox_V03 = new System.Windows.Forms.TextBox();
             this.textBox_K03 = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.textBox_C0X = new System.Windows.Forms.TextBox();
+            this.textBox_AgentLat = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.textBox_C0Y = new System.Windows.Forms.TextBox();
-            this.textBox_C1Y = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.textBox_C1X = new System.Windows.Forms.TextBox();
-            this.textBox_C2Y = new System.Windows.Forms.TextBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.textBox_C2X = new System.Windows.Forms.TextBox();
-            this.textBox_C3Y = new System.Windows.Forms.TextBox();
-            this.label8 = new System.Windows.Forms.Label();
-            this.textBox_C3X = new System.Windows.Forms.TextBox();
+            this.textBox_AgentLng = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
             this.listBoxAgentList = new System.Windows.Forms.ListBox();
             this.label10 = new System.Windows.Forms.Label();
@@ -76,28 +66,21 @@
             this.listBoxJoinedAgentList = new System.Windows.Forms.ListBox();
             this.label13 = new System.Windows.Forms.Label();
             this.gMapExplorer = new GMap.NET.WindowsForms.GMapControl();
+            this.labelLatLng = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonCreate
             // 
             this.buttonCreate.Font = new System.Drawing.Font("微軟正黑體", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.buttonCreate.Location = new System.Drawing.Point(135, 390);
+            this.buttonCreate.Location = new System.Drawing.Point(82, 453);
             this.buttonCreate.Name = "buttonCreate";
-            this.buttonCreate.Size = new System.Drawing.Size(81, 101);
+            this.buttonCreate.Size = new System.Drawing.Size(134, 43);
             this.buttonCreate.TabIndex = 1;
             this.buttonCreate.Text = "Create New Agent";
             this.buttonCreate.UseVisualStyleBackColor = true;
             this.buttonCreate.Click += new System.EventHandler(this.buttonCreate_Click);
-            // 
-            // panel1
-            // 
-            this.panel1.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.panel1.Location = new System.Drawing.Point(240, 12);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(400, 400);
-            this.panel1.TabIndex = 2;
-            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             // 
             // buttonStart
             // 
@@ -124,7 +107,6 @@
             // SimulationTimer
             // 
             this.SimulationTimer.Interval = 1000;
-            this.SimulationTimer.Tick += new System.EventHandler(this.SimulationTimer_Tick);
             // 
             // numericUpDown1
             // 
@@ -242,13 +224,13 @@
             this.label3.TabIndex = 15;
             this.label3.Text = "Agent Coordinate";
             // 
-            // textBox_C0X
+            // textBox_AgentLat
             // 
-            this.textBox_C0X.Location = new System.Drawing.Point(56, 390);
-            this.textBox_C0X.Name = "textBox_C0X";
-            this.textBox_C0X.Size = new System.Drawing.Size(30, 22);
-            this.textBox_C0X.TabIndex = 16;
-            this.textBox_C0X.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_C0X_KeyPress);
+            this.textBox_AgentLat.Location = new System.Drawing.Point(56, 390);
+            this.textBox_AgentLat.Name = "textBox_AgentLat";
+            this.textBox_AgentLat.Size = new System.Drawing.Size(160, 22);
+            this.textBox_AgentLat.TabIndex = 16;
+            this.textBox_AgentLat.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_C0X_KeyPress);
             // 
             // label4
             // 
@@ -267,95 +249,17 @@
             this.label5.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.label5.Location = new System.Drawing.Point(26, 390);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(24, 17);
+            this.label5.Size = new System.Drawing.Size(27, 17);
             this.label5.TabIndex = 19;
-            this.label5.Text = "[0]";
+            this.label5.Text = "Lat";
             // 
-            // textBox_C0Y
+            // textBox_AgentLng
             // 
-            this.textBox_C0Y.Location = new System.Drawing.Point(92, 390);
-            this.textBox_C0Y.Name = "textBox_C0Y";
-            this.textBox_C0Y.Size = new System.Drawing.Size(30, 22);
-            this.textBox_C0Y.TabIndex = 20;
-            this.textBox_C0Y.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_C0X_KeyPress);
-            // 
-            // textBox_C1Y
-            // 
-            this.textBox_C1Y.Location = new System.Drawing.Point(92, 418);
-            this.textBox_C1Y.Name = "textBox_C1Y";
-            this.textBox_C1Y.Size = new System.Drawing.Size(30, 22);
-            this.textBox_C1Y.TabIndex = 23;
-            this.textBox_C1Y.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_C0X_KeyPress);
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label6.Location = new System.Drawing.Point(26, 418);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(24, 17);
-            this.label6.TabIndex = 22;
-            this.label6.Text = "[1]";
-            // 
-            // textBox_C1X
-            // 
-            this.textBox_C1X.Location = new System.Drawing.Point(56, 418);
-            this.textBox_C1X.Name = "textBox_C1X";
-            this.textBox_C1X.Size = new System.Drawing.Size(30, 22);
-            this.textBox_C1X.TabIndex = 21;
-            this.textBox_C1X.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_C0X_KeyPress);
-            // 
-            // textBox_C2Y
-            // 
-            this.textBox_C2Y.Location = new System.Drawing.Point(92, 446);
-            this.textBox_C2Y.Name = "textBox_C2Y";
-            this.textBox_C2Y.Size = new System.Drawing.Size(30, 22);
-            this.textBox_C2Y.TabIndex = 26;
-            this.textBox_C2Y.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_C0X_KeyPress);
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label7.Location = new System.Drawing.Point(25, 446);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(24, 17);
-            this.label7.TabIndex = 25;
-            this.label7.Text = "[2]";
-            // 
-            // textBox_C2X
-            // 
-            this.textBox_C2X.Location = new System.Drawing.Point(56, 446);
-            this.textBox_C2X.Name = "textBox_C2X";
-            this.textBox_C2X.Size = new System.Drawing.Size(30, 22);
-            this.textBox_C2X.TabIndex = 24;
-            this.textBox_C2X.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_C0X_KeyPress);
-            // 
-            // textBox_C3Y
-            // 
-            this.textBox_C3Y.Location = new System.Drawing.Point(92, 474);
-            this.textBox_C3Y.Name = "textBox_C3Y";
-            this.textBox_C3Y.Size = new System.Drawing.Size(30, 22);
-            this.textBox_C3Y.TabIndex = 29;
-            this.textBox_C3Y.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_C0X_KeyPress);
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label8.Location = new System.Drawing.Point(25, 474);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(24, 17);
-            this.label8.TabIndex = 28;
-            this.label8.Text = "[3]";
-            // 
-            // textBox_C3X
-            // 
-            this.textBox_C3X.Location = new System.Drawing.Point(56, 474);
-            this.textBox_C3X.Name = "textBox_C3X";
-            this.textBox_C3X.Size = new System.Drawing.Size(30, 22);
-            this.textBox_C3X.TabIndex = 27;
-            this.textBox_C3X.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_C0X_KeyPress);
+            this.textBox_AgentLng.Location = new System.Drawing.Point(56, 425);
+            this.textBox_AgentLng.Name = "textBox_AgentLng";
+            this.textBox_AgentLng.Size = new System.Drawing.Size(160, 22);
+            this.textBox_AgentLng.TabIndex = 20;
+            this.textBox_AgentLng.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox_C0X_KeyPress);
             // 
             // label9
             // 
@@ -510,7 +414,7 @@
             this.gMapExplorer.CanDragMap = true;
             this.gMapExplorer.GrayScaleMode = false;
             this.gMapExplorer.LevelsKeepInMemmory = 5;
-            this.gMapExplorer.Location = new System.Drawing.Point(992, 12);
+            this.gMapExplorer.Location = new System.Drawing.Point(222, 12);
             this.gMapExplorer.MarkersEnabled = true;
             this.gMapExplorer.MaxZoom = 2;
             this.gMapExplorer.MinZoom = 2;
@@ -521,16 +425,36 @@
             this.gMapExplorer.RetryLoadTile = 0;
             this.gMapExplorer.RoutesEnabled = true;
             this.gMapExplorer.ShowTileGridLines = false;
-            this.gMapExplorer.Size = new System.Drawing.Size(303, 484);
+            this.gMapExplorer.Size = new System.Drawing.Size(418, 337);
             this.gMapExplorer.TabIndex = 46;
             this.gMapExplorer.Zoom = 0D;
             this.gMapExplorer.Load += new System.EventHandler(this.gMapExplorer_Load);
+            // 
+            // labelLatLng
+            // 
+            this.labelLatLng.AutoSize = true;
+            this.labelLatLng.Location = new System.Drawing.Point(220, 354);
+            this.labelLatLng.Name = "labelLatLng";
+            this.labelLatLng.Size = new System.Drawing.Size(61, 12);
+            this.labelLatLng.TabIndex = 47;
+            this.labelLatLng.Text = "labelLatLng";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.label6.Location = new System.Drawing.Point(26, 425);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(31, 17);
+            this.label6.TabIndex = 19;
+            this.label6.Text = "Lng";
             // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1307, 502);
+            this.ClientSize = new System.Drawing.Size(985, 502);
+            this.Controls.Add(this.labelLatLng);
             this.Controls.Add(this.gMapExplorer);
             this.Controls.Add(this.label13);
             this.Controls.Add(this.listBoxJoinedAgentList);
@@ -546,42 +470,32 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.textBox_K06);
-            this.Controls.Add(this.textBox_C3Y);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.label8);
             this.Controls.Add(this.textBox_V05);
-            this.Controls.Add(this.textBox_C3X);
             this.Controls.Add(this.textBox_V01);
-            this.Controls.Add(this.textBox_C2Y);
             this.Controls.Add(this.textBox_K05);
-            this.Controls.Add(this.label7);
             this.Controls.Add(this.textBox_K02);
-            this.Controls.Add(this.textBox_C2X);
             this.Controls.Add(this.textBox_V04);
-            this.Controls.Add(this.textBox_C1Y);
             this.Controls.Add(this.textBox_V02);
-            this.Controls.Add(this.label6);
             this.Controls.Add(this.textBox_K04);
-            this.Controls.Add(this.textBox_C1X);
             this.Controls.Add(this.textBox_K03);
-            this.Controls.Add(this.textBox_C0Y);
+            this.Controls.Add(this.textBox_AgentLng);
             this.Controls.Add(this.textBox_V03);
+            this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label11);
-            this.Controls.Add(this.textBox_C0X);
+            this.Controls.Add(this.textBox_AgentLat);
             this.Controls.Add(this.numericUpDown1);
             this.Controls.Add(this.buttonPause);
             this.Controls.Add(this.buttonStart);
-            this.Controls.Add(this.panel1);
             this.Controls.Add(this.buttonCreate);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "MainWindow";
             this.Text = "Agent-Based Model 2D";
             this.Load += new System.EventHandler(this.MainWindow_Load);
-            this.Paint += new System.Windows.Forms.PaintEventHandler(this.MainWindow_Paint);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -591,7 +505,6 @@
         #endregion
 
         private System.Windows.Forms.Button buttonCreate;
-        private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button buttonStart;
         private System.Windows.Forms.Button buttonPause;
         public System.Windows.Forms.Timer SimulationTimer;
@@ -606,19 +519,10 @@
         private System.Windows.Forms.TextBox textBox_V03;
         private System.Windows.Forms.TextBox textBox_K03;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox textBox_C0X;
+        private System.Windows.Forms.TextBox textBox_AgentLat;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox textBox_C0Y;
-        private System.Windows.Forms.TextBox textBox_C1Y;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.TextBox textBox_C1X;
-        private System.Windows.Forms.TextBox textBox_C2Y;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.TextBox textBox_C2X;
-        private System.Windows.Forms.TextBox textBox_C3Y;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.TextBox textBox_C3X;
+        private System.Windows.Forms.TextBox textBox_AgentLng;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.ListBox listBoxAgentList;
         private System.Windows.Forms.Label label10;
@@ -636,6 +540,8 @@
         private System.Windows.Forms.ListBox listBoxJoinedAgentList;
         private System.Windows.Forms.Label label13;
         private GMap.NET.WindowsForms.GMapControl gMapExplorer;
+        private System.Windows.Forms.Label labelLatLng;
+        private System.Windows.Forms.Label label6;
     }
 }
 

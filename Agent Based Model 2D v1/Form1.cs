@@ -13,7 +13,7 @@ using GMap.NET;
 
 
 
-namespace WindowsFormsApplication1
+namespace AgentBasedModel
 {
 
     #region MAIN WINDOW UI
@@ -21,14 +21,15 @@ namespace WindowsFormsApplication1
     public partial class MainWindow : Form
     {
 
-        Graphics g;
-        Pen FirePen, BuildingPen, TreePen, SmokePen;
+        //Graphics g;
+        //Pen FirePen, BuildingPen, TreePen, SmokePen;
         Random Seed = new Random();
         God God;
 
         //GMAP
-        GMapOverlay overlayOne;
-        String contry;
+        GMapOverlay OverlayOne;
+        GMapOverlay OverlayAgents;
+        //String contry;
 
         public MainWindow(God god)
         {
@@ -39,15 +40,6 @@ namespace WindowsFormsApplication1
 
             // pause disabled
             buttonPause.Enabled = false;
-
-            // drawing 
-            g = this.panel1.CreateGraphics();
-
-            FirePen = new Pen(Color.Red, 5);
-            BuildingPen = new Pen(Color.Black, 5);
-            TreePen = new Pen(Color.DarkGreen, 5);
-            SmokePen = new Pen(Color.Gray, 5);
-
 
             //agent list box config 
             listBoxAgentType.SelectionMode = SelectionMode.One;
@@ -62,34 +54,164 @@ namespace WindowsFormsApplication1
             listBoxAgentControl.Items.Add("02");
             listBoxAgentControl.Items.Add("03");
 
-            //Console
+            //Console initialize
             listBoxConsole.Items.Clear();
-            //listBoxConsole.Items.Add("This is my console");
-
-
-            //GMap.NET
-         
 
         }
 
+        //GMap.NET
         private void gMapExplorer_Load(object sender, EventArgs e)
-        {
+        { 
             //init map
             gMapExplorer.Position = new PointLatLng(24.797332, 120.995304);
-            //gMapExplorer.SetCurrentPositionByKeywords("VARSE");
-            gMapExplorer.MapProvider = GMapProviders.BingMap;
+
+
+            GMapProvider.Language = LanguageType.ChineseTraditional;
+            gMapExplorer.MapProvider = GMapProviders.YahooMap;
             gMapExplorer.MinZoom = 3;
             gMapExplorer.MaxZoom = 17;
-            gMapExplorer.Zoom = 10;
+            gMapExplorer.Zoom = 11;
             gMapExplorer.Manager.Mode = AccessMode.ServerAndCache;
-            //ajout des overlay
-            overlayOne = new GMapOverlay(gMapExplorer, "OverlayOne");
-            //ajout de Markers
+            gMapExplorer.MarkersEnabled = true;
+            //gMapExplorer.Dock = DockStyle.Fill;
+            
+
+            labelLatLng.Text = "Lng : " + gMapExplorer.Position.Lng.ToString() 
+                + "   Lat : " + gMapExplorer.Position.Lat.ToString();
+
+            OverlayOne = new GMapOverlay(gMapExplorer, "OverlayOne");
+            OverlayAgents = new GMapOverlay(gMapExplorer, "OverlayAgents");
+            /*
             overlayOne.Markers.Add(new 
                 GMap.NET.WindowsForms.Markers.GMapMarkerGoogleGreen(new
                     PointLatLng(24.797332, 120.995304)));
-            //ajout de overlay à la map
-            gMapExplorer.Overlays.Add(overlayOne);
+            */
+            gMapExplorer.Overlays.Add(OverlayOne);
+            gMapExplorer.Overlays.Add(OverlayAgents);
+
+            //gMapExplorer.DragButton = MouseButtons.Left;
+
+            Cursor.Current = Cursors.WaitCursor;
+            var current = new PointLatLng(gMapExplorer.Position.Lat, 
+                gMapExplorer.Position.Lng);
+
+            var currentMark = new GMap.NET.WindowsForms.Markers.
+                GMapMarkerGoogleGreen(current);
+
+            Cursor.Current = Cursors.Default;
+            gMapExplorer.MouseDoubleClick += new MouseEventHandler
+                (gMapExplorer_MouseDoubleClick);
+        }
+
+        void gMapExplorer_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                Cursor.Current = Cursors.WaitCursor;
+
+                PointLatLng latLng = gMapExplorer.FromLocalToLatLng(e.X, e.Y);
+
+                var current = new PointLatLng
+                    (Math.Abs(latLng.Lat), latLng.Lng);
+
+                var currentMark = new 
+                    GMap.NET.WindowsForms.Markers.GMapMarkerCross(current);
+
+                //refresh overlays and markers
+                gMapExplorer.MarkersEnabled = false;
+                OverlayOne.Markers.Clear();
+                //gMapExplorer.Overlays.Clear();
+                OverlayOne.Markers.Add(currentMark);
+                //gMapExplorer.Overlays.Add(OverlayOne);
+                gMapExplorer.MarkersEnabled = true;
+                Cursor.Current = Cursors.Hand;
+
+                labelLatLng.Text =
+                    "Lng : " + latLng.Lng.ToString()
+                    + "   Lat : " + latLng.Lat.ToString();
+
+                textBox_AgentLng.Text = latLng.Lng.ToString();
+                textBox_AgentLat.Text = latLng.Lat.ToString();
+            }
+        }
+
+        // Refresh gMapExplorer's agents
+        
+        public void RefreshGMapMarkers()
+        {
+            
+            // refresh overlays and markers
+            // initialize
+            gMapExplorer.MarkersEnabled = false;
+            OverlayOne.Markers.Clear();
+            OverlayAgents.Markers.Clear();
+            gMapExplorer.Overlays.Clear();
+
+            // add each agent
+            for (int ii = 0; ii <= God.AgentCount; ii++ )
+            {
+                Agent CurrentAgent = God.WorldAgentList[ii];
+
+                if (CurrentAgent == null)
+                    continue;
+
+                if (CurrentAgent.AttachableObjectAgentType
+                    != AttachableObjectAgentTypes.NULL)
+                {
+                    switch (CurrentAgent.AttachableObjectAgentType)
+                    {
+                        case AttachableObjectAgentTypes.BUILDING:
+                            var BuildingMarker =
+                                new GMap.NET.WindowsForms.
+                                    Markers.GMapMarkerGoogleGreen
+                                    (CurrentAgent.LatLng);
+
+                            OverlayAgents.Markers.Add(BuildingMarker);
+
+                            break;
+                        case AttachableObjectAgentTypes.TREE:
+                            var TreeMarker =
+                                new GMap.NET.WindowsForms.
+                                    Markers.GMapMarkerGoogleGreen
+                                    (CurrentAgent.LatLng);
+
+                            OverlayAgents.Markers.Add(TreeMarker);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                else if (CurrentAgent.NaturalElementAgentType
+                   != NaturalElementAgentTypes.NULL)
+                {
+                    switch (CurrentAgent.NaturalElementAgentType)
+                    {
+                        case NaturalElementAgentTypes.FIRE:
+                            var FireMarker =
+                                new GMap.NET.WindowsForms.
+                                    Markers.GMapMarkerGoogleRed
+                                    (CurrentAgent.LatLng);
+
+                            OverlayAgents.Markers.Add(FireMarker);
+                            break;
+                        case NaturalElementAgentTypes.SMOKE:
+                            var SmokeMarker =
+                                new GMap.NET.WindowsForms.
+                                    Markers.GMapMarkerGoogleRed
+                                    (CurrentAgent.LatLng);
+
+                            OverlayAgents.Markers.Add(SmokeMarker);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }//end of for-loop
+
+            gMapExplorer.Overlays.Add(OverlayOne);
+            gMapExplorer.Overlays.Add(OverlayAgents);
+            gMapExplorer.MarkersEnabled = true;
+
         }
 
         public void RefreshAgentData()
@@ -107,19 +229,8 @@ namespace WindowsFormsApplication1
             textBox_K06.Text = "";
             textBox_V06.Text = "";
 
-            Random randomSeed = new Random();
-
-            textBox_C0X.Text = randomSeed.Next(0, 400).ToString();
-            textBox_C0Y.Text = randomSeed.Next(0, 400).ToString();
-            textBox_C1X.Text = randomSeed.Next(0, 2).ToString();
-            textBox_C1Y.Text = randomSeed.Next(0, 2).ToString();
-            textBox_C2X.Text = randomSeed.Next(0, 2).ToString();
-            textBox_C2Y.Text = randomSeed.Next(0, 2).ToString();
-
-
-
             int index = listBoxAgentType.SelectedIndex;
-            //do not exist
+            //index do not exist
             if (index < 0) 
                 return;
 
@@ -222,6 +333,11 @@ namespace WindowsFormsApplication1
             }
             //output = string.Format("Stop in ii = {0}", ii);
             //MyPrintf(output);
+
+
+            //for testing Markers
+            RefreshGMapMarkers();
+
         }
 
         public void RefreshJoinedAgentList()
@@ -260,78 +376,12 @@ namespace WindowsFormsApplication1
         //this method let UI can call God.create (internal)
         public void CreateAgent()
         {
-            
-            //new coordinate
-            CoordinateStruct[] Coordinate;
 
-            //loading windows form infomation
-            int[] X = new int[4];
-            int[] Y = new int[4];
-            int Level = 0;
+            PointLatLng LatLng = new PointLatLng();
 
+            LatLng.Lat = double.Parse(textBox_AgentLat.Text);
+            LatLng.Lng = double.Parse(textBox_AgentLng.Text);
 
-            if (textBox_C0X.Text != "" && textBox_C0Y.Text != ""){
-                X[0] = int.Parse(textBox_C0X.Text);
-                Y[0] = int.Parse(textBox_C0Y.Text);
-                Level = 0;
-            }
-
-
-            if (textBox_C1X.Text != "" && textBox_C1Y.Text != ""){
-                X[1] = int.Parse(textBox_C1X.Text);
-                Y[1] = int.Parse(textBox_C1Y.Text);
-                Level = 1;
-            }
-            else{
-                X[1] = -1;
-                Y[1] = -1;
-            }
-
-            if (textBox_C2X.Text != "" && textBox_C2Y.Text != ""){
-                X[2] = int.Parse(textBox_C2X.Text);
-                Y[2] = int.Parse(textBox_C2Y.Text);
-                Level = 2;
-            }else{
-                X[2] = -1;
-                Y[2] = -1;
-            }
-
-            if (textBox_C3X.Text != "" && textBox_C3Y.Text != ""){
-                X[3] = int.Parse(textBox_C3X.Text);
-                Y[3] = int.Parse(textBox_C3Y.Text);
-                Level = 3;
-            }else{
-                X[3] = -1;
-                Y[3] = -1;
-            }
-
-            /*
-            string output = string.Format(
-                "{0}, {1}  {2},{3}  {4}, {5}  {6},{7}", 
-                X[0], Y[0], X[1],Y[1], X[2], Y[2], X[3], Y[3]);
-
-            MyPrintf(output);
-            */
-
-            if (X[0] >= 0 && X[0] <= 400 && Y[0] >= 0 && Y[0] <= 400){
-                //check range
-            }
-            
-            Coordinate = new CoordinateStruct[Level + 1];
-            for (int ii = 0; ii <= Level; ii++)
-            {
-                Coordinate[ii].X = X[ii];
-                Coordinate[ii].Y = Y[ii];
-            }
-
-            Rectangle Target;
-            Target = new Rectangle(Coordinate[0].X, Coordinate[0].Y, 1, 1);
-
-            /*
-            output = string.Format("Setting to ({0}, {1})", 
-                                    Coordinate[0].X, Coordinate[0].Y);
-            MyPrintf(output);
-            */
 
             Dictionary<string, string> Properties = 
                 new Dictionary<string, string>();
@@ -362,8 +412,6 @@ namespace WindowsFormsApplication1
             if (currentIndex < 0)
                 return;
 
-
-
             switch (listBoxAgentType.Items[currentIndex].ToString())
             {
                     
@@ -371,13 +419,13 @@ namespace WindowsFormsApplication1
 
                     God.create(NaturalElementAgentTypes.FIRE,
                         Properties,
-                        Coordinate,
+                        LatLng,
                         God.WorldEnvironmentList[0]
                         );
 
                     
                     //draw it
-                    g.DrawRectangle(FirePen, Target);
+                    //g.DrawRectangle(FirePen, Target);
 
                     break;
 
@@ -385,33 +433,33 @@ namespace WindowsFormsApplication1
                     God.create(
                         NaturalElementAgentTypes.SMOKE,
                         Properties,
-                        Coordinate,
+                        LatLng,
                         God.WorldEnvironmentList[0]
                         );
 
-                    g.DrawRectangle(SmokePen, Target);
+                    //g.DrawRectangle(SmokePen, Target);
                     break;
 
                 case "TREE":
                     God.create(
                         AttachableObjectAgentTypes.TREE,
                         Properties,
-                        Coordinate,
+                        LatLng,
                         God.WorldEnvironmentList[0]     
                         );
 
-                    g.DrawRectangle(TreePen, Target);
+                    //g.DrawRectangle(TreePen, Target);
                     break;
 
                 case "BUILDING":
                     God.create(
                         AttachableObjectAgentTypes.BUILDING,
                         Properties,
-                        Coordinate,
+                        LatLng,
                         God.WorldEnvironmentList[0]
                         );
 
-                    g.DrawRectangle(BuildingPen, Target);
+                    //g.DrawRectangle(BuildingPen, Target);
                     break;
 
                 default:
@@ -430,7 +478,7 @@ namespace WindowsFormsApplication1
             RefreshAgentData();
             RefreshAgentList();
             RefreshJoinedAgentList();
-
+      
         }
 
 
@@ -454,12 +502,6 @@ namespace WindowsFormsApplication1
             SimulationTimer.Stop();
         }
 
-        private void SimulationTimer_Tick(object sender, EventArgs e)
-        {
-           
-        }
-
-
 
         private void MainWindow_Load(object sender, EventArgs e)
         {
@@ -468,15 +510,6 @@ namespace WindowsFormsApplication1
             RefreshJoinedAgentList();
         }
 
-        private void panel1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void MainWindow_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
 
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
         {
@@ -529,7 +562,7 @@ namespace WindowsFormsApplication1
             
             labelAgentProperties.Text = string.Format(
                 "({0}, {1})\n\nIsActivated:{2}\nIsDead:{3}\n", 
-                target.Coordinate[0].X, target.Coordinate[0].Y,
+                target.LatLng.Lat, target.LatLng.Lng,
                 target.IsActivated, target.IsDead);
 
 
@@ -603,7 +636,7 @@ namespace WindowsFormsApplication1
 
             labelAgentProperties.Text = string.Format(
                 "({0}, {1})\n\nIsActivated:{2}\nIsDead:{3}\n",
-                target.Coordinate[0].X, target.Coordinate[0].Y,
+                target.LatLng.Lat, target.LatLng.Lng,
                 target.IsActivated, target.IsDead);
 
 
@@ -1272,7 +1305,7 @@ namespace WindowsFormsApplication1
         internal int create(
             NaturalElementAgentTypes agentType, 
             Dictionary<string, string> properties,
-            CoordinateStruct[] coordinate, 
+            PointLatLng latLng, 
             Environment targetEnvironment
             )
         {
@@ -1284,7 +1317,7 @@ namespace WindowsFormsApplication1
 
                     Agent newFire = 
                         new Agent(this, agentType, properties, 
-                            coordinate, targetEnvironment);
+                            latLng, targetEnvironment);
                     
                     //force activated
                     activate(newFire);
@@ -1295,7 +1328,7 @@ namespace WindowsFormsApplication1
                 case NaturalElementAgentTypes.SMOKE:
                     Agent newSmoke = 
                         new Agent(this, agentType, properties, 
-                            coordinate, targetEnvironment);
+                            latLng, targetEnvironment);
 
                     //force activated
                     activate(newSmoke);
@@ -1319,7 +1352,7 @@ namespace WindowsFormsApplication1
         internal int create(
             AttachableObjectAgentTypes agentType, 
             Dictionary<string, string> properties,
-            CoordinateStruct[] coordinate, 
+            PointLatLng latLng, 
             Environment targetEnvironment
             )
         {
@@ -1330,7 +1363,7 @@ namespace WindowsFormsApplication1
 
                     Agent newBuilding= 
                         new Agent(this, agentType, properties,
-                            coordinate, targetEnvironment);
+                            latLng, targetEnvironment);
 
                     //force activated
                     activate(newBuilding);
@@ -1339,7 +1372,7 @@ namespace WindowsFormsApplication1
                 case AttachableObjectAgentTypes.TREE:
                     Agent newTree = 
                         new Agent(this, agentType, properties, 
-                            coordinate, targetEnvironment);
+                            latLng, targetEnvironment);
 
                     //force activated
                     activate(newTree);
@@ -1413,6 +1446,8 @@ namespace WindowsFormsApplication1
 
         public bool IsActivated;
 
+        public PointLatLng LatLng;
+
         //public CoordinateSystem Coordinate;
         
         public CoordinateStruct[] Coordinate;
@@ -1424,16 +1459,22 @@ namespace WindowsFormsApplication1
         public int AgentCollision(Agent TargetAgent)
         {
             int CollisionResult = -1;
+
+            double difference = 0.00000001;
             
             //check if [X Y Level 0]
-            if (TargetAgent.Coordinate[0].X == this.Coordinate[0].X &&
-                TargetAgent.Coordinate[0].Y == this.Coordinate[0].Y)
+            if (Math.Abs(TargetAgent.LatLng.Lng - this.LatLng.Lng) 
+                < difference
+                && Math.Abs(TargetAgent.LatLng.Lat - this.LatLng.Lat) 
+                < difference)
             {
                 // return status: level 0 collision
                 CollisionResult = 0;
 
-                if (TargetAgent.Coordinate[1].X == this.Coordinate[1].X &&
-                    TargetAgent.Coordinate[1].Y == this.Coordinate[1].Y)
+                if (Math.Abs(TargetAgent.LatLng.Lng - this.LatLng.Lng)
+                < difference * 0.1 &&
+                    Math.Abs(TargetAgent.LatLng.Lat - this.LatLng.Lat)
+                < difference * 0.1)
                 {
                     // return status: level 1 collision
                     CollisionResult = 1;
@@ -1452,7 +1493,7 @@ namespace WindowsFormsApplication1
             God God,
             NaturalElementAgentTypes AgentType, 
             Dictionary<string, string> Properties,
-            CoordinateStruct[] Coordinate, 
+            PointLatLng LatLng, 
             Environment AgentEnvironment
             )
         {
@@ -1467,21 +1508,10 @@ namespace WindowsFormsApplication1
             IsDead = false;
             IsActivated = false;
 
-            this.Coordinate = Coordinate;
+            this.LatLng = LatLng;
             this.MyEnvironment = AgentEnvironment;
             this.Properties = Properties;
             
-            //for testing coordinate
-            for (int ii = 0; ii < Coordinate.Length; ii++)
-            {
-                /*
-                MainWindow.MyPrintf(
-                    string.Format("coord V3 [{0}] : ({1}, {2})", 
-                                    ii, Coordinate[ii].X, Coordinate[ii].Y));
-                */
-            }
-
-
             switch (AgentType)
             {
                 //specify every type of agents
@@ -1502,7 +1532,7 @@ namespace WindowsFormsApplication1
             God God,
             AttachableObjectAgentTypes AgentType, 
             Dictionary<string, string> Properties,
-            CoordinateStruct[] Coordinate, 
+            PointLatLng LatLng, 
             Environment AgentEnvironment
             )
         {
@@ -1518,22 +1548,10 @@ namespace WindowsFormsApplication1
             IsDead = false;
             IsActivated = false;
 
-            this.Coordinate = Coordinate;
+            this.LatLng = LatLng;
             this.MyEnvironment = AgentEnvironment;
             this.Properties = Properties;
 
-            //for testing coordinate
-            
-            for (int ii = 0; ii < Coordinate.Length; ii++)
-            {
-                /*
-                MainWindow.MyPrintf(
-                    string.Format("coord V3 [{0}] : ({1}, {2})",
-                                    ii, Coordinate[ii].X, Coordinate[ii].Y));
-                */
-
-            }
-            
 
             switch (AgentType)
             {
@@ -1544,8 +1562,6 @@ namespace WindowsFormsApplication1
                 case AttachableObjectAgentTypes.TREE:
 
                     break;
-
-
 
             }
 
@@ -1633,7 +1649,7 @@ namespace WindowsFormsApplication1
                                 AgentA.NaturalElementAgentType,
                                 this.AttachableObjectAgentType,
                                 AgentA.Properties, this.Properties,
-                                Coordinate, MyEnvironment
+                                LatLng, MyEnvironment
                                 );
 
                             this.IsActivated = false;
@@ -1660,7 +1676,7 @@ namespace WindowsFormsApplication1
                                 AgentA.NaturalElementAgentType,
                                 this.AttachableObjectAgentType,
                                 AgentA.Properties, this.Properties,
-                                Coordinate, MyEnvironment
+                                LatLng, MyEnvironment
                                 );
 
                             //agent A and B disappers
@@ -1760,7 +1776,8 @@ namespace WindowsFormsApplication1
 
         //public CoordinateSystem Coordinate;
 
-        public CoordinateStruct[] Coordinate;
+        public PointLatLng LatLng;
+        //public CoordinateStruct[] Coordinate;
 
         public Environment MyEnvironment;
 
@@ -1771,7 +1788,7 @@ namespace WindowsFormsApplication1
             AttachableObjectAgentTypes TypeB, 
             Dictionary<string, string> PropertiesA,
             Dictionary<string, string> PropertiesB,
-            CoordinateStruct[] Coordinate, 
+            PointLatLng LatLng, 
             Environment AgentEnvironment
             )
         {
@@ -1781,8 +1798,8 @@ namespace WindowsFormsApplication1
 
             this.AgentTypeA = TypeA;
             this.AgentTypeB = TypeB;
-            this.Coordinate = Coordinate;
-            
+            this.LatLng = LatLng;
+
             this.MyEnvironment = AgentEnvironment;
             this.IsDead = false;
             this.IsActivated = true;
