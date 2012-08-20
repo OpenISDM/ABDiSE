@@ -26,3 +26,4 @@ C:\light\Agent Based Model 2D v1\obj\x86\Debug\GenerateResource.read.1.tlog
 C:\light\Agent Based Model 2D v1\obj\x86\Debug\GenerateResource.write.1.tlog
 C:\light\Agent Based Model 2D v1\bin\Debug\Agent Based Model 2D v1.exe.config
 C:\light\Agent Based Model 2D v1\bin\Debug\BSE.Windows.Forms.dll
+C:\light\Agent Based Model 2D v1\bin\Debug\Agent Based Model GUI.exe.config

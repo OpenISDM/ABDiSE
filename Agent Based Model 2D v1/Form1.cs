@@ -29,7 +29,10 @@ namespace AgentBasedModel
         //GMAP
         GMapOverlay OverlayOne;
         GMapOverlay OverlayAgents;
-        //String contry;
+
+        //Markers control
+        GMapMarker CurrentMouseOnMarker = null;
+        GMapMarker SelectedMarker = null;
 
         public MainWindow(God god)
         {
@@ -62,6 +65,7 @@ namespace AgentBasedModel
         //GMap.NET
         private void gMapExplorer_Load(object sender, EventArgs e)
         { 
+
             //init map
             gMapExplorer.Position = new PointLatLng(24.797332, 120.995304);
 
@@ -99,11 +103,21 @@ namespace AgentBasedModel
                 GMapMarkerGoogleGreen(current);
 
             Cursor.Current = Cursors.Default;
+
             gMapExplorer.MouseDoubleClick += new MouseEventHandler
                 (gMapExplorer_MouseDoubleClick);
+            gMapExplorer.OnMarkerEnter += new MarkerEnter
+                (gMapExplorer_OnMarkerEnter);
+            gMapExplorer.OnMarkerLeave += new MarkerLeave
+                (gMapExplorer_OnMarkerLeave);
+            gMapExplorer.MouseUp += new MouseEventHandler
+                (gMapExplorer_MouseUp);
+            gMapExplorer.MouseDown += new MouseEventHandler
+                (gMapExplorer_OnMouseDown);
         }
 
-        void gMapExplorer_MouseDoubleClick(object sender, MouseEventArgs e)
+        private void gMapExplorer_MouseDoubleClick
+            (object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
             {
@@ -135,8 +149,136 @@ namespace AgentBasedModel
             }
         }
 
+        private void gMapExplorer_OnMouseDown(object sender, MouseEventArgs e)
+        {
+            if (CurrentMouseOnMarker != null)
+            {
+                SelectedMarker = CurrentMouseOnMarker;
+                GMapMarkerCircle marker = (GMapMarkerCircle)SelectedMarker;
+
+                DeselectMarkers();
+
+                marker.IsSelected = true;
+
+                //search which agent according to this marker
+                for (int ii = 0; ii <= God.AgentNumber; ii++)
+                {
+                    Agent target = God.WorldAgentList[ii];
+                    
+                    if (target == null)
+                        continue;
+                    
+                    //found!
+                    if (target.Marker.Equals(marker))
+                    {
+                        //find index in listBoxAgentList, and highlight it
+                        for (int jj = 0; jj < listBoxAgentList.Items.Count; 
+                            jj++)
+                        {
+                            string name = listBoxAgentList.Items[jj].
+                                ToString();
+                            if (name.Equals(target.Properties["Name"].
+                                ToString()))
+                            {
+                                listBoxAgentList.SelectedIndex = jj;
+                            }
+                        }
+                        
+                    }
+
+                }
+
+            }
+            
+        }
+
+        private void gMapExplorer_OnMarkerEnter(GMapMarker m)
+        {
+            if (m is GMapMarkerCircle)
+            {
+
+                CurrentMouseOnMarker = m;
+
+                GMapMarkerCircle Circle = (GMapMarkerCircle)m;
+                Circle.CircleDiameter = 
+                    (int)CircleDiameterTypes.IntActiveDiameter;
+
+            }       
+
+            labelMouseStatus.Text = "OnMarkerEnter";
+        }
+
+        private void gMapExplorer_OnMarkerLeave(GMapMarker m)
+        {
+            if (m is GMapMarkerCircle)
+            {
+                CurrentMouseOnMarker = null;
+
+                GMapMarkerCircle Circle = (GMapMarkerCircle)m;
+                Circle.CircleDiameter = 
+                    (int)CircleDiameterTypes.IntPassiveDiameter;
+
+            }
+
+            labelMouseStatus.Text = "OnMarkerLeave";
+        }
+
+
+        private void gMapExplorer_MouseUp(object sender, MouseEventArgs e)
+        {
+            labelMouseStatus.Text = "MouseUp";
+        }
+
+        /* temp search marker <=> agnet
+        // search marker
+        public GMapMarker SearchMarkerFromAgent(Agent agent)
+        {
+            GMapMarker TargetMarker = null;
+
+
+
+            return TargetMarker;
+        }
+
+        //search agent
+        public Agent SearchAgentFromMarker(GMapMarker marker)
+        {
+            if (marker == null)
+                return null;
+
+            Agent TargetAgent = null;
+            
+            for (int ii = 0; ii <= God.AgentCount; ii++)
+            {
+                TargetAgent = God.WorldAgentList[ii];
+
+                if (TargetAgent == null)
+                    continue;
+
+                if (marker.Position == TargetAgent.LatLng)
+                    return TargetAgent;
+            }
+
+            return TargetAgent;
+        }
+        */
+          
+          
         // Refresh gMapExplorer's agents
-        
+        public void DeselectMarkers()
+        {
+            for (int ii = 0; ii <= God.AgentNumber; ii++)
+            {
+                Agent CurrentAgent = God.WorldAgentList[ii];
+
+                if (CurrentAgent == null)
+                    continue;
+
+                CurrentAgent.Marker.IsSelected = false;
+
+            }
+        }
+
         public void RefreshGMapMarkers()
         {
             
@@ -148,65 +290,21 @@ namespace AgentBasedModel
             gMapExplorer.Overlays.Clear();
 
             // add each agent
-            for (int ii = 0; ii <= God.AgentCount; ii++ )
+            for (int ii = 0; ii <= God.AgentNumber; ii++ )
             {
+
                 Agent CurrentAgent = God.WorldAgentList[ii];
 
                 if (CurrentAgent == null)
                     continue;
 
-                if (CurrentAgent.AttachableObjectAgentType
-                    != AttachableObjectAgentTypes.NULL)
-                {
-                    switch (CurrentAgent.AttachableObjectAgentType)
-                    {
-                        case AttachableObjectAgentTypes.BUILDING:
-                            var BuildingMarker =
-                                new GMap.NET.WindowsForms.
-                                    Markers.GMapMarkerGoogleGreen
-                                    (CurrentAgent.LatLng);
+                // add new target marker to GMap
+                OverlayAgents.Markers.Add(CurrentAgent.Marker);
+                
 
-                            OverlayAgents.Markers.Add(BuildingMarker);
-
-                            break;
-                        case AttachableObjectAgentTypes.TREE:
-                            var TreeMarker =
-                                new GMap.NET.WindowsForms.
-                                    Markers.GMapMarkerGoogleGreen
-                                    (CurrentAgent.LatLng);
-
-                            OverlayAgents.Markers.Add(TreeMarker);
-                            break;
-                        default:
-                            break;
-                    }
-                }
-                else if (CurrentAgent.NaturalElementAgentType
-                   != NaturalElementAgentTypes.NULL)
-                {
-                    switch (CurrentAgent.NaturalElementAgentType)
-                    {
-                        case NaturalElementAgentTypes.FIRE:
-                            var FireMarker =
-                                new GMap.NET.WindowsForms.
-                                    Markers.GMapMarkerGoogleRed
-                                    (CurrentAgent.LatLng);
-
-                            OverlayAgents.Markers.Add(FireMarker);
-                            break;
-                        case NaturalElementAgentTypes.SMOKE:
-                            var SmokeMarker =
-                                new GMap.NET.WindowsForms.
-                                    Markers.GMapMarkerGoogleRed
-                                    (CurrentAgent.LatLng);
-
-                            OverlayAgents.Markers.Add(SmokeMarker);
-                            break;
-                        default:
-                            break;
-                    }
-                }
             }//end of for-loop
+
+            
 
             gMapExplorer.Overlays.Add(OverlayOne);
             gMapExplorer.Overlays.Add(OverlayAgents);
@@ -348,7 +446,7 @@ namespace AgentBasedModel
             int ii;
             string output;
 
-            for (ii = 0; ii <= God.JoinedAgentNumber; ii++)
+            for (ii = 0; ii <= God.JoinedAgentCount; ii++)
             {
                 if (God.WorldJoinedAgentList[ii] == null)
                     continue;
@@ -371,7 +469,6 @@ namespace AgentBasedModel
             listBoxConsole.Items.Add(String);
             listBoxConsole.TopIndex = listBoxConsole.Items.Count-1;
         }
-
 
         //this method let UI can call God.create (internal)
         public void CreateAgent()
@@ -470,7 +567,6 @@ namespace AgentBasedModel
 
         }
 
-
         private void buttonCreate_Click(object sender, EventArgs e)
         {
 
@@ -480,10 +576,6 @@ namespace AgentBasedModel
             RefreshJoinedAgentList();
       
         }
-
-
-
-
 
         private void buttonStart_Click(object sender, EventArgs e)
         {
@@ -502,7 +594,6 @@ namespace AgentBasedModel
             SimulationTimer.Stop();
         }
 
-
         private void MainWindow_Load(object sender, EventArgs e)
         {
             RefreshAgentData();
@@ -510,12 +601,10 @@ namespace AgentBasedModel
             RefreshJoinedAgentList();
         }
 
-
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
         {
             SimulationTimer.Interval = (int)(numericUpDown1.Value * 1000);
         }
-
 
         private void textBox_C0X_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -540,22 +629,28 @@ namespace AgentBasedModel
 
             Agent target = null;
 
-            for(int ii=0; ii<God.AgentNumber; ii++)
+            for(int ii=0; ii<=God.AgentCount; ii++)
             {
                 if (God.WorldAgentList[ii] == null)
                     continue;
 
-                /*if(God.WorldAgentList[ii].Properties.ContainsKey("Name"))
-                    MyPrintf(string.Format(
-                        "name:{0}, list:{1}", 
-                        name, 
-                 * God.WorldAgentList[ii].Properties["Name"].ToString()
-                    ));
-                */
+                if (!God.WorldAgentList[ii].Properties.ContainsKey("Name"))
+                    continue;
+
+
                 if (name.Equals(
-                    God.WorldAgentList[ii].Properties["Name"].ToString())){
+                    God.WorldAgentList[ii].Properties["Name"].ToString()))
+                {
+                    //found!
                     target = God.WorldAgentList[ii];
-                    //MyPrintf("target found!");
+
+                    //clear markers
+                    DeselectMarkers();
+                    //select what we found
+                    target.Marker.IsSelected = true;
+                    //refresh GUI
+                    RefreshGMapMarkers();
+
                     break;
                 }
             }
@@ -613,7 +708,7 @@ namespace AgentBasedModel
 
             JoinedAgent target = null;
 
-            for (int ii = 0; ii < God.WorldJoinedAgentList.Length; ii++)
+            for (int ii = 0; ii <= God.JoinedAgentNumber; ii++)
             {
                 if (God.WorldJoinedAgentList[ii] == null)
                     break;
@@ -654,11 +749,208 @@ namespace AgentBasedModel
         }
 
 
+    }
 
+    #endregion
 
+    #region GMAP CUSTOM MARKER
 
+    public class GMapMarkerCircle : GMap.NET.WindowsForms.GMapMarker
+    {
 
+        #region Properties
+        public NaturalElementAgentTypes NaturalElementAgentType;
+        public AttachableObjectAgentTypes AttachableObjectAgentType;
 
+        public bool IsSelected = false;
+
+        // The pen for the outer circle
+        public Pen OuterPen { get; set; }
+
+        // The brush for the inner circle
+        public Brush InnerBrush { get; set; }
+
+        // The brush for the Text
+        public Brush TextBrush { get; set; }
+
+        // The font for the text
+        public Font TextFont { get; set; }
+
+        // The text to display inside of the marker 
+        public String Text { get; set; }
+
+        private int diameter = 10;
+
+        public int SelectedOffset = 15;
+
+        // The size of the circle
+        public int CircleDiameter
+        {
+            get
+            {
+                return this.diameter;
+            }
+            set
+            {
+                diameter = value;
+                this.Size = new System.Drawing.Size(diameter, diameter);
+                Offset = new System.Drawing.Point
+                    (-Size.Width / 2, -Size.Height / 2);
+            }
+        }
+        #endregion
+
+        public GMapMarkerCircle(PointLatLng p)
+            : base(p)
+        {
+            OuterPen = new Pen(Color.Black, 2);
+            InnerBrush = new SolidBrush(Color.White);
+
+            CircleDiameter = (int)CircleDiameterTypes.IntPassiveDiameter;
+
+            this.TextFont = new Font("Arial", (int)(diameter / 2));
+            this.TextBrush = Brushes.Black;
+            Offset = new System.Drawing.Point
+                (-Size.Width / 2, -Size.Height / 2);
+
+        }
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="outer">The pen for the outer ring</param>
+        /// <param name="inner">The brush for the inner circle.</param>
+        /// <param name="diameter">The diameter in pixel of 
+        /// the whole circle</param>
+        /// <param name="text">The text in the marker.</param>
+        public GMapMarkerCircle
+            (PointLatLng p, Pen outer, Brush inner, int diam, String text)
+            : base(p)
+        {
+            OuterPen = outer;
+            InnerBrush = inner;
+            CircleDiameter = diam;
+            this.Text = text;
+            this.TextFont = new Font("Arial", (int)(diameter / 2));
+            this.TextBrush = Brushes.Black;
+            Offset = new System.Drawing.Point
+                (-Size.Width / 2, -Size.Height / 2);
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="p">The LatLongPoint of the marker.</param>
+        /// <param name="outer">The pen for the outer ring</param>
+        /// <param name="inner">The brush for the inner circle.</param>
+        /// <param name="diameter">The diameter in pixel of 
+        /// the whole circle</param>
+        /// <param name="textBrush">The brush for the text.</param>
+        public GMapMarkerCircle(PointLatLng p, Pen outer, Brush inner, 
+            int diam, String text, Brush textBrush)
+            : base(p)
+        {
+            OuterPen = outer;
+            InnerBrush = inner;
+            CircleDiameter = diam;
+            this.Text = text;
+            this.TextFont = new Font("Arial", (int)(diameter / 2));
+            this.TextBrush = textBrush;
+            Offset = new System.Drawing.Point
+                (-Size.Width / 2, -Size.Height / 2);
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="p">The LatLongPoint of the marker.</param>
+        /// <param name="outer">The pen for the outer ring</param>
+        /// <param name="inner">The brush for the inner circle.</param>
+        /// <param name="diameter">The diameter in pixel of 
+        /// the whole circle</param>
+        /// <param name="textBrush">The brush for the text.</param>
+        public GMapMarkerCircle(PointLatLng p, Pen outer, Brush inner, 
+            int diam, String text, Brush textBrush, Font textFont)
+            : base(p)
+        {
+            OuterPen = outer;
+            InnerBrush = inner;
+            CircleDiameter = diam;
+            this.Text = text;
+            this.TextFont = textFont;
+            this.TextBrush = textBrush;
+            Offset = new System.Drawing.Point
+                (-Size.Width / 2, -Size.Height / 2);
+        }
+
+        /// <summary>
+        /// Render a circle
+        /// </summary>
+        /// <param name="g"></param>
+        public override void OnRender(Graphics g)
+        {
+            g.FillEllipse(InnerBrush, new Rectangle
+                (LocalPosition.X, LocalPosition.Y, diameter, diameter));
+            g.DrawEllipse(OuterPen, new Rectangle
+                (LocalPosition.X, LocalPosition.Y, diameter, diameter));
+
+            if (this.IsSelected)
+            {
+
+                g.DrawRectangle(OuterPen, new Rectangle
+                    (LocalPosition.X - SelectedOffset / 2,
+                    LocalPosition.Y - SelectedOffset / 2,
+                    diameter + SelectedOffset, diameter + SelectedOffset));
+
+            }
+
+            if (!String.IsNullOrEmpty(this.Text))
+            {
+                SizeF sizeOfString = g.MeasureString
+                    (this.Text, this.TextFont);
+                int x = (LocalPosition.X + diameter / 2) - 
+                    (int)(sizeOfString.Width / 2);
+                int y = (LocalPosition.Y + diameter / 2) - 
+                    (int)(sizeOfString.Height / 2);
+                g.DrawString(this.Text, this.TextFont, 
+                    this.TextBrush, x, y);
+            }
+        }
+
+        public void IsBuildingMarker()
+        {
+            NaturalElementAgentType = NaturalElementAgentTypes.NULL;
+            AttachableObjectAgentType = AttachableObjectAgentTypes.BUILDING;
+
+            this.InnerBrush = new SolidBrush(Color.Gray);
+            OuterPen.Color = Color.Black;
+
+        }
+        public void IsTreeMarker()
+        {
+            NaturalElementAgentType = NaturalElementAgentTypes.NULL;
+            AttachableObjectAgentType = AttachableObjectAgentTypes.TREE;
+
+            this.InnerBrush = new SolidBrush(Color.Green);
+            OuterPen.Color = Color.Brown;
+        }
+
+        public void IsFireMarker()
+        {
+            NaturalElementAgentType = NaturalElementAgentTypes.FIRE;
+            AttachableObjectAgentType = AttachableObjectAgentTypes.NULL;
+
+            this.InnerBrush = new SolidBrush(Color.Red);
+            OuterPen.Color = Color.DarkRed;
+        }
+
+        public void IsSmokeMarker()
+        {
+            NaturalElementAgentType = NaturalElementAgentTypes.SMOKE;
+            AttachableObjectAgentType = AttachableObjectAgentTypes.NULL;
+
+            this.InnerBrush = new SolidBrush(Color.LightGray);
+            OuterPen.Color = Color.DarkGray;
+        }
     }
 
     #endregion
@@ -692,6 +984,14 @@ namespace AgentBasedModel
 
     }
 
+    // enum of active and passive diameter
+    public enum CircleDiameterTypes
+    {
+        IntActiveDiameter = 12,
+        IntPassiveDiameter = 12, 
+        MaximumDiameter
+    }
+
     /*
      * Class Map
      * 
@@ -712,106 +1012,6 @@ namespace AgentBasedModel
 
     }
      * */
-
-    #endregion
-
-    #region COORDINATE STRUCT
-
-
-
-
-    /*
-     * struct CoordinateStruct
-     * 
-     * this struct have multiple levels
-     * level 0: one grid, simple x, y
-     * level 1: grid with 1/4 size (0,0) (0,1) (1,0) (1,1)
-     * level 2: grid with 1/4 size .....
-     */
-    public struct CoordinateStruct
-    {
-        public int X, Y;
-
-    }
-
-
-    public class CoordinateCreater
-    {
-        //c# windows applicaiton
-        MainWindow MainWindow;
-
-        public void SetMainWindow(MainWindow MainWindow)
-        {
-            this.MainWindow = MainWindow;
-        }
-
-        public static CoordinateStruct[] CreateRaondomCoordinate(
-            int CoordinateMaxLevel)
-        {
-
-            //System.Threading.Thread.Sleep(1000);
-            Random seed = new Random();
-            int random = seed.Next();
-            
-            CoordinateStruct[] TargetCoordinte;
-
-            // create correct position coordinate
-            if (CoordinateMaxLevel > 0){
-                TargetCoordinte = new CoordinateStruct[CoordinateMaxLevel];
-            }else{
-                TargetCoordinte = null;
-                //error!
-            }
-
-            
-            for (int ii = 0; ii < CoordinateMaxLevel; ii++)
-            {
-                
-                if (ii < 1){
-                    TargetCoordinte[ii].X = seed.Next(0, 255);
-                    TargetCoordinte[ii].Y = seed.Next(0, 255);
-                }else{
-                    TargetCoordinte[ii].X = seed.Next(0, 2);
-                    TargetCoordinte[ii].Y = seed.Next(0, 2);
-                }
-            }
-
-            return TargetCoordinte;
-        }
-    }
-
-    /*
-     * class CoordinateSystem
-     * 
-     * this system have multiple levels
-     * level 0: one grid, simple x, y
-     * level 1: grid with 1/4 size
-     */
-    /*
-    public class CoordinateSystem
-    {
-        public int X, Y;
-
-        public CoordinateSystem(int X, int Y)
-        {
-            this.X = X;
-            this.Y = Y;
-        }
-
-
-    }
-    */
-
-    /*
-     * 
-     * Class Environment
-     * 
-     * this class can create “target environment”
-     * according to custom class Map, or other GIS data format
-     * 
-     * A local environment of a region in the world is a set of parameters that affects the objects in the region
-     * 
-     */
 
     #endregion
 
@@ -995,6 +1195,16 @@ namespace AgentBasedModel
 
     #region ENVIRONMENT
 
+    /*
+     * 
+     * Class Environment
+     * 
+     * this class can create “target environment”
+     * according to custom class Map, or other GIS data format
+     * 
+     * A local environment of a region in the world is a set of parameters that affects the objects in the region
+     * 
+     */
     public class Environment
     {
 
@@ -1114,8 +1324,8 @@ namespace AgentBasedModel
         public Dictionary <string, string> properties =
             new Dictionary<string, string>();
 
-        private int MaximumEnvironments = 100;
-        private int MaximumAgents = 1000;
+        public int MaximumEnvironments = 100;
+        public int MaximumAgents = 1000;
 
         private God()
         {
@@ -1446,11 +1656,11 @@ namespace AgentBasedModel
 
         public bool IsActivated;
 
-        public PointLatLng LatLng;
+        //for GUI use
 
-        //public CoordinateSystem Coordinate;
-        
-        public CoordinateStruct[] Coordinate;
+        public GMapMarkerCircle Marker; 
+
+        public PointLatLng LatLng;
 
         public Environment MyEnvironment;
 
@@ -1511,15 +1721,17 @@ namespace AgentBasedModel
             this.LatLng = LatLng;
             this.MyEnvironment = AgentEnvironment;
             this.Properties = Properties;
-            
+
+            this.Marker = new GMapMarkerCircle(LatLng);
+
             switch (AgentType)
             {
                 //specify every type of agents
                 case NaturalElementAgentTypes.FIRE:
-
+                    Marker.IsFireMarker();
                     break;
                 case NaturalElementAgentTypes.SMOKE:
-
+                    Marker.IsSmokeMarker();
                     break;
 
             }
@@ -1552,15 +1764,16 @@ namespace AgentBasedModel
             this.MyEnvironment = AgentEnvironment;
             this.Properties = Properties;
 
+            this.Marker = new GMapMarkerCircle(LatLng);
 
             switch (AgentType)
             {
                 //specify every type of agents
                 case AttachableObjectAgentTypes.BUILDING:
-
+                    Marker.IsBuildingMarker();
                     break;
                 case AttachableObjectAgentTypes.TREE:
-
+                    Marker.IsTreeMarker();
                     break;
 
             }
@@ -1705,54 +1918,6 @@ namespace AgentBasedModel
             return 0;
         }//end of attachedby
 
-        public int EnlargeCoordinateLevel(int TargetLevel)
-        {
-            string test = "";
-            test = String.Format(
-                "EnlargeCoordinateLevel({0}) original {1}", 
-                TargetLevel, Coordinate.Length);
-
-            God.MainWindow.MyPrintf(test);
-
-            // if bigger
-            if (TargetLevel > Coordinate.Length){
-                CoordinateStruct[] LargerCoordinateStruct = 
-                    new CoordinateStruct[TargetLevel];
-                Coordinate.CopyTo(LargerCoordinateStruct, 0);
-
-                foreach (var e in Coordinate)
-                {
-                    Console.WriteLine(
-                        "({0}, {1})", 
-                        e.X.ToString(), e.Y.ToString());
-
-                }
-
-                foreach (var e in LargerCoordinateStruct)
-                {
-                    Console.WriteLine(
-                        "({0}, {1})", 
-                        e.X.ToString(), e.Y.ToString());
-
-                }
-
-                // replace larger to original 
-                God.MainWindow.MyPrintf("replaceing");
-
-                Coordinate = LargerCoordinateStruct;
-                /*
-                foreach (var e in Coordinate)
-                {
-                    Console.WriteLine("({0}, {1})", 
-                        e.X.ToString(), e.Y.ToString());
-
-                }
-                */
-                return 0;
-            }
-            else
-                return -1;
-        }
     }
 
     /*

@@ -68,6 +68,8 @@
             this.gMapExplorer = new GMap.NET.WindowsForms.GMapControl();
             this.labelLatLng = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.labelMouseStatus = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -449,11 +451,33 @@
             this.label6.TabIndex = 19;
             this.label6.Text = "Lng";
             // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.label7.Location = new System.Drawing.Point(237, 390);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(94, 17);
+            this.label7.TabIndex = 48;
+            this.label7.Text = "Mouse Status:";
+            // 
+            // labelMouseStatus
+            // 
+            this.labelMouseStatus.AutoSize = true;
+            this.labelMouseStatus.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
+            this.labelMouseStatus.Location = new System.Drawing.Point(334, 390);
+            this.labelMouseStatus.Name = "labelMouseStatus";
+            this.labelMouseStatus.Size = new System.Drawing.Size(26, 17);
+            this.labelMouseStatus.TabIndex = 49;
+            this.labelMouseStatus.Text = "XD";
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(985, 502);
+            this.Controls.Add(this.labelMouseStatus);
+            this.Controls.Add(this.label7);
             this.Controls.Add(this.labelLatLng);
             this.Controls.Add(this.gMapExplorer);
             this.Controls.Add(this.label13);
@@ -542,6 +566,8 @@
         private GMap.NET.WindowsForms.GMapControl gMapExplorer;
         private System.Windows.Forms.Label labelLatLng;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label labelMouseStatus;
     }
 }
 
