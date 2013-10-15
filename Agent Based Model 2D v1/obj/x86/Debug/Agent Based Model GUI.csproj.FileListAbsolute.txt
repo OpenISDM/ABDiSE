@@ -1,0 +1,15 @@
+C:\light\Agent Based Model 2D v1\bin\Debug\Agent Based Model GUI.exe.config
+C:\light\Agent Based Model 2D v1\bin\Debug\Agent Based Model GUI.exe
+C:\light\Agent Based Model 2D v1\bin\Debug\Agent Based Model GUI.pdb
+C:\light\Agent Based Model 2D v1\bin\Debug\BSE.Windows.Forms.dll
+C:\light\Agent Based Model 2D v1\bin\Debug\GMap.NET.Core.dll
+C:\light\Agent Based Model 2D v1\bin\Debug\GMap.NET.WindowsForms.dll
+C:\light\Agent Based Model 2D v1\bin\Debug\GMap.NET.Core.xml
+C:\light\Agent Based Model 2D v1\bin\Debug\GMap.NET.WindowsForms.xml
+C:\light\Agent Based Model 2D v1\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\light\Agent Based Model 2D v1\obj\x86\Debug\AgentBasedModel.MainWindow.resources
+C:\light\Agent Based Model 2D v1\obj\x86\Debug\AgentBasedModelGUI.Properties.Resources.resources
+C:\light\Agent Based Model 2D v1\obj\x86\Debug\GenerateResource.read.1.tlog
+C:\light\Agent Based Model 2D v1\obj\x86\Debug\GenerateResource.write.1.tlog
+C:\light\Agent Based Model 2D v1\obj\x86\Debug\Agent Based Model GUI.exe
+C:\light\Agent Based Model 2D v1\obj\x86\Debug\Agent Based Model GUI.pdb

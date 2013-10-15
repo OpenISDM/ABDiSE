@@ -1,0 +1,16 @@
+D:\Dropbox\[CS]\light\Agent Based Model 2D v1\obj\x86\Debug\ABDiSECore.csprojResolveAssemblyReference.cache
+D:\Dropbox\[CS]\light\Agent Based Model 2D v1\obj\x86\Debug\ABDiSE.GUI.MainWindow.resources
+D:\Dropbox\[CS]\light\Agent Based Model 2D v1\obj\x86\Debug\ABDiSE.Properties.Resources.resources
+D:\Dropbox\[CS]\light\Agent Based Model 2D v1\obj\x86\Debug\ABDiSECore.csproj.GenerateResource.Cache
+D:\Dropbox\[CS]\light\Agent Based Model 2D v1\bin\Debug\ABDiSEGUI.exe.config
+D:\Dropbox\[CS]\light\Agent Based Model 2D v1\bin\Debug\ABDiSEGUI.exe
+D:\Dropbox\[CS]\light\Agent Based Model 2D v1\bin\Debug\ABDiSEGUI.pdb
+D:\Dropbox\[CS]\light\Agent Based Model 2D v1\bin\Debug\BSE.Windows.Forms.dll
+D:\Dropbox\[CS]\light\Agent Based Model 2D v1\bin\Debug\GMap.NET.Core.dll
+D:\Dropbox\[CS]\light\Agent Based Model 2D v1\bin\Debug\GMap.NET.WindowsForms.dll
+D:\Dropbox\[CS]\light\Agent Based Model 2D v1\bin\Debug\GMap.NET.Core.xml
+D:\Dropbox\[CS]\light\Agent Based Model 2D v1\bin\Debug\GMap.NET.WindowsForms.xml
+D:\Dropbox\[CS]\light\Agent Based Model 2D v1\obj\x86\Debug\ABDiSEGUI.exe
+D:\Dropbox\[CS]\light\Agent Based Model 2D v1\obj\x86\Debug\ABDiSEGUI.pdb
+D:\Dropbox\[CS]\light\Agent Based Model 2D v1\bin\Debug\ABDiSEClassLibrary.dll
+D:\Dropbox\[CS]\light\Agent Based Model 2D v1\bin\Debug\ABDiSEClassLibrary.pdb
