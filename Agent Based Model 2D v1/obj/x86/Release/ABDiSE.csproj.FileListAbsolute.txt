@@ -1,5 +1,0 @@
-C:\light\Agent Based Model 2D v1\obj\x86\Release\ResolveAssemblyReference.cache
-C:\light\Agent Based Model 2D v1\obj\x86\Release\ABDiSEGUI.MainWindow.resources
-C:\light\Agent Based Model 2D v1\obj\x86\Release\AgentBasedModelGUI.Properties.Resources.resources
-C:\light\Agent Based Model 2D v1\obj\x86\Release\GenerateResource.read.1.tlog
-C:\light\Agent Based Model 2D v1\obj\x86\Release\GenerateResource.write.1.tlog
