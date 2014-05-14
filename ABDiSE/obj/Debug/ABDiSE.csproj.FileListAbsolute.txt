@@ -1,0 +1,2 @@
+D:\Dropbox\[CS]\ABDiSE 2.0\ABDiSE\bin\Debug\ABDiSE.exe.config
+D:\Dropbox\[CS]\ABDiSE 2.0\ABDiSE\bin\Debug\ABDiSE 2.0.exe.config
