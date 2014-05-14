@@ -209,23 +209,59 @@ namespace ABDiSE.Model.AgentClasses
 
                 Console.WriteLine(B.AgentType);
 
+                Dictionary<string, string> properties
+                            = new Dictionary<string, string>();
 
                 switch (B.AgentType) 
                 { 
+                        
                     case "Building":
                         //create Building Joined with Fire
-                        
-                        
-                        Dictionary<string, string> properties
-                            = new Dictionary<string,string>();
 
+                        // orders are important!
+                        properties.Add("Name", B.AgentProperties["Name"].ToString()+"(@Fire)");
+                        properties.Add("FireClass", this.AgentProperties["FireClass"]);
+                        properties.Add("FireLife", this.AgentProperties["FireLife"]);
+                        properties.Add("FireLevel", this.AgentProperties["FireLevel"]);
+                        properties.Add("BuildingType", B.AgentProperties["BuildingType"]);
+                        properties.Add("Floor", B.AgentProperties["Floor"]);
+                        properties.Add("BuiltYear", B.AgentProperties["BuiltYear"]);
+                        properties.Add("BuildingLife", "100");
 
-
-                        BuildingJoinedFire newAgent;
+                        BuildingJoinedFire newBuildingFireAgent = 
+                            new BuildingJoinedFire(
+                                CoreController, 
+                                properties, 
+                                B.LatLng, 
+                                B.MyEnvironment
+                                );                      
 
                         break;
                     case "Tree":
+                        //
                         //create Tree Joined with Fire
+                        //
+
+                        // orders are important!
+                        /*
+                        properties.Add("Name", B.AgentProperties["Name"].ToString()+"(@Fire)");
+                        properties.Add("FireClass", this.AgentProperties["FireClass"]);
+                        properties.Add("FireLife", this.AgentProperties["FireLife"]);
+                        properties.Add("FireLevel", this.AgentProperties["FireLevel"]);
+                        properties.Add("BuildingType", B.AgentProperties["BuildingType"]);
+                        properties.Add("Floor", B.AgentProperties["Floor"]);
+                        properties.Add("BuiltYear", B.AgentProperties["BuiltYear"]);
+                        properties.Add("BuildingLife", "100");
+
+                        BuildingJoinedFire newTreeFireAgent = 
+                            new BuildingJoinedFire(
+                                CoreController, 
+                                properties, 
+                                B.LatLng, 
+                                B.MyEnvironment
+                                );
+
+                        CoreController.God.AddToAgentList(newTreeFireAgent);*/
                         break;
 
                     default:
@@ -236,6 +272,8 @@ namespace ABDiSE.Model.AgentClasses
                 //wait to be disposed(free)
                 this.IsActivated = false;
                 this.IsDead = true;
+                B.IsActivated = false;
+                B.IsDead = true;
 
                 //succeed method status
                 return MethodReturnResults.SUCCEED;

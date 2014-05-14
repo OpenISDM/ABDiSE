@@ -146,6 +146,7 @@ namespace ABDiSE.Model.AgentClasses
         //TODO: multi level attach
         public override MethodReturnResults Attach(Agent B)
         {
+            /*
             //not activated
             if (this.IsActivated == false || B.IsActivated == false)
                 return MethodReturnResults.FAILED;
@@ -179,7 +180,8 @@ namespace ABDiSE.Model.AgentClasses
                 //nothing happens
                 return MethodReturnResults.FAILED;
             }
-
+            */
+            return MethodReturnResults.FAILED;
         }
 
         public override void SetMarkerFormat()

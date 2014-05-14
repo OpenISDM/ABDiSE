@@ -129,7 +129,7 @@ namespace ABDiSE.Model.AgentClasses
                 Update();
             }
 
-            Console.WriteLine(" ThreadPoolCallback in Agent : Step[{2}]: {0} computed {1} ",
+            Console.WriteLine("Step[{2}]: {0} computed {1} (ThreadPoolCallback)",
                 Thread.CurrentThread.Name, this.AgentProperties["Name"].ToString(), CoreController.God.CurrentStep);
             //_doneEvent.Set();
         }

@@ -136,6 +136,13 @@ namespace ABDiSE.View
                 Console.WriteLine("bw 完成!");
             }
 
+            //
+            //after background worker is finished
+            //
+            RefreshAgentList();
+            RefreshJoinedAgentList();
+            RefreshGMapMarkers();
+
             button_StepSim.Enabled = true;
 
         }
@@ -321,7 +328,7 @@ namespace ABDiSE.View
                 marker.IsSelected = true;
 
                 //search target agent according to this marker
-                for (int ii = 0; ii <= CoreController.God.AgentNumber; ii++)
+                for (int ii = 0; ii < CoreController.God.AgentNumber; ii++)
                 {
                     Agent target = CoreController.God.WorldAgentList[ii];
                     
@@ -1028,7 +1035,7 @@ namespace ABDiSE.View
             {
 
                 label_AgentProperties.Text += 
-                    string.Format("{0}\n  {1}\n\n", item.Key, item.Value);
+                    string.Format("{0} :  \t{1}\n", item.Key, item.Value);
             }
 
             //MyPrintf(string.Format("Text : {0}", Text));
@@ -1150,7 +1157,7 @@ namespace ABDiSE.View
             {
 
                 label_AgentProperties.Text +=
-                    string.Format(" {0}\n {1}\n\n", item.Key, item.Value);
+                    string.Format("{0} : \t{1}\n", item.Key, item.Value);
             }
 
             //clear another listbox
@@ -1677,6 +1684,7 @@ namespace ABDiSE.View
 
             CoreController.STP.EndPool();
 
+            CoreController.God.ClearDeadAgent();
 
 
         
