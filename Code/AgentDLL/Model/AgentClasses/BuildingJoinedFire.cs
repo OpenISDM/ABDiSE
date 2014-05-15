@@ -12,7 +12,7 @@ namespace ABDiSE.Model.AgentClasses
     public class BuildingJoinedFire : Agent
     {
         // definitions
-        
+        public const int CREATE_NEW_FIRE_THRESHOLD = 50;
 
         public BuildingJoinedFire()
             : base()
@@ -127,14 +127,46 @@ namespace ABDiSE.Model.AgentClasses
             // firelife null - error
             if (!this.AgentProperties.ContainsKey("FireLife"))
             {
-                this.IsDead = true;
-                this.IsActivated = false;
+                //this.IsDead = true;
+                //this.IsActivated = false;
+                Console.WriteLine("{0} firelife null - error", this.AgentProperties["Name"]);
                 return;
             }
 
             //simple simulate: firelevel -=10 or -= 10%
             int currentFireLife = int.Parse(this.AgentProperties["FireLife"]);
             int currentBuildingLife = int.Parse(this.AgentProperties["BuildingLife"]);
+
+
+            if (currentFireLife > CREATE_NEW_FIRE_THRESHOLD)
+            {   
+                //
+                // create new fire agent and
+                // share "Fire Life" for it 
+                //
+                currentFireLife /= 2;
+                this.AgentProperties["FireLife"] = currentFireLife.ToString();
+
+                int currentFireLevel = int.Parse(this.AgentProperties["FireLevel"]);
+                
+                currentFireLevel /= 2;
+                this.AgentProperties["FireLevel"] = currentFireLevel.ToString();
+
+                Dictionary<string, string> fireProperties
+                    = new Dictionary<string, string>();
+                fireProperties.Add("Name", "B@F Created Fire");
+                fireProperties.Add("FireClass", this.AgentProperties["FireClass"]);
+                fireProperties.Add("FireLife", currentFireLife.ToString());
+                fireProperties.Add("FireLevel", currentFireLevel.ToString());
+
+                Fire newFire = new Fire(
+                    CoreController,
+                    fireProperties,
+                    this.LatLng,
+                    this.MyEnvironment
+                    );
+
+            }
 
             if (currentFireLife > Fire.FIRE_LEVEL_DECREASE_UNIT)
             {
@@ -144,7 +176,6 @@ namespace ABDiSE.Model.AgentClasses
                 //
                 // create smoke agents
                 //
-                
                 Dictionary<string, string> smokeProperties 
                     = new Dictionary<string, string>();
 
@@ -221,7 +252,7 @@ namespace ABDiSE.Model.AgentClasses
             Marker.IsCircle = false;
             Marker.IsSquare = true;
 
-            Marker.InnerBrush = new SolidBrush(Color.Gray);
+            Marker.InnerBrush = new SolidBrush(Color.DarkRed);
             Marker.OuterPen.Color = Color.Red;
             //OuterPen.Width = 2;
 

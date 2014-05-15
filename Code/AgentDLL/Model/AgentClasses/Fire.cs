@@ -162,7 +162,9 @@ namespace ABDiSE.Model.AgentClasses
          */
         public void SimulateFireLife()
         {
+            //
             // firelife null - error
+            //
             if (!this.AgentProperties.ContainsKey("FireLife"))
             {
                 //this.IsDead = true;
@@ -170,7 +172,7 @@ namespace ABDiSE.Model.AgentClasses
                 return;
             }
 
-            //simple simulate: firelevel -=10 or -= 10%
+            
             int currentValue = int.Parse(this.AgentProperties["FireLife"]);
 
 
@@ -223,9 +225,10 @@ namespace ABDiSE.Model.AgentClasses
                 { 
                         
                     case "Building":
-                        //create Building Joined with Fire
-
-                        // orders are important!
+                        //
+                        // create Building Joined with Fire
+                        // dictionary orders are important!
+                        // 
                         properties.Add("Name", B.AgentProperties["Name"].ToString()+"(@Fire)");
                         properties.Add("FireClass", this.AgentProperties["FireClass"]);
                         properties.Add("FireLife", this.AgentProperties["FireLife"]);
@@ -241,9 +244,19 @@ namespace ABDiSE.Model.AgentClasses
                                 properties, 
                                 B.LatLng, 
                                 B.MyEnvironment
-                                );                      
+                                );
 
-                        break;
+                        //
+                        // wait to be disposed(free)
+                        //
+                        this.IsActivated = false;
+                        this.IsDead = true;
+                        B.IsActivated = false;
+                        B.IsDead = true;
+
+                        
+                        return MethodReturnResults.SUCCEED;
+
                     case "Tree":
                         //
                         //create Tree Joined with Fire
@@ -273,23 +286,17 @@ namespace ABDiSE.Model.AgentClasses
 
                     default:
                         break;
+                        
                 }
 
 
-                //wait to be disposed(free)
-                this.IsActivated = false;
-                this.IsDead = true;
-                B.IsActivated = false;
-                B.IsDead = true;
+                
+            }
 
-                //succeed method status
-                return MethodReturnResults.SUCCEED;
-            }
-            else
-            {
-                //nothing happens
-                return MethodReturnResults.FAILED;
-            }
+            //
+            // nothing happened
+            //
+            return MethodReturnResults.FAILED;
 
         }
 

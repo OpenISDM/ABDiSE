@@ -32,7 +32,6 @@ D:\Dropbox\GITLAB\abdise_agent-based-simulator\Code\ABDiSE\bin\Debug\GMap.NET.Co
 D:\Dropbox\GITLAB\abdise_agent-based-simulator\Code\ABDiSE\bin\Debug\GMap.NET.WindowsForms.dll
 D:\Dropbox\GITLAB\abdise_agent-based-simulator\Code\ABDiSE\bin\Debug\GMap.NET.Core.xml
 D:\Dropbox\GITLAB\abdise_agent-based-simulator\Code\ABDiSE\bin\Debug\GMap.NET.WindowsForms.xml
-D:\Dropbox\GITLAB\abdise_agent-based-simulator\Code\ABDiSE\obj\Debug\ABDiSE 2.0.csprojResolveAssemblyReference.cache
 D:\Dropbox\GITLAB\abdise_agent-based-simulator\Code\ABDiSE\obj\Debug\ABDiSE.Properties.Resources.resources
 D:\Dropbox\GITLAB\abdise_agent-based-simulator\Code\ABDiSE\obj\Debug\ABDiSE.View.MainWindow.resources
 D:\Dropbox\GITLAB\abdise_agent-based-simulator\Code\ABDiSE\obj\Debug\ABDiSE 2.0.csproj.GenerateResource.Cache

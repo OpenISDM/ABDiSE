@@ -300,10 +300,7 @@ namespace ABDiSE.Controller
 
                 return null;
             }
-
-
-            Object args = new Object[] { coreContorller, properties, latLng, env };
-            Object args2 = new Object[] { coreContorller, latLng };
+     
 
             // The first parameter to pass into the Invoke Method coming up.
             // args means arguments array
