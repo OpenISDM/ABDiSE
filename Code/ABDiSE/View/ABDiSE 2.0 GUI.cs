@@ -1025,9 +1025,9 @@ namespace ABDiSE.View
             
             // updating label text
             label_AgentProperties.Text = string.Format(
-                "{0}\n{1}\n\nIsActivated:{2}\nIsDead:{3}\n\n", 
+                "{0}\n{1}\n\nIsActivated:{2}\nIsDead:{3}\nCurrentStep:{4}\n", 
                 target.LatLng.Lat, target.LatLng.Lng,
-                target.IsActivated, target.IsDead);
+                target.IsActivated, target.IsDead, target.CurrentStep);
 
             //display properties
             foreach (KeyValuePair<string, string> item
@@ -1148,9 +1148,9 @@ namespace ABDiSE.View
 
             // update label text
             label_AgentProperties.Text = string.Format(
-                "({0}\n{1})\n\nIsActivated:{2}\nIsDead:{3}\n",
+                "{0}\n{1}\n\nIsActivated:{2}\nIsDead:{3}\nCurrentStep:{4}\n",
                 target.LatLng.Lat, target.LatLng.Lng,
-                target.IsActivated, target.IsDead);
+                target.IsActivated, target.IsDead, target.CurrentStep);
 
             foreach (KeyValuePair<string, string> item
                 in target.AgentProperties)
@@ -1188,189 +1188,6 @@ namespace ABDiSE.View
             
         }
 
-
-
-        //TODO: priory thread queue
-        /*  
-        * public void StartSimulationSteps()
-        * 
-        * Description:
-        *      run simulation
-        *      this method simulate certain steps of all the agents/joined agents
-        *      1. start thread pool
-        *      2. for(steps)
-        *          queue workitems
-        *      3. end pool
-        *      
-        * Arguments:     
-        *      void
-        * Return Value:
-        *      void
-        */
-        public void stepsSimulation()
-        {
-
-            //init
-            CoreController.StartThreadPool(
-                (int)numericUpDown_STPThreadsNum.Value,
-                (int)numericUpDown_STPIdleTime.Value,
-                (int)numericUpDown_STPExecuteTime.Value
-
-                );
-
-            //step N : stage 2
-
-            for (int count = 0; count < 
-                (int)numericUpDown_SimSteps.Value; count++ )
-            {
-                bw.ReportProgress(count);
-
-                CoreController.God.CurrentStep++;
-                /*label_GodCurrentStep.Text = 
-                    CoreController.God.CurrentStep.ToString();
-                */
-                //queue joined agent 
-                if (CoreController.God.AgentCount > 0)
-                {
-                    /*// One event is used for each object
-                    ManualResetEvent[] doneEvents =
-                        new ManualResetEvent[God.JoinedAgentNumber];*/
-                    Console.WriteLine
-                        ("launching Joined Agent tasks..");
-
-
-                    Agent joinedAgent = null;
-
-                    //every joined agent runs update() itself
-                    // put workitems into threadpool
-                    for (int ii = 0; 
-                        ii < CoreController.God.AgentNumber; ii++)
-                    {
-
-                        joinedAgent = CoreController.God.WorldAgentList[ii];
-                        
-                        if (joinedAgent != null && joinedAgent.IsJoinedAgent)
-                        {
-                            //if need update
-                            if (joinedAgent.CurrentStep <= 
-                                CoreController.God.CurrentStep)
-                            {
-                                //TODO
-                                /*
-                                //update
-                                CoreController.STP.QueueUserWorkItem
-                                    (joinedAgent.ThreadPoolCallback, ii.ToString());
-                                 * */
-                                //joinedAgent.update();
-                            }
-                            else
-                            {
-                                //wait until next step
-                                continue;
-                            }
-
-                            /*doneEvents[ii] = new ManualResetEvent(false);
-                            // do self update check
-                            joinedAgent.SetDoneEvent(doneEvents[ii]);*/
-
-
-
-                        }
-                        else
-                        {
-                            //doneEvents[ii] = new ManualResetEvent(true);
-                            continue;
-                        }
-                    }
-                    // Wait for all threads in pool to calculation...
-                    //WaitHandle.WaitAll(doneEvents);
-                    /*Console.WriteLine
-                        ("after WaitAll: All calculations are complete.");*/
-                }
-
-                /*
-                //barrier
-                while (God.SimpleTP.WorkitemNumber > 0)
-                {
-                    //TODO: change this while 0 busy waiting
-                }
-                */
-
-                //queue agent
-                if (CoreController.God.AgentCount > 0)
-                {
-                    // One event is used for each object
-                    /*ManualResetEvent[] doneEvents =
-                        new ManualResetEvent[God.AgentNumber];*/
-                    Console.WriteLine
-                        ("launching {0} Agent tasks..", CoreController.God.AgentNumber);
-
-                    Agent agent = null;
-
-                    //every agent runs update() itself
-                    for (int ii = 0; ii < CoreController.God.AgentNumber; ii++)
-                    {
-                        agent = CoreController.God.WorldAgentList[ii];
-                        if (agent != null && agent.IsJoinedAgent != true)
-                        {
-
-                            //if need update
-                            if (agent.CurrentStep <= 
-                                CoreController.God.CurrentStep)
-                            {
-                                //TODO
-                                // do self update check
-                                /*
-                                CoreController.STP.QueueUserWorkItem
-                                    (agent.ThreadPoolCallback, ii.ToString());
-                                */
-                                // check whole world agents attachment
-                                // TODO: search for nearby environments(grids) only 
-                                //God.CheckAgentAttachment(agent);
-
-
-                            }
-                            else
-                            {
-                                //wait until next step
-                                continue;
-                            }
-
-
-                        }
-                        else
-                            continue;
-
-                    }
-                }
-
-                /*
-                //barrier
-                while (God.SimpleTP.WorkitemNumber > 0)
-                {
-                    //TODO: change this while 0 busy waiting
-                }
-                */
-                lock (ClearDeadAgentLock)
-                {
-                    // clear IsDead == true
-                    CoreController.God.ClearDeadAgent();
-                    // refresh GUI
-                    //RefreshGMapMarkers();
-                    RefreshAgentList();
-                    RefreshJoinedAgentList();
-
-                    
-                }
-
-                //set delay time
-                //Thread.Sleep((int)numericUpDown_SimDelay.Value);
-            }
-
-
-            CoreController.STP.EndPool();           
-
-        }
 
 
         /*  
@@ -1600,7 +1417,7 @@ namespace ABDiSE.View
                 if (joinedAgent != null && joinedAgent.IsJoinedAgent)
                 {
                     //if need update
-                    if (joinedAgent.CurrentStep <= CoreController.God.CurrentStep)
+                    if (joinedAgent.CurrentStep < CoreController.God.CurrentStep)
                     {
                         //update
                         
@@ -1649,11 +1466,11 @@ namespace ABDiSE.View
             for (int ii = 0; ii < CoreController.God.AgentNumber; ii++)
             {
                 agent = CoreController.God.WorldAgentList[ii];
-                if (agent != null)
+                if (agent != null && agent.IsJoinedAgent != true)
                 {
 
                     //if need update
-                    if (agent.CurrentStep <= CoreController.God.CurrentStep)
+                    if (agent.CurrentStep < CoreController.God.CurrentStep)
                     {
                         //TODO
                         

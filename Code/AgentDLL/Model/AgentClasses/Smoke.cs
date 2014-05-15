@@ -132,9 +132,16 @@ namespace ABDiSE.Model.AgentClasses
 
         public override void Update()
         {
+            //
+            // terminate, if this agent has been updated
+            //
+            if (this.CurrentStep >= CoreController.God.CurrentStep)
+                return;
+
             SimulateSmokeLife();
             MoveByWind();
 
+            this.CurrentStep = CoreController.God.CurrentStep;
         }
 
         /* 

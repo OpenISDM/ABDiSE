@@ -97,7 +97,19 @@ namespace ABDiSE.Model.AgentClasses
 
         public override void Update()
         {
+            //
+            // terminate, if this agent has been updated
+            //
+            if (this.CurrentStep >= CoreController.God.CurrentStep)
+                return;
+
+
             SimulateBuildingJoinedFireLife();
+
+            //
+            // update step according to God
+            //
+            this.CurrentStep = CoreController.God.CurrentStep;
         }
 
         /* 
@@ -128,17 +140,37 @@ namespace ABDiSE.Model.AgentClasses
             {
                 currentFireLife -= Fire.FIRE_LEVEL_DECREASE_UNIT;
                 this.AgentProperties["FireLife"] = currentFireLife.ToString();
+
+                //
+                // create smoke agents
+                //
+                
+                Dictionary<string, string> smokeProperties 
+                    = new Dictionary<string, string>();
+
+                smokeProperties.Add("Name", "B@F Created Smoke");
+                smokeProperties.Add("SmokeType", "Wet Smoke Residues");
+                smokeProperties.Add("SmokeLife", currentFireLife.ToString());
+                smokeProperties.Add("SmokeLevel", this.AgentProperties["FireLevel"]);
+
+
+                Smoke newAgent = new Smoke(
+                    CoreController,
+                    smokeProperties, 
+                    this.LatLng, 
+                    this.MyEnvironment
+                    );
+
             }
             if (currentBuildingLife > Fire.FIRE_LEVEL_DECREASE_UNIT)
             {
                 currentBuildingLife -= Fire.FIRE_LEVEL_DECREASE_UNIT;
                 this.AgentProperties["BuildingLife"] = currentBuildingLife.ToString();
             }
-
-            if(currentBuildingLife < 0)
+            else
             {
                 //this.IsDead = true;
-                this.IsActivated = false;
+                //this.IsActivated = false;
                 Marker.InnerBrush = new SolidBrush(Color.Black);
             }
         }

@@ -81,7 +81,7 @@ namespace ABDiSE.Model.AgentClasses
             //assign pointer
             this.CoreController = CoreController;
 
-            this.CurrentStep = 0;
+            this.CurrentStep = CoreController.God.CurrentStep;
 
             IsDead = false;
             IsActivated = true;
@@ -129,7 +129,7 @@ namespace ABDiSE.Model.AgentClasses
                 Update();
             }
 
-            Console.WriteLine("Step[{2}]: {0} computed {1} (ThreadPoolCallback)",
+            Console.WriteLine("Step[{2}]: {0} computed {1} (TPCallback)",
                 Thread.CurrentThread.Name, this.AgentProperties["Name"].ToString(), CoreController.God.CurrentStep);
             //_doneEvent.Set();
         }

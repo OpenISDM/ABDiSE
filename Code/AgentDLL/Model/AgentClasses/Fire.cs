@@ -135,12 +135,19 @@ namespace ABDiSE.Model.AgentClasses
 
         public override void Update()
         {
+            //
+            // terminate, if this agent has been updated
+            //
+            if (this.CurrentStep >= CoreController.God.CurrentStep)
+                return;
+
+
             this.CoreController.God.CheckAgentAttachment(this);
 
             this.SimulateFireLife();
             this.MoveByWind();
-            
-            
+
+            this.CurrentStep = CoreController.God.CurrentStep;
         }
 
         /* 
@@ -158,8 +165,8 @@ namespace ABDiSE.Model.AgentClasses
             // firelife null - error
             if (!this.AgentProperties.ContainsKey("FireLife"))
             {
-                this.IsDead = true;
-                this.IsActivated = false;
+                //this.IsDead = true;
+                //this.IsActivated = false;
                 return;
             }
 

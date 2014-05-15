@@ -30,4 +30,6 @@ D:\Dropbox\GITLAB\abdise_agent-based-simulator\Code\AgentDLL\bin\Debug\GMap.NET.
 D:\Dropbox\GITLAB\abdise_agent-based-simulator\Code\AgentDLL\bin\Debug\GMap.NET.WindowsForms.xml
 D:\Dropbox\GITLAB\abdise_agent-based-simulator\Code\AgentDLL\obj\Debug\AgentDLL.dll
 D:\Dropbox\GITLAB\abdise_agent-based-simulator\Code\AgentDLL\obj\Debug\AgentDLL.pdb
+D:\Dropbox\GITLAB\abdise_agent-based-simulator\Code\AgentDLL\bin\Debug\ABDiSE 2.0.dll
+D:\Dropbox\GITLAB\abdise_agent-based-simulator\Code\AgentDLL\bin\Debug\ABDiSE 2.0.pdb
 D:\Dropbox\GITLAB\abdise_agent-based-simulator\Code\AgentDLL\obj\Debug\AgentDLL.csprojResolveAssemblyReference.cache
