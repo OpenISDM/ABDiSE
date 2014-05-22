@@ -229,7 +229,7 @@ namespace ABDiSE.Model.AgentClasses
                         // create Building Joined with Fire
                         // dictionary orders are important!
                         // 
-                        properties.Add("Name", B.AgentProperties["Name"].ToString()+"(@Fire)");
+                        properties.Add("Name", B.AgentProperties["Name"]+"(@Fire)");
                         properties.Add("FireClass", this.AgentProperties["FireClass"]);
                         properties.Add("FireLife", this.AgentProperties["FireLife"]);
                         properties.Add("FireLevel", this.AgentProperties["FireLevel"]);
@@ -259,30 +259,38 @@ namespace ABDiSE.Model.AgentClasses
 
                     case "Tree":
                         //
-                        //create Tree Joined with Fire
+                        // create Building Joined with Fire
+                        // dictionary orders are important!
                         //
 
-                        // orders are important!
-                        /*
-                        properties.Add("Name", B.AgentProperties["Name"].ToString()+"(@Fire)");
+                        properties.Add("Name", B.AgentProperties["Name"]+"(@Fire)");
                         properties.Add("FireClass", this.AgentProperties["FireClass"]);
                         properties.Add("FireLife", this.AgentProperties["FireLife"]);
                         properties.Add("FireLevel", this.AgentProperties["FireLevel"]);
-                        properties.Add("BuildingType", B.AgentProperties["BuildingType"]);
-                        properties.Add("Floor", B.AgentProperties["Floor"]);
-                        properties.Add("BuiltYear", B.AgentProperties["BuiltYear"]);
-                        properties.Add("BuildingLife", "100");
+                        properties.Add("TreeType", B.AgentProperties["TreeType"]);
+                        properties.Add("Height", B.AgentProperties["Height"]);
+                        properties.Add("Age", B.AgentProperties["Age"]);
+                        properties.Add("TreeLife", "100");
 
-                        BuildingJoinedFire newTreeFireAgent = 
-                            new BuildingJoinedFire(
+                        TreeJoinedFire newTreeFireAgent = 
+                            new TreeJoinedFire(
                                 CoreController, 
                                 properties, 
                                 B.LatLng, 
                                 B.MyEnvironment
                                 );
 
-                        CoreController.God.AddToAgentList(newTreeFireAgent);*/
-                        break;
+                        //
+                        // wait to be disposed(free)
+                        //
+                        this.IsActivated = false;
+                        this.IsDead = true;
+                        B.IsActivated = false;
+                        B.IsDead = true;
+
+
+                        return MethodReturnResults.SUCCEED;
+                        
 
                     default:
                         break;

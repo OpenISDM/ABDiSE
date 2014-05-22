@@ -119,43 +119,19 @@ namespace ABDiSE.Model.AgentClasses
 
         public override void Update()
         {
-            //do nothing
+            //
+            // terminate, if this agent has been updated
+            //
+            if (this.CurrentStep >= CoreController.God.CurrentStep)
+                return;
+
+
+            this.CurrentStep = CoreController.God.CurrentStep;
         }
 
         public override MethodReturnResults Attach(Agent B)
         {
-            //not activated
-            if (this.IsActivated == false || B.IsActivated == false)
-                return MethodReturnResults.FAILED;
-            //already dead
-            if (this.IsDead == true || B.IsDead == true)
-                return MethodReturnResults.FAILED;
-
-
-
-            //closeby level
-            if (B.AgentDistance(this) != MethodReturnResults.FAILED)
-            {
-
-                Console.WriteLine("Attach close by ({0} attaches{1})",
-                    this.AgentProperties["Name"].ToString(),
-                    B.AgentProperties["Name"].ToString());
-
-                //create new joinedAgent
-                //AgentB.AttachedBy(this);
-
-                //wait to be disposed(free)
-                this.IsActivated = false;
-                this.IsDead = true;
-
-                //succeed method status
-                return MethodReturnResults.SUCCEED;
-            }
-            else
-            {
-                //nothing happens
-                return MethodReturnResults.FAILED;
-            }
+            return MethodReturnResults.FAILED;
 
         }
 
