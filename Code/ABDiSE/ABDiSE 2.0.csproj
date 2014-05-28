@@ -73,6 +73,12 @@
     <Compile Include="View\ABDiSE 2.0 GUI.Designer.cs">
       <DependentUpon>ABDiSE 2.0 GUI.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\SelectDLLForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\SelectDLLForm.Designer.cs">
+      <DependentUpon>SelectDLLForm.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -84,6 +90,9 @@
     </Compile>
     <EmbeddedResource Include="View\ABDiSE 2.0 GUI.resx">
       <DependentUpon>ABDiSE 2.0 GUI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\SelectDLLForm.resx">
+      <DependentUpon>SelectDLLForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

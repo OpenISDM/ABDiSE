@@ -24,6 +24,7 @@ namespace ABDiSE.Controller
         Assembly Assemblies = null;
 
         public ArrayList Classes;
+        public ArrayList SelectedClasses;
 
         //constructor
         public CoreController()
@@ -59,6 +60,8 @@ namespace ABDiSE.Controller
             
 
             Classes = GetAllTypesFromDLLstring(DLLName);
+            
+            SelectedClasses = Classes;
 
             //remove the last useless item
             //Classes.RemoveAt( Classes.Count - 1);
@@ -86,7 +89,7 @@ namespace ABDiSE.Controller
                 //print methods
                 foreach (var jj in Methods)
                 {
-                    Console.WriteLine(jj + "----Methods: " + jj.ToString());
+                    Console.WriteLine("----Methods: " + jj.ToString());
 
                 }
 

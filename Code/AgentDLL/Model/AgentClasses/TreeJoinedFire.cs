@@ -64,9 +64,10 @@ namespace ABDiSE.Model.AgentClasses
             ConfigStrings.ClassShortName = "TreeJoinedFire";
             ConfigStrings.ClassFullName = typeof(TreeJoinedFire).ToString();
 
-
+            //
             // assign keys in dictionary properties
             // orders are important!
+            //
             ConfigStrings.Keys.Add("Name");
             ConfigStrings.Keys.Add("FireClass");
             ConfigStrings.Keys.Add("FireLife");
@@ -76,8 +77,9 @@ namespace ABDiSE.Model.AgentClasses
             ConfigStrings.Keys.Add("Age");
             ConfigStrings.Keys.Add("TreeLife");
 
+            //
             // assign types
-
+            //
             SubTypeStrings defaultTreeJoinedFire = new SubTypeStrings();
             defaultTreeJoinedFire.AgentSubType = "default";
             defaultTreeJoinedFire.Values.Add("Tree@Fire-default");
