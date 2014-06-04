@@ -117,7 +117,7 @@ namespace ABDiSE.Model
         {
 
             string DisplayString = string.Format(
-                "Weather:{0}  WindSpeed: {1}  WindDirection:{2}  RainFall:{3} ", 
+                "Weather:{0}  WindSpeed: {1}  \nWindDirection:{2}  RainFall:{3} ", 
                 EnvProperties["Weather"], EnvProperties["WindSpeed"], 
                 EnvProperties["WindDirection"], EnvProperties["RainFall"] );
             

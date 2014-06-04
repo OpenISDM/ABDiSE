@@ -84,6 +84,7 @@
             this.numericUpDown_SimSteps = new System.Windows.Forms.NumericUpDown();
             this.label_SimStepsTitle = new System.Windows.Forms.Label();
             this.groupBox_AgentCreation = new System.Windows.Forms.GroupBox();
+            this.button_SelectDLL = new System.Windows.Forms.Button();
             this.groupBox_STP = new System.Windows.Forms.GroupBox();
             this.groupBox_SimControl = new System.Windows.Forms.GroupBox();
             this.progressBar_steps = new System.Windows.Forms.ProgressBar();
@@ -99,7 +100,6 @@
             this.radioButton_Rainy = new System.Windows.Forms.RadioButton();
             this.radioButton_Cloudy = new System.Windows.Forms.RadioButton();
             this.radioButton_Sunny = new System.Windows.Forms.RadioButton();
-            this.button_SelectDLL = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_SimDelay)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_STPQueueDelay)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_STPWorkitemNum)).BeginInit();
@@ -764,6 +764,16 @@
             this.groupBox_AgentCreation.TabStop = false;
             this.groupBox_AgentCreation.Text = "New Agent Setting";
             // 
+            // button_SelectDLL
+            // 
+            this.button_SelectDLL.Location = new System.Drawing.Point(10, 136);
+            this.button_SelectDLL.Name = "button_SelectDLL";
+            this.button_SelectDLL.Size = new System.Drawing.Size(142, 31);
+            this.button_SelectDLL.TabIndex = 43;
+            this.button_SelectDLL.Text = "Select DLL";
+            this.button_SelectDLL.UseVisualStyleBackColor = true;
+            this.button_SelectDLL.Click += new System.EventHandler(this.button_SelectDLL_Click);
+            // 
             // groupBox_STP
             // 
             this.groupBox_STP.Controls.Add(this.numericUpDown_STPQueueDelay);
@@ -836,7 +846,7 @@
             // label_EnvironmentProperties
             // 
             this.label_EnvironmentProperties.AutoSize = true;
-            this.label_EnvironmentProperties.Location = new System.Drawing.Point(316, 27);
+            this.label_EnvironmentProperties.Location = new System.Drawing.Point(253, 32);
             this.label_EnvironmentProperties.MaximumSize = new System.Drawing.Size(300, 0);
             this.label_EnvironmentProperties.Name = "label_EnvironmentProperties";
             this.label_EnvironmentProperties.Size = new System.Drawing.Size(74, 12);
@@ -845,7 +855,7 @@
             // 
             // textBox_Env_WindSpeed
             // 
-            this.textBox_Env_WindSpeed.Location = new System.Drawing.Point(202, 65);
+            this.textBox_Env_WindSpeed.Location = new System.Drawing.Point(158, 63);
             this.textBox_Env_WindSpeed.Margin = new System.Windows.Forms.Padding(1);
             this.textBox_Env_WindSpeed.Name = "textBox_Env_WindSpeed";
             this.textBox_Env_WindSpeed.Size = new System.Drawing.Size(88, 22);
@@ -857,7 +867,7 @@
             // 
             this.label_EnvironmentPropertiesTitle.AutoSize = true;
             this.label_EnvironmentPropertiesTitle.Font = new System.Drawing.Font("新細明體", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label_EnvironmentPropertiesTitle.Location = new System.Drawing.Point(306, 14);
+            this.label_EnvironmentPropertiesTitle.Location = new System.Drawing.Point(253, 15);
             this.label_EnvironmentPropertiesTitle.Name = "label_EnvironmentPropertiesTitle";
             this.label_EnvironmentPropertiesTitle.Size = new System.Drawing.Size(137, 12);
             this.label_EnvironmentPropertiesTitle.TabIndex = 65;
@@ -866,7 +876,7 @@
             // label_Env_WindSpeedTitle
             // 
             this.label_Env_WindSpeedTitle.AutoSize = true;
-            this.label_Env_WindSpeedTitle.Location = new System.Drawing.Point(124, 68);
+            this.label_Env_WindSpeedTitle.Location = new System.Drawing.Point(79, 66);
             this.label_Env_WindSpeedTitle.MaximumSize = new System.Drawing.Size(300, 0);
             this.label_Env_WindSpeedTitle.Name = "label_Env_WindSpeedTitle";
             this.label_Env_WindSpeedTitle.Size = new System.Drawing.Size(62, 12);
@@ -875,7 +885,7 @@
             // 
             // textBox_Env_WindDirection
             // 
-            this.textBox_Env_WindDirection.Location = new System.Drawing.Point(202, 41);
+            this.textBox_Env_WindDirection.Location = new System.Drawing.Point(157, 41);
             this.textBox_Env_WindDirection.Margin = new System.Windows.Forms.Padding(1);
             this.textBox_Env_WindDirection.Name = "textBox_Env_WindDirection";
             this.textBox_Env_WindDirection.Size = new System.Drawing.Size(88, 22);
@@ -886,7 +896,7 @@
             // label_Env_WindDirTitle
             // 
             this.label_Env_WindDirTitle.AutoSize = true;
-            this.label_Env_WindDirTitle.Location = new System.Drawing.Point(124, 46);
+            this.label_Env_WindDirTitle.Location = new System.Drawing.Point(79, 44);
             this.label_Env_WindDirTitle.MaximumSize = new System.Drawing.Size(300, 0);
             this.label_Env_WindDirTitle.Name = "label_Env_WindDirTitle";
             this.label_Env_WindDirTitle.Size = new System.Drawing.Size(74, 12);
@@ -896,7 +906,7 @@
             // label_Env_RainFallTitle
             // 
             this.label_Env_RainFallTitle.AutoSize = true;
-            this.label_Env_RainFallTitle.Location = new System.Drawing.Point(124, 22);
+            this.label_Env_RainFallTitle.Location = new System.Drawing.Point(81, 22);
             this.label_Env_RainFallTitle.MaximumSize = new System.Drawing.Size(300, 0);
             this.label_Env_RainFallTitle.Name = "label_Env_RainFallTitle";
             this.label_Env_RainFallTitle.Size = new System.Drawing.Size(73, 12);
@@ -905,7 +915,7 @@
             // 
             // textBox_Env_RainFall
             // 
-            this.textBox_Env_RainFall.Location = new System.Drawing.Point(202, 17);
+            this.textBox_Env_RainFall.Location = new System.Drawing.Point(158, 18);
             this.textBox_Env_RainFall.Margin = new System.Windows.Forms.Padding(1);
             this.textBox_Env_RainFall.Name = "textBox_Env_RainFall";
             this.textBox_Env_RainFall.Size = new System.Drawing.Size(88, 22);
@@ -947,16 +957,6 @@
             this.radioButton_Sunny.Text = "Sunny";
             this.radioButton_Sunny.UseVisualStyleBackColor = true;
             this.radioButton_Sunny.CheckedChanged += new System.EventHandler(this.environmentRadioButtons_CheckedChanged);
-            // 
-            // button_SelectDLL
-            // 
-            this.button_SelectDLL.Location = new System.Drawing.Point(10, 136);
-            this.button_SelectDLL.Name = "button_SelectDLL";
-            this.button_SelectDLL.Size = new System.Drawing.Size(142, 31);
-            this.button_SelectDLL.TabIndex = 43;
-            this.button_SelectDLL.Text = "Select DLL";
-            this.button_SelectDLL.UseVisualStyleBackColor = true;
-            this.button_SelectDLL.Click += new System.EventHandler(this.button_SelectDLL_Click);
             // 
             // MainWindow
             // 
