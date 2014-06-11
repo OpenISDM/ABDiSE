@@ -284,7 +284,7 @@ namespace ABDiSE.View
 
                 public MainWindow(CoreController CC)
 
-            Function Description:
+            Constructor Description:
 
                 This is the constructor of MainWindow.
                 It initializes necessary objects.
@@ -1109,7 +1109,11 @@ namespace ABDiSE.View
 
                 This method uses data in GUI(left side) 
                 to call constructor in agent
+           
+            Returned Value:
 
+                MethodReturnResults - succeed or failed
+         
             Possible Error Code or Exception:
 
                 Service is not available 
@@ -2160,10 +2164,9 @@ namespace ABDiSE.View
     *      this class extends GMapMarker
     *      use for drawing custom circle marker      
     *      
-    *      reuse internet open source code, few edit by Lightorz
+    *      reuse internet open source code, edit by Lightorz
     *      
     */
-
     public class GMapMarkerCircle : GMap.NET.WindowsForms.GMapMarker
     {
 

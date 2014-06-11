@@ -1,22 +1,39 @@
-﻿/*
-    Project Name: ABDiSE
-                  (Agent-Based Disaster Simulation Environment)
+﻿/*++
+    Copyright (c) 2014  OpenISDM
 
-    Version:      pre-alpha
-    
-    File Name:    God.cs
+    Project Name: 
 
-    SVN $Revision: $
+        ABDiSE
+             (Agent-Based Disaster Simulation Environment)
 
-    Abstract:     Each Simulation experiment is set up through this entity. 
-                  include Main
- 
-    Authors:      T.L. Hsu 
-  
-    Contacts:     Lightorz@gmail.com
-     
+    Version:
+
+        2.0
+
+    File Name:
+
+        God.cs
+
+    Abstract:
+
+        God class is the core of ABDiSE model elements. 
+        There is only one God instance.
+        This class maintains world agent list and environment list.    
+        It can change agent properties directly.
+        
+    Authors:  
+
+        Tzu-Liang Hsu, Lightorz@gmail.com
+
+    License:
+
+        GPL 3.0 This file is subject to the terms and conditions defined 
+        in file 'COPYING.txt', which is part of this source code package.
+
     Major Revision History:
-*/
+
+        2014/6/11: version 2.0 alpha
+--*/
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,85 +50,136 @@ using System.Threading;
 
 namespace ABDiSE.Model
 {
-    /*  
-    * public class God
-    * 
-    * Description:
-    *      God class is the core of ABDiSE, there is only one God instance.
-    *      Maintenances world agent list and environment list      
-    *      do creation and can change agent directly.
-    *      
-    */
+    /*++
+    Class:
+
+        God
+
+    Summary:
+
+        God class is the core of ABDiSE. 
+        There is only one God instance.
+        This class maintains world agent list and environment list      
+        It can change agent properties directly.
+
+    Methods:
+        God
+            Constructor
+     
+        AddToEnvironmentList
+            This method adds target environment to God's list
+        
+        ClearDeadAgent
+            This method clears dead agents in the world
+        
+        AddToAgentList
+            This method adds target agent to God's list  
+        
+        CheckAgentAttachment
+            This method automatically checks and attaches 
+        
+        activate
+            This method activate target agent
+     
+        affect
+            This method change environment parameters 
+            and attributes of objects in non-causal ways
+      
+        control
+            this method causes an object to change behavior/state in ways not 
+            defined by object's own behavior-change methods 
+      
+    --*/
     public class God
     {
-        //c# windows applicaiton
-        //MainWindow MainWindow;
-
-        //public SimpleThreadPool SimpleTP;
-
+        //
+        // current simulation step
+        //
         public int CurrentStep = 0;
 
         public Environment[] WorldEnvironmentList;
+
+        //
         // reference of agents, recorded by God
         // this list is used for recording ALL agents in the simulation world
+        //
         public Agent[] WorldAgentList;
-        //public JoinedAgent[] WorldJoinedAgentList;
 
+        //
         // for naming new Agent (Maximum array index)
+        //
         public int AgentNumber = 0;
-        //public int JoinedAgentNumber = 0;
 
-        //real agent count
+        //
+        // real agent count
+        //
         public int AgentCount = 0;
-        //public int JoinedAgentCount = 0;
 
+        
         public Dictionary<string, string> properties =
             new Dictionary<string, string>();
 
         public int MaximumEnvironments = 100;
-        public int MaximumAgents = 1000;
+        public int MaximumAgents = 5000;
 
-        /* 
-         * private God()
-         * 
-         * Description:
-         *      constructor of God class
-         *      
-         * Arguments:     
-         *      void
-         */
+        /*++
+            Constructor:
+
+                public God()
+
+            Function Description:
+
+                This function search from the requested URI of searched term
+
+            Parameters:
+
+                void
+
+            Possible Error Code or Exception:
+
+                Service is not available 
+        --*/
         public God()
         {
-            // create the only GUI, and assign pointers of itself to it.
 
             this.WorldEnvironmentList = new Environment[MaximumEnvironments];
             this.WorldAgentList = new Agent[MaximumAgents];
-            //this.WorldJoinedAgentList = new JoinedAgent[MaximumAgents];
 
         }
 
-        /* 
-         *  public MethodReturnResults AddToEnvironmentList
-         *  (ABDiSE.Environment En)
-         * 
-         * Description:
-         *      add target environment to god's list
-         *      
-         * Arguments:     
-         *      void
-         * Return Value:
-         *      void
-         */
-        public MethodReturnResults AddToEnvironmentList(Environment En)
+        /*++
+            Function Name:
+
+                public MethodReturnResults AddToEnvironmentList(Environment En)
+
+            Function Description:
+
+                This function adds target environment to God's list
+
+            Parameters:
+
+                Environment en - ABDiSE environment (pointer) which user wants to add to list.
+
+            Returned Value:
+
+                MethodReturnResults - succeed or failed
+
+            Possible Error Code or Exception:
+
+                Service is not available 
+        --*/
+        public MethodReturnResults AddToEnvironmentList(Environment en)
         {
+            //
             // search for space
+            //
             for (int ii = 0; ii < MaximumEnvironments; ii++)
             {
                 if (WorldEnvironmentList[ii] == null)
                 {
-                    WorldEnvironmentList[ii] = En;
+                    WorldEnvironmentList[ii] = en;
                     return MethodReturnResults.SUCCEED;
-                    //break;
+
                 }
             }
 
@@ -119,29 +187,42 @@ namespace ABDiSE.Model
 
         }
 
-        /* 
-         *  public void ClearDeadAgent()
-         * 
-         * Description:
-         *      clear agent and joined agent which "IsDead" == ture
-         *      
-         * Arguments:     
-         *      void
-         * Return Value:
-         *      void
-         */
+        /*++
+            Function Name:
+
+                public void ClearDeadAgent()
+
+            Function Description:
+
+                This function clears agent and joined agent which "IsDead" == ture
+
+            Parameters:
+
+                void
+
+            Returned Value:
+
+                void
+
+            Possible Error Code or Exception:
+
+                Service is not available 
+        --*/
         public void ClearDeadAgent()
         {
 
             for (int ii = 0; ii < AgentNumber; ii++)
             {
-                //clear dead agent
+                //
+                // clear dead agent
+                //
                 if (WorldAgentList[ii] != null &&
                     WorldAgentList[ii].IsDead == true)
                 {
+                    Console.WriteLine("Clear Dead Agent #{0}", WorldAgentList[ii].AgentProperties["Name"]);
                     WorldAgentList[ii] = null;
 
-                    Console.WriteLine("Clear Dead Agent #{0}", ii);
+                    
                     // agent count -1
                     AgentCount--;
                 }
@@ -150,18 +231,27 @@ namespace ABDiSE.Model
 
         }
 
+        /*++
+            Function Name:
 
-        /* 
-         *  public MethodReturnResults AddToAgentList(Agent TargetAgent)
-         * 
-         * Description:
-         *      add target agent to god's list
-         *      
-         * Arguments:     
-         *      TargetAgent - target agent to be added
-         * Return Value:
-         *      void
-         */
+                public MethodReturnResults AddToAgentList(Agent targetAgent)
+
+            Function Description:
+
+                add target agent to god's list
+
+            Parameters:
+
+                Agent targetAgent - target agent to be added
+
+            Returned Value:
+
+                MethodReturnResults - succeed or failed
+
+            Possible Error Code or Exception:
+
+                Service is not available 
+        --*/
         public MethodReturnResults AddToAgentList(Agent targetAgent)
         {
             // agent number +1
@@ -177,7 +267,7 @@ namespace ABDiSE.Model
             // way 1: very simple and stupid way: 
             //        search first null slot and replace it
 
-            for (int ii = 0; ii < AgentNumber; ii++)
+            for (int ii = 0; ii <= AgentNumber; ii++)
             {
 
                 if (WorldAgentList[ii] == null)
@@ -198,22 +288,29 @@ namespace ABDiSE.Model
 
         }
 
+        /*++
+            Function Name:
 
-        
+                public void CheckAgentAttachment(Agent TargetAgent)
 
-        /* 
-         *  public void CheckAgentAttachment(Agent TargetAgent)
-         * 
-         * Description:
-         *      let the agent checks if there is suitable agent to attach
-         *      TODO : only find same environment, search smartly
-         *      
-         * Arguments:     
-         *      TargetAgent - target agent to be checked
-         * Return Value:
-         *      void
-         */
-        public void CheckAgentAttachment(Agent targetAgent)
+            Function Description:
+
+                let the agent checks if there is suitable agent to attach
+                TODO : only find same environment, search smartly
+
+            Parameters:
+
+                Agent targetAgent - target agent to be checked
+
+            Returned Value:
+
+                MethodReturnResults - succeed or failed
+
+            Possible Error Code or Exception:
+
+                Service is not available 
+        --*/
+        public MethodReturnResults CheckAgentAttachment(Agent targetAgent)
         {
             MethodReturnResults result = MethodReturnResults.FAILED;
 
@@ -248,45 +345,66 @@ namespace ABDiSE.Model
 
             }
 
+            return result;
         }
 
+        /*++
+            Function Name:
 
-        /* 
-         * private MethodReturnResults activate(Agent target)
-         * 
-         * Description:
-         *      Activate: make specified objects active.
-         *      
-         * Arguments:     
-         *      target - target agent to be activated
-         * Return Value:
-         *      MethodReturnResults - succeed, failed, etc
-         */
+                private MethodReturnResults activate(Agent target)
+
+            Function Description:
+
+                Activate: make specified objects active.
+
+            Parameters:
+
+                Agent targetAgent - target agent to be activated
+
+            Returned Value:
+
+                MethodReturnResults - succeed or failed
+
+            Possible Error Code or Exception:
+
+                Service is not available 
+        --*/
         private MethodReturnResults activate(Agent target)
         {
 
             //if(...)
             target.IsActivated = true;
+            //
             // and do other things
+            //
 
-            //succeed or fail method status
             return MethodReturnResults.SUCCEED;
         }
 
-        /* 
-         * private MethodReturnResults affect
-            (Agent target, Dictionary<string, string> controls)
-         * 
-         * Description:
-         *      Affect(or Assign): change environment parameters 
-         *      and attributes of objects in non-causal ways.
-         *      
-         * Arguments:     
-         *      target - target agent to be activated
-         *      controls - control commands in dictionary
-         * Return Value:
-         *      MethodReturnResults - succeed, failed, etc
-         */
+        /*++
+            Function Name:
+
+                private MethodReturnResults affect
+                    (Agent target, Dictionary<string, string> controls)
+
+            Function Description:
+
+                Affect(or Assign): change environment parameters 
+                and attributes of objects in non-causal ways.
+
+            Parameters:
+
+                Agent targetAgent - target agent
+                controls - control commands in dictionary
+
+            Returned Value:
+
+                MethodReturnResults - succeed or failed
+
+            Possible Error Code or Exception:
+
+                Service is not available 
+        --*/
         private MethodReturnResults affect
             (Agent target, Dictionary<string, string> controls)
         {
@@ -299,27 +417,39 @@ namespace ABDiSE.Model
 
         }
 
-        /* 
-         * private MethodReturnResults control
-            (Agent target, Dictionary<string, string> controls)
-         * 
-         * Description:
-         *      Control: cause an object to change behavior/state in ways not 
-         *      defined by object’s own behavior-change methods. 
-         *      
-         * Arguments:     
-         *      target - target agent to be activated
-         *      controls - control commands in dictionary
-         * Return Value:
-         *      MethodReturnResults - succeed, failed, etc
-         */
+        /*++
+            Function Name:
+
+                private MethodReturnResults control
+                    (Agent target, Dictionary<string, string> controls)
+
+            Function Description:
+
+                Control: cause an object to change behavior/state in ways not 
+                defined by object’s own behavior-change methods. 
+
+            Parameters:
+
+                Agent targetAgent - target agent
+                controls - control commands in dictionary
+
+            Returned Value:
+
+                MethodReturnResults - succeed or failed
+
+            Possible Error Code or Exception:
+
+                Service is not available 
+        --*/
         private MethodReturnResults control
             (Agent target, Dictionary<string, string> controls)
         {
+
             //if(controls.ooo)
             //  target.OOO = XXX;
-            //succeed or fail method status
+
             return MethodReturnResults.SUCCEED;
         }
+
     }
 }
