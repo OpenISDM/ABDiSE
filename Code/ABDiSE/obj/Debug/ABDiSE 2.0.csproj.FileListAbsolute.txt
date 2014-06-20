@@ -40,3 +40,6 @@ D:\Dropbox\GITLAB\abdise_agent-based-simulator\Code\ABDiSE\obj\Debug\ABDiSE 2.0.
 D:\Dropbox\GITLAB\abdise_agent-based-simulator\Code\ABDiSE\bin\Debug\ABDiSE 2.0.exe.config
 D:\Dropbox\GITLAB\abdise_agent-based-simulator\Code\ABDiSE\bin\Debug\ABDiSE 2.0.exe
 D:\Dropbox\GITLAB\abdise_agent-based-simulator\Code\ABDiSE\obj\Debug\ABDiSE 2.0.exe
+C:\Users\Lightorz\Dropbox\GITLAB\abdise_agent-based-simulator\Code\ABDiSE\bin\Debug\ABDiSE 2.0.exe.config
+C:\Users\Lightorz\Dropbox\GITLAB\abdise_agent-based-simulator\Code\ABDiSE\obj\Debug\ABDiSE 2.0.exe
+C:\Users\Lightorz\Dropbox\GITLAB\abdise_agent-based-simulator\Code\ABDiSE\obj\Debug\ABDiSE 2.0.pdb

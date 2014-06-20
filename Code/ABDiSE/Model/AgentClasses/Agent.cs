@@ -1,40 +1,45 @@
-﻿/*++
-    Copyright (c) 2014  OpenISDM
-
-    Project Name: 
-
-        ABDiSE
-             (Agent-Based Disaster Simulation Environment)
-
-    Version:
-
-        2.0
-
-    File Name:
-
-        Agent.cs
-
-    Abstract:
-
-        Agent.cs is a abstract class for "Agent" in the OpenISDM ABDiSE project.
-        Agent is like an active object, it can interact with other agnet and environment.
-        ABDiSE divides all agents into two major types: 
-        NaturalElementAgentTypes and AttachableObjectAgentTypes.
- 
-    Authors:  
-
-        Tzu-Liang Hsu, Lightorz@gmail.com
-
-    License:
-
-        GPL 3.0 This file is subject to the terms and conditions defined 
-        in file 'COPYING.txt', which is part of this source code package.
-
-    Major Revision History:
-
-        2014/5/28: version 2.0 alpha
---*/
-
+﻿/** 
+ *  @file Agent.cs
+ *  Agent.cs is a abstract class for "Agent" in the OpenISDM ABDiSE project.
+ *  
+ *  Copyright (c) 2014  OpenISDM
+ *   
+ *  Project Name: 
+ * 
+ *      ABDiSE 
+ *          (Agent-Based Disaster Simulation Environment)
+ *
+ *  Version:
+ *
+ *      2.0
+ *
+ *  File Name:
+ *
+ *      Agent.cs
+ *
+ *  Abstract:
+ *
+ *      Agent.cs is a abstract class for "Agent" in the OpenISDM ABDiSE project.
+ *       
+ *      Agent is like an active object, it can interact with other agnet and environment.
+ *      ABDiSE divides all agents into two major types: 
+ *      NaturalElementAgentTypes and AttachableObjectAgentTypes.
+ *
+ *  Authors:  
+ *
+ *      Tzu-Liang Hsu, Lightorz@gmail.com
+ *
+ *  License:
+ *
+ *      GPL 3.0 This file is subject to the terms and conditions defined 
+ *      in file 'COPYING.txt', which is part of this source code package.
+ *
+ *  Major Revision History:
+ *
+ *      2014/5/28: version 2.0 alpha
+ *      2014/6/20: edit comments for doxygen
+ *
+ */
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,58 +53,48 @@ using System.Threading;
 
 namespace ABDiSE.Model.AgentClasses
 {
-
-    /*++
-        Class:
-
-            public abstract class Agent
-
-        Summary:
-
-            Class Agent is a abstract class for "Agent" in the OpenISDM ABDiSE project.
-            Agent is like an active object, it can interact with other agnet and environment.
-            ABDiSE divides all agents into two major types: 
-            NaturalElementAgentTypes and AttachableObjectAgentTypes.
-
-        Methods:
-            //TODO: 
-
-    --*/
+    /**
+     *  Agent is a abstract class for "Agent" in the OpenISDM ABDiSE project.
+     *       
+     *  Agent is like an active object, it can interact with other agnet and environment.
+     *  ABDiSE divides all agents into two major types: 
+     *  NaturalElementAgentTypes and AttachableObjectAgentTypes.
+     */
     public abstract class Agent
     {
         //
-        // for example: fire, smoke, building
+        /// for example: fire, smoke, building
         //
         public string AgentType;
 
         //
-        // Controller pointer
+        /// Controller pointer
         //
         public CoreController CoreController;
 
         //
-        // time driven counter - simulation step
+        /// time driven counter - simulation step
         //
         public int CurrentStep = -1;
 
         //
-        // detail properties of agent
+        /// detail properties of agent
         // 
         public Dictionary<string, string> AgentProperties;
 
         //
-        // configuration strings , will be assigned by AgentDLL
+        /// configuration strings , will be assigned by AgentDLL
         //
         public ConfigStrings ConfigStrings;
 
         //
-        // agent type - select one 
+        /// agent type - select one from NE or AO
         //
         public bool IsNaturalElementAgent = false;
         public bool IsAttachableObjectAgent = false;
 
         //
-        // joined agent flag
+        /// joined agent flag
         //
         public bool IsJoinedAgent = false;
 
@@ -109,64 +104,36 @@ namespace ABDiSE.Model.AgentClasses
         public Environment MyEnvironment;
         
         // 
-        // GMap.NET custom marker - for display in GUI map
+        /// GMap.NET custom marker - for display in GUI map
         //
         public GMapMarkerCircle Marker;
 
         public PointLatLng LatLng;
 
-        /*++
-            Constructor Name:
-
-                public Agent()
-
-            Constructor Description:
-
-                This is the constructor of Agent.
-                basically you will not call it.
-
-            Parameters:
-
-                void
-
-            Possible Error Code or Exception:
-
-                Service is not available 
-        --*/
+        /**
+         * 
+         * Constructor of Agent.
+         * basically you will not call it.
+         * 
+         */
         public Agent() 
         {
             //debug:
             //Console.WriteLine("Agent() called");
         }
 
-        /*++
-            Constructor Name:
 
-                public Agent(
-                    CoreController CoreController,
-                    Dictionary<string, string> Properties,
-                    PointLatLng LatLng,
-                    ABDiSE.Model.Environment AgentEnvironment
-                    )
-
-            Constructor Description:
-
-                This is the constructor of Agent.
-                assign values of parameters to correct data structure.
-                will called by other types of Agent in AgentDLL
-                (for example, fire, building...)
-
-            Parameters:
-
-                CoreController CoreController - pointer to controller
-                Dictionary<string, string> Properties - data structure agent needs
-                PointLatLng LatLng - the point of coordinates
-                ABDiSE.Model.Environment AgentEnvironment - environment the agent locates
-
-            Possible Error Code or Exception:
-
-                Service is not available 
-        --*/
+        /**
+         * assign values of parameters to agent data structure.
+         * 
+         * this constructor will be called by other types of Agent in AgentDLL
+         * (for example, fire, building...)
+         * 
+         *  @param CoreController CoreController - pointer to controller
+         *  @param Dictionary<string, string> Properties - data structure agent needs
+         *  @param PointLatLng LatLng - the point of coordinates
+         *  @param ABDiSE.Model.Environment AgentEnvironment - environment the agent locates
+         */
         public Agent(
             CoreController CoreController,
             Dictionary<string, string> Properties,
@@ -204,30 +171,19 @@ namespace ABDiSE.Model.AgentClasses
         }
 
         //
-        //lock of each agent
+        ///lock of each agent
         //
         private Object agentLock = new Object();
 
-
-        /*++
-            Function Name:
-
-                public void ThreadPoolCallback(Object threadContext)
-
-            Function Description:
-
-                Callback method of agent
-                this method is parallelized   
-                this block is like a workitem in threadpool
-            
-            Parameters:     
-                
-                threadContext - the index of for loop
-            
-            Possible Error Code or Exception:
-
-                Service is not available 
-        --*/
+        /**
+         * Callback method of agent.
+         * 
+         * This method is parallelized.
+         * This block is like a workitem in threadpool.
+         * 
+         * @param threadContext - the index of thread
+         * 
+         */
         public void ThreadPoolCallback(Object threadContext)
         {
             //int threadIndex = int.Parse(threadContext.ToString());
@@ -248,135 +204,63 @@ namespace ABDiSE.Model.AgentClasses
                 );
         }
 
-        /*++
-            Method Name:
 
-                public abstract MethodReturnResults Attach(Agent B);
-
-            Method Description:
-
-                This is an abstract method, will be implemented by children class
-                simulates agent attachment
-                A attach B => A.Attach(B)
-         
-                attaches to a target if conditions are true
-                Agent A,B itself disappears,
-                create new joined agent
-                ex: becomes agent: target (joined with) fire    
-         
-            Parameters:     
-                
-                Agent B - attach target (attachable agent like building)
-            
-            Returned Value:
-
-                MethodReturnResults - succeed or failed
-          
-            Possible Error Code or Exception:
-
-                Service is not available 
-        --*/
+        /**
+         * Simulates agent attachment
+         * 
+         * This is an abstract method, will be implemented by children class
+         * simulates agent attachment
+         * A attach B => A.Attach(B)
+         *
+         * attaches to a target if conditions are true
+         * Agent A,B itself disappears,
+         * create new joined agent
+         * ex: becomes agent: target (joined with) fire    
+         * 
+         * @param Agent B - attach target (attachable agent like building)
+         * 
+         * @return MethodReturnResults - succeed or failed
+         * 
+         */
         public abstract MethodReturnResults Attach(Agent B);
 
-        /*++
-            Method Name:
 
-                public abstract void SetMarkerFormat();
-
-            Method Description:
-
-                This is an abstract method, will be implemented by children class
-                
-                set format of marker
-         
-            Parameters:     
-                
-                void
-            
-            Returned Value:
-
-                void
-          
-            Possible Error Code or Exception:
-
-                Service is not available 
-        --*/
+        /**
+         * Set format of marker for agents.
+         * 
+         * This is an abstract method, will be implemented by children class                  
+         * 
+         */
         public abstract void SetMarkerFormat();
 
-        /*++
-            Method Name:
 
-                public abstract ConfigStrings SetDefaultConfigStrings();
-
-            Method Description:
-
-                This is an abstract method, will be implemented by children class
-                
-                return configuration strings in AgentDLL database
-         
-            Parameters:     
-                
-                void
-            
-            Returned Value:
-
-                ConfigStrings - configuration strings
-          
-            Possible Error Code or Exception:
-
-                Service is not available 
-        --*/
+        /**
+         * Return configuration strings in AgentDLL database.
+         * 
+         * This is an abstract method, will be implemented by children class.
+         * 
+         * @return ConfigStrings - configuration strings
+         */
         public abstract ConfigStrings SetDefaultConfigStrings();
 
-        /*++
-            Method Name:
 
-                public abstract void Update();
-
-            Method Description:
-
-                This is an abstract method, will be implemented by children class
-                
-                Agent will excute this method once in every simulation step
-         
-            Parameters:     
-                
-                void
-            
-            Returned Value:
-
-                void
-          
-            Possible Error Code or Exception:
-
-                Service is not available 
-        --*/
+        /**
+         * Agents will excute this method once in every simulation step.
+         * 
+         * This is an abstract method, will be implemented by children class.
+         */
         public abstract void Update();
 
-        /*++
-            Method Name:
 
-                public MethodReturnResults MoveByWind()
-
-            Method Description:
-
-                this method simulates wind movement of agents
-         
-            Parameters:     
-                
-                void
-            
-            Returned Value:
-
-                MethodReturnResults - succeed , failed, etc
-          
-            Possible Error Code or Exception:
-
-                Service is not available 
-        --*/
+        /**
+         * This method simulates wind movement of agents
+         * 
+         * @return MethodReturnResults - succeed , failed, etc
+         */
         public MethodReturnResults MoveByWind()
         {
-            //Console.WriteLine(this.Properties["Name"].ToString() + ".MoveByEnvironment before(" + this.LatLng.Lat + "," + this.LatLng.Lng + ")");
+            //Console.WriteLine(this.Properties["Name"].ToString() + 
+            //".MoveByEnvironment before(" + this.LatLng.Lat + "," + this.LatLng.Lng + ")");
 
             double windSpeed =
                 double.Parse(this.MyEnvironment.EnvProperties["WindSpeed"]);
@@ -416,27 +300,12 @@ namespace ABDiSE.Model.AgentClasses
         }
 
 
-        /*++
-            Method Name:
-
-                public MethodReturnResults AgentDistance(Agent TargetAgent)
-
-            Method Description:
-
-                computes distance between Agent A and B 
-         
-            Parameters:     
-                
-                Agent target - target agent which will be computed
-            
-            Returned Value:
-
-                MethodReturnResults - AGENT_CLOSEBY_DISTANCE_LEVEL or failed
-          
-            Possible Error Code or Exception:
-
-                Service is not available 
-        --*/
+        /**
+         * Computes distance between Agent A and B .
+         * 
+         * @param Agent target - target agent which will be computed
+         * @return MethodReturnResults - AGENT_CLOSEBY_DISTANCE_LEVEL or failed
+         */
         public MethodReturnResults AgentDistance(Agent target)
         {
             

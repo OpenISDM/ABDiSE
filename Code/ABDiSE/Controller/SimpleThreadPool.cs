@@ -1,22 +1,41 @@
-﻿/*
-    Project Name: ABDiSE ThreadpoolGUI
-                  (Agent-Based Disaster Simulation Environment)
- 
-    Version:      pre-alpha
-    
-    File Name:    SimpleThreadPool.cs
-
-    SVN $Revision: $
-
-    Abstract:     ABDiSE thread pool
-                  controls threads and workitems
- 
-    Authors:      T.L. Hsu 
-  
-    Contacts:     Lightorz@gmail.com
-     
-    Major Revision History:
-*/
+﻿/** 
+ *  @file SimpleThreadPool.cs
+ *  Custom thread pool in ABDiSE project, controls threads and workitems
+ *  
+ *  Copyright (c) 2014  OpenISDM
+ *   
+ *  Project Name: 
+ * 
+ *      ABDiSE 
+ *          (Agent-Based Disaster Simulation Environment)
+ *
+ *  Version:
+ *
+ *      2.0
+ *
+ *  File Name:
+ *
+ *      SimpleThreadPool.cs
+ *
+ *  Abstract:
+ *
+ *      Custom thread pool in ABDiSE project, controls threads and workitems
+ *
+ *  Authors:  
+ *
+ *      Tzu-Liang Hsu, Lightorz@gmail.com
+ *
+ *  License:
+ *
+ *      GPL 3.0 This file is subject to the terms and conditions defined 
+ *      in file 'COPYING.txt', which is part of this source code package.
+ *
+ *  Major Revision History:
+ *
+ *      2014/5/28: version 2.0 alpha
+ *      2014/6/20: edit comments for doxygen
+ *
+ */
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,41 +49,34 @@ using ABDiSE.Controller;
 
 namespace ABDiSE.Controller.ThreadPool
 {
-    /*  
-    * public class SimpleThreadPool : IDisposable
-    * 
-    * Description:
-    *      simple custom thread pool
-    *      queue workitem and execute
-    *      
-    */
+    /**  
+     *  Simple custom thread pool.
+     *  queue workitems and execute them.
+     *      
+     */
     public class SimpleThreadPool : IDisposable
     {
         //pointer
         //CoreController CoreController;
 
-        //c# windows applicaiton
-
         public bool DynamicMode = true;
 
-        //time of execute (random)
+        //
+        ///time of execute (random)
+        //
         public static int ExecuteTime;
 
         DateTime timerStart, timerEnd;
 
-        //public int computedWorkItem;
 
-        /*  
-        * public static void ShowMessage(Object stateInfo)
-        * 
-        * Description:
-        *      show message of workitem
-        *      
-        * Arguments:     
-        *      stateInfo - thread object
-        * Return Value:
-        *      void
-        */
+        /**
+         * Show message of workitems.
+         * 
+         * @debug does some fake computations
+         * 
+         * @param stateInfo - thread object
+         * 
+         */
         public static void ShowMessage(Object stateInfo)
         {
             //Thread.Sleep(new Random().Next(ExecuteTime));
@@ -96,53 +108,54 @@ namespace ABDiSE.Controller.ThreadPool
 
         }
 
-        // list of threads
+        //
+        ///list of threads
+        //
         private List<Thread> workerThreads = new List<Thread>();
    
-        // flags: stop and cancel 
         private bool stopFlag = false;
         private bool cancelFlag = false;
    
-        // time out setting
+        //
+        /// time out setting
+        //
         private TimeSpan maxWorkerThreadTimeout;
 
-        // max thread number in dynamic mode
+        //
+        /// max thread number in dynamic mode
+        //
         private int maxWorkerThreadCount = 0;
 
-        // priority
         private ThreadPriority workerThreadPriority = 
             ThreadPriority.Normal;
         
-        // queue of workitems
+        //
+        /// queue of workitems
+        //
         private Queue<WorkItem> workitems = new Queue<WorkItem>();
         
-        // count of workitem queue
+        //
+        /// count of workitem queue
+        //
         public int WorkitemNumber = 0;
 
+        //
         // manual reset event
+        //
         private ManualResetEvent enqueueNotify = 
             new ManualResetEvent(false);
 
-        /*  
-        * public SimpleThreadPool(
-            int threads, 
-            ThreadPriority priority, 
-            int idleTimeout,
-            int executeTime
-            )
-        * 
-        * Description:
-        *      constructor of thread pool
-        *      do the initializtion and create worker threads
-        *      
-        * Arguments:     
-        *      threads - thread number
-        *      priority - thread priority
-        *      idleTimeout - thread idle time 
-        *      executeTime - random range of execute time
-        * Return Value:
-        *      void
-        */
+
+        /**
+         * Constructor of thread pool
+         * do the initializtion and create worker threads
+         * 
+         * @param threads - thread number
+         * @param priority - thread priority
+         * @param idleTimeout - thread idle time 
+         * @param executeTime - random range of execute time
+         * 
+         */
         public SimpleThreadPool(
             CoreController CoreController,
             int threads, 
@@ -198,17 +211,12 @@ namespace ABDiSE.Controller.ThreadPool
 
         }
 
-        /*  
-        * private void CreateWorkerThread()
-        * 
-        * Description:
-        *      create worker thread
-        *      assign thread priority
-        * Arguments:     
-        *      void
-        * Return Value:
-        *      void
-        */
+
+        /**
+         * create worker thread and assign thread priority
+         * 
+         * @param myid - ID of the thread 
+         */
         private void CreateWorkerThread(int myid)
         {
             //Console.WriteLine("CreateWorkerThread");
@@ -222,40 +230,38 @@ namespace ABDiSE.Controller.ThreadPool
             //Console.WriteLine(worker.Name + "called worker.start()");
         }
 
+        /**
+         * create worker thread
+         * 
+         */
         private void CreateWorkerThread()
         {
             this.CreateWorkerThread(-1);
         
         }
 
-        /*  
-        * public bool QueueUserWorkItem(WaitCallback callback)
-        * 
-        * Description:
-        *      queue workitem
-        *      
-        * Arguments:     
-        *      callback - WaitCallback
-        * Return Value:
-        *      boolean
-        */
+
+        /**
+         * Queue user workitem in thread pool.
+         * 
+         * @param callback - WaitCallback
+         * @return bool result
+         * 
+         */
         public bool QueueUserWorkItem(WaitCallback callback)
         {
             return this.QueueUserWorkItem(callback, null);
         }
 
-        /*  
-        * public bool QueueUserWorkItem(WaitCallback callback, object state)
-        * 
-        * Description:
-        *      queue workitem
-        *      
-        * Arguments:     
-        *      callback - Wait Callback
-        *      state - object state      
-        * Return Value:
-        *      boolean
-        */
+
+        /**
+         * Queue user workitem in thread pool.
+         * 
+         * @param callback - WaitCallback
+         * @param state - object state  
+         * @return bool result
+         * 
+         */
         public bool QueueUserWorkItem(WaitCallback callback, object state)
         {
             if (this.stopFlag == true) 
@@ -284,54 +290,36 @@ namespace ABDiSE.Controller.ThreadPool
             return true;
         }
 
-        /*  
-        * public void EndPool()
-        * 
-        * Description:
-        *      call EndPool (false)
-        *      
-        * Arguments:     
-        *      void      
-        * Return Value:
-        *      void
-        */
+
+        /**
+         * End the threadpool.
+         * Calls EndPool(false)
+         * 
+         */
         public void EndPool()
         {
             this.EndPool(false);
         }
 
-        /*  
-        * public void CancelPool()
-        * 
-        * Description:
-        *      call EndPool (true)
-        *      
-        * Arguments:     
-        *      void      
-        * Return Value:
-        *      void
-        */
+
+        /**
+         *  Cancel the threadpool.
+         *  Calls EndPool(true)
+         */
         public void CancelPool()
         {
             this.EndPool(true);
         }
 
-        /*  
-        * public void EndPool(bool cancelQueueItem)
-        * 
-        * Description:
-        *      End thread pool
-        *      join threads
-        *      handle cancel or stop situations
-        *      
-        * Arguments:     
-        *      cancelQueueItem - cancel or end flag      
-        * Return Value:
-        *      void
-        */
+        /**
+         * End the threadpool with parameter.
+         * This method joins threads and handles cancel or stop situations
+         * 
+         * @param cancelQueueItem - cancel or end flag   
+         */
         public void EndPool(bool cancelQueueItem)
         {
-            Console.WriteLine("[STP]...EndPool:" + cancelQueueItem);
+            Console.WriteLine("[STP]...EndPool cancelQueueItem: " + cancelQueueItem);
 
             if (this.workerThreads.Count == 0) 
                 return;
@@ -359,17 +347,9 @@ namespace ABDiSE.Controller.ThreadPool
             Console.WriteLine("[STP] EndPool finished. Time: " + time);
         }
 
-        /*  
-        * private void DoWorkerThread()
-        * 
-        * Description:
-        *      execute workitems
-        *      
-        * Arguments:     
-        *      void      
-        * Return Value:
-        *      void
-        */
+        /**
+         * Execute workitems
+         */
         private void DoWorkerThread()
         {
             while (true)
@@ -458,13 +438,13 @@ namespace ABDiSE.Controller.ThreadPool
             //this.workerThreads.Remove(Thread.CurrentThread);
         }
 
-        /*  
-        * private class WorkItem
-        * 
-        * Description:
-        *      define workitem and callback
-        *      
-        */
+
+        /**
+         * WorkItem is a structure in threadpool.
+         * 
+         * This class defines workitem and its callback.
+         * 
+         */
         private class WorkItem
         {
             public WaitCallback callback;
@@ -477,17 +457,12 @@ namespace ABDiSE.Controller.ThreadPool
             }
         }
 
-        /*  
-        * public void Dispose()
-        * 
-        * Description:
-        *      dispose and call Endpool
-        *      
-        * Arguments:     
-        *      void      
-        * Return Value:
-        *      void
-        */
+
+        /**
+         * Dispose the threadpool.
+         * 
+         * Call Endpool(false).
+         */
         public void Dispose()
         {
             Console.WriteLine("[STP] public void Dispose()");
