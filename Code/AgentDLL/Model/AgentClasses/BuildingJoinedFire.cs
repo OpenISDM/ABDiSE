@@ -1,4 +1,42 @@
-﻿using System;
+﻿/** 
+ *  @file BuildingJoinedFire.cs
+ *  BuildingJoinedFire is an Joined Agent type in the OpenISDM ABDiSE project.
+ *  It is one of the basic Joined Agent object.
+ *  Detail information is in the SetDefaultConfigStrings method.
+ *  
+ *  Copyright (c) 2014  OpenISDM
+ *   
+ *  Project Name: 
+ * 
+ *      ABDiSE 
+ *          (Agent-Based Disaster Simulation Environment)
+ *
+ *  Version:
+ *
+ *      2.0
+ *
+ *  Abstract:
+ *
+ *      BuildingJoinedFire is an Joined Agent type in the OpenISDM ABDiSE project.
+ *      It is one of the basic Joined Agent object.
+ *      Detail information is in the SetDefaultConfigStrings method.
+ *
+ *  Authors:  
+ *
+ *      Tzu-Liang Hsu, Lightorz@gmail.com
+ *
+ *  License:
+ *
+ *      GPL 3.0 This file is subject to the terms and conditions defined 
+ *      in file 'COPYING.txt', which is part of this source code package.
+ *
+ *  Major Revision History:
+ *
+ *      2014/5/28: version 2.0 alpha
+ *      2014/7/3: edit comments for doxygen
+ *
+ */
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,11 +47,19 @@ using System.Drawing;
 
 namespace ABDiSE.Model.AgentClasses
 {
+    /**
+     *  BuildingJoinedFire is a joined agent in the OpenISDM ABDiSE project.
+     *  It is one of the basic Joined Agent object.
+     *  Detail information is in the SetDefaultConfigStrings method.
+     */
     public class BuildingJoinedFire : Agent
     {
-        // definitions
+
         public const int CREATE_NEW_FIRE_THRESHOLD = 50;
 
+        /**
+         *  No parameter consturctor for testing.
+         */ 
         public BuildingJoinedFire()
             : base()
         {
@@ -21,6 +67,14 @@ namespace ABDiSE.Model.AgentClasses
 
         }
 
+        /**
+         *  Constructor of BuildingJoinedFire. Assign parameters to its data structure.
+         *  
+         *  @param CoreController - Pointer to CoreController
+         *  @param Properties - Dictionary form data structure
+         *  @param LatLng - Coordinates of Building Agent
+         *  @param AgentEnvironment - Environment of Building
+         */
         public BuildingJoinedFire(
             CoreController CoreController,
             Dictionary<string, string> Properties,
@@ -112,15 +166,9 @@ namespace ABDiSE.Model.AgentClasses
             this.CurrentStep = CoreController.God.CurrentStep;
         }
 
-        /* 
-         * public void SimulateBuildingJoinedFireLife()
-         * 
-         * Description:
-         *      decrease/compute life of building joined with fire agent
-         *      
-         * Arguments:     
-         * Return Value:
-         *      void
+        /**
+         *  Compute life of BuildingJoinedFire agent.
+         *  User can freely edit this method.
          */
         public void SimulateBuildingJoinedFireLife()
         {
@@ -134,8 +182,8 @@ namespace ABDiSE.Model.AgentClasses
             }
 
             //simple simulate: firelevel -=10 or -= 10%
-            int currentFireLife = int.Parse(this.AgentProperties["FireLife"]);
-            int currentBuildingLife = int.Parse(this.AgentProperties["BuildingLife"]);
+            double currentFireLife = double.Parse(this.AgentProperties["FireLife"]);
+            double currentBuildingLife = double.Parse(this.AgentProperties["BuildingLife"]);
 
 
             if (currentFireLife > CREATE_NEW_FIRE_THRESHOLD)
@@ -144,12 +192,12 @@ namespace ABDiSE.Model.AgentClasses
                 // create new fire agent and
                 // share "Fire Life" for it 
                 //
-                currentFireLife /= 2;
+                currentFireLife *=0.8;
                 this.AgentProperties["FireLife"] = currentFireLife.ToString();
 
-                int currentFireLevel = int.Parse(this.AgentProperties["FireLevel"]);
+                double currentFireLevel = double.Parse(this.AgentProperties["FireLevel"]);
                 
-                currentFireLevel /= 2;
+                currentFireLevel *= 0.8;
                 this.AgentProperties["FireLevel"] = currentFireLevel.ToString();
 
                 Dictionary<string, string> fireProperties
@@ -206,7 +254,11 @@ namespace ABDiSE.Model.AgentClasses
             }
         }
 
-        //TODO: multi level attach
+
+        /**
+         * BuildingJoinedFire can attach other agent if user wants.
+         *  @todo multi-level attach
+         */
         public override MethodReturnResults Attach(Agent B)
         {
             /*
@@ -244,7 +296,7 @@ namespace ABDiSE.Model.AgentClasses
                 return MethodReturnResults.FAILED;
             }
             */
-            return MethodReturnResults.FAILED;
+            return MethodReturnResults.FAIL;
         }
 
         public override void SetMarkerFormat()

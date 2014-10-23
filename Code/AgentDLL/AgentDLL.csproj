@@ -55,12 +55,16 @@
   <ItemGroup>
     <Compile Include="Model\AgentClasses\Building.cs" />
     <Compile Include="Model\AgentClasses\BuildingJoinedFire.cs" />
+    <Compile Include="Model\AgentClasses\Flood.cs" />
     <Compile Include="Model\AgentClasses\TreeJoinedFire.cs" />
     <Compile Include="Model\AgentClasses\Smoke.cs" />
     <Compile Include="Model\AgentClasses\Tree.cs" />
     <Compile Include="Model\AgentClasses\Fire.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Model\AgentClasses\BuildingJoinedFlood.cs" />
+    <Compile Include="Model\AgentClasses\TreeJoinedFlood.cs" />
+    <Compile Include="Model\AgentClasses\Tornado.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

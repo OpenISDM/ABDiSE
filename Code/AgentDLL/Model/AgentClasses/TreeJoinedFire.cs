@@ -1,4 +1,31 @@
-﻿using System;
+﻿/** 
+ *  @file TreeJoinedFire.cs
+ *  TreeJoinedFire is an Joined Agent type in the OpenISDM ABDiSE project.
+ *  It is one of the basic Joined Agent object.
+ *  Detail information is in the SetDefaultConfigStrings method.
+ *  
+ *  Copyright (c) 2014  OpenISDM
+ *   
+ *  Project Name: 
+ * 
+ *      ABDiSE 
+ *          (Agent-Based Disaster Simulation Environment)
+ *  Authors:  
+ *
+ *      Tzu-Liang Hsu, Lightorz@gmail.com
+ *
+ *  License:
+ *
+ *      GPL 3.0 This file is subject to the terms and conditions defined 
+ *      in file 'COPYING.txt', which is part of this source code package.
+ *
+ *  Major Revision History:
+ *
+ *      2014/5/28: version 2.0 alpha
+ *      2014/7/3: edit comments for doxygen
+ *
+ */
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,11 +36,19 @@ using System.Drawing;
 
 namespace ABDiSE.Model.AgentClasses
 {
+    /**
+     *  TreeJoinedFire is an Agent type in the OpenISDM ABDiSE project.
+     *  It is one of the basic Joined Agent object.
+     *  Detail information is in the SetDefaultConfigStrings method.
+     */
     public class TreeJoinedFire : Agent
     {
-        // definitions
+
         public const int CREATE_NEW_FIRE_THRESHOLD = 50;
 
+        /**
+         *  No parameter consturctor for testing.
+         */ 
         public TreeJoinedFire()
             : base()
         {
@@ -21,6 +56,14 @@ namespace ABDiSE.Model.AgentClasses
 
         }
 
+        /**
+         *  Constructor of TreeJoinedFire. Assign parameters to its data structure.
+         *  
+         *  @param CoreController - Pointer to CoreController
+         *  @param Properties - Dictionary form data structure
+         *  @param LatLng - Coordinates of Building Agent
+         *  @param AgentEnvironment - Environment of Building
+         */
         public TreeJoinedFire(
             CoreController CoreController,
             Dictionary<string, string> Properties,
@@ -99,7 +142,7 @@ namespace ABDiSE.Model.AgentClasses
 
         public override void Update()
         {
-            Console.WriteLine("debug!!!!");
+
             //
             // terminate, if this agent has been updated
             //
@@ -115,15 +158,9 @@ namespace ABDiSE.Model.AgentClasses
             this.CurrentStep = CoreController.God.CurrentStep;
         }
 
-        /* 
-         * public void SimulateTreeJoinedFireLife()
-         * 
-         * Description:
-         *      decrease/compute life of building joined with tree agent
-         *      
-         * Arguments:     
-         * Return Value:
-         *      void
+        /**
+         *  Compute TreeJoinedFire agent's Life. 
+         *  User can freely edit this method.
          */
         public void SimulateTreeJoinedFireLife()
         {
@@ -137,8 +174,8 @@ namespace ABDiSE.Model.AgentClasses
             }
 
             //simple simulate: firelevel -=10 or -= 10%
-            int currentFireLife = int.Parse(this.AgentProperties["FireLife"]);
-            int currentTreeLife = int.Parse(this.AgentProperties["TreeLife"]);
+            double currentFireLife = double.Parse(this.AgentProperties["FireLife"]);
+            double currentTreeLife = double.Parse(this.AgentProperties["TreeLife"]);
 
 
             if (currentFireLife > CREATE_NEW_FIRE_THRESHOLD)
@@ -147,12 +184,12 @@ namespace ABDiSE.Model.AgentClasses
                 // create new fire agent and
                 // share "Fire Life" for it 
                 //
-                currentFireLife /= 2;
+                currentFireLife *= 0.8;
                 this.AgentProperties["FireLife"] = currentFireLife.ToString();
 
-                int currentFireLevel = int.Parse(this.AgentProperties["FireLevel"]);
+                double currentFireLevel = int.Parse(this.AgentProperties["FireLevel"]);
 
-                currentFireLevel /= 2;
+                currentFireLevel *=0.8;
                 this.AgentProperties["FireLevel"] = currentFireLevel.ToString();
 
                 Dictionary<string, string> fireProperties
@@ -209,15 +246,20 @@ namespace ABDiSE.Model.AgentClasses
             }
         }
 
-        //
-        // TODO: multi level attach
-        //
+        /**
+         * BuildingJoinedFire can attach other agent if user wants.
+         *  @todo multi-level attach
+         */
         public override MethodReturnResults Attach(Agent B)
         {
 
-            return MethodReturnResults.FAILED;
+            return MethodReturnResults.FAIL;
         }
 
+        /**
+         *  Assign detailed value for GMap.NET custom markers.
+         *  User can freely edit this method.
+         */
         public override void SetMarkerFormat()
         {
             Marker.IsCircle = true;
@@ -226,7 +268,6 @@ namespace ABDiSE.Model.AgentClasses
             Marker.InnerBrush = new SolidBrush(Color.DarkRed);
             Marker.OuterPen.Color = Color.Red;
             //OuterPen.Width = 2;
-
 
         }
 
