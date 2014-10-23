@@ -13,10 +13,6 @@
  *
  *      2.0
  *
- *  File Name:
- *
- *      SimpleThreadPool.cs
- *
  *  Abstract:
  *
  *      Custom thread pool in ABDiSE project, controls threads and workitems
@@ -56,8 +52,6 @@ namespace ABDiSE.Controller.ThreadPool
      */
     public class SimpleThreadPool : IDisposable
     {
-        //pointer
-        //CoreController CoreController;
 
         public bool DynamicMode = true;
 
@@ -70,14 +64,12 @@ namespace ABDiSE.Controller.ThreadPool
 
 
         /**
-         * Show message of workitems.
-         * 
-         * @debug does some fake computations
+         * Show message of workitems,  does some fake computations
          * 
          * @param stateInfo - thread object
          * 
          */
-        public static void ShowMessage(Object stateInfo)
+        public static void ShowTestMessage(Object stateInfo)
         {
             //Thread.Sleep(new Random().Next(ExecuteTime));
             //Thread.Sleep(ExecuteTime);
@@ -87,7 +79,7 @@ namespace ABDiSE.Controller.ThreadPool
             int ExecuteCount = new Random(Guid.NewGuid().GetHashCode()).Next(ExecuteTime);
 
             Console.WriteLine(
-                "[" + (String)stateInfo + "] : by  " + Thread.CurrentThread.Name
+                "TestMessage:[" + (String)stateInfo + "start] by " + Thread.CurrentThread.Name
                  +
                 "\tExecuteCount: " + ExecuteCount
                 );
@@ -102,8 +94,7 @@ namespace ABDiSE.Controller.ThreadPool
             }
 
             Console.WriteLine(
-                " [" + (String)stateInfo  + "] ends : by\t " +
-                Thread.CurrentThread.Name
+                "ShowTestMessage:[" + (String)stateInfo + "end]"
                 );
 
         }
@@ -132,8 +123,10 @@ namespace ABDiSE.Controller.ThreadPool
         //
         /// queue of workitems
         //
-        private Queue<WorkItem> workitems = new Queue<WorkItem>();
-        
+        private Queue<WorkItem> workitems = new Queue<WorkItem>(WorkitemQueueLength);
+
+        public const int WorkitemQueueLength = 1000;
+
         //
         /// count of workitem queue
         //
@@ -150,6 +143,7 @@ namespace ABDiSE.Controller.ThreadPool
          * Constructor of thread pool
          * do the initializtion and create worker threads
          * 
+         * @param CoreController - reference to the core controller
          * @param threads - thread number
          * @param priority - thread priority
          * @param idleTimeout - thread idle time 

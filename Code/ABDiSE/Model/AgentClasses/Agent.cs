@@ -21,7 +21,7 @@
  *
  *      Agent.cs is a abstract class for "Agent" in the OpenISDM ABDiSE project.
  *       
- *      Agent is like an active object, it can interact with other agnet and environment.
+ *      Agent is like an active object, it can interact with other agent and environment.
  *      ABDiSE divides all agents into two major types: 
  *      NaturalElementAgentTypes and AttachableObjectAgentTypes.
  *
@@ -50,6 +50,7 @@ using ABDiSE.View;
 using GMap.NET;
 using ABDiSE.Controller;
 using System.Threading;
+using System.Runtime.Serialization;
 
 namespace ABDiSE.Model.AgentClasses
 {
@@ -60,11 +61,14 @@ namespace ABDiSE.Model.AgentClasses
      *  ABDiSE divides all agents into two major types: 
      *  NaturalElementAgentTypes and AttachableObjectAgentTypes.
      */
+    [DataContract] // for XML
     public abstract class Agent
     {
+
         //
         /// for example: fire, smoke, building
         //
+        [DataMember]
         public string AgentType;
 
         //
@@ -75,11 +79,13 @@ namespace ABDiSE.Model.AgentClasses
         //
         /// time driven counter - simulation step
         //
+        [DataMember]
         public int CurrentStep = -1;
 
         //
         /// detail properties of agent
         // 
+        [DataMember]
         public Dictionary<string, string> AgentProperties;
 
         //
@@ -90,15 +96,21 @@ namespace ABDiSE.Model.AgentClasses
         //
         /// agent type - select one from NE or AO
         //
+        [DataMember]
         public bool IsNaturalElementAgent = false;
+        [DataMember]
         public bool IsAttachableObjectAgent = false;
 
         //
         /// joined agent flag
         //
+        [DataMember]
         public bool IsJoinedAgent = false;
 
+        [DataMember]
         public bool IsDead = true;
+
+        [DataMember]
         public bool IsActivated = false;
 
         public Environment MyEnvironment;
@@ -108,13 +120,12 @@ namespace ABDiSE.Model.AgentClasses
         //
         public GMapMarkerCircle Marker;
 
+        [DataMember]
         public PointLatLng LatLng;
 
         /**
-         * 
          * Constructor of Agent.
          * basically you will not call it.
-         * 
          */
         public Agent() 
         {
@@ -123,16 +134,35 @@ namespace ABDiSE.Model.AgentClasses
         }
 
 
+        #region XML file save/load
+
+        /**
+         *  fill the missing data of agent
+         */ 
+        public void RecoverAgent(CoreController coreController)
+        {
+            // fill other attributes
+            this.CoreController = coreController;
+            this.MyEnvironment = coreController.God.WorldEnvironmentList[0];
+            // reset marker
+            this.Marker = new View.GMapMarkerCircle(LatLng);
+            this.SetMarkerFormat();
+
+            coreController.God.AddToAgentList(this);
+        }
+
+        #endregion
+
         /**
          * assign values of parameters to agent data structure.
          * 
          * this constructor will be called by other types of Agent in AgentDLL
          * (for example, fire, building...)
          * 
-         *  @param CoreController CoreController - pointer to controller
-         *  @param Dictionary<string, string> Properties - data structure agent needs
-         *  @param PointLatLng LatLng - the point of coordinates
-         *  @param ABDiSE.Model.Environment AgentEnvironment - environment the agent locates
+         *  @param CoreController - pointer to controller
+         *  @param Properties - data structure agent needs
+         *  @param LatLng - the point of coordinates
+         *  @param AgentEnvironment - environment the agent locates
          */
         public Agent(
             CoreController CoreController,
@@ -217,9 +247,9 @@ namespace ABDiSE.Model.AgentClasses
          * create new joined agent
          * ex: becomes agent: target (joined with) fire    
          * 
-         * @param Agent B - attach target (attachable agent like building)
+         * @param B - attach target (attachable agent like building)
          * 
-         * @return MethodReturnResults - succeed or failed
+         * @return MethodReturnResults - succeed or fail
          * 
          */
         public abstract MethodReturnResults Attach(Agent B);
@@ -237,7 +267,7 @@ namespace ABDiSE.Model.AgentClasses
         /**
          * Return configuration strings in AgentDLL database.
          * 
-         * This is an abstract method, will be implemented by children class.
+         * This is an abstract method, will be implemented by children classes.
          * 
          * @return ConfigStrings - configuration strings
          */
@@ -255,7 +285,7 @@ namespace ABDiSE.Model.AgentClasses
         /**
          * This method simulates wind movement of agents
          * 
-         * @return MethodReturnResults - succeed , failed, etc
+         * @return MethodReturnResults - succeed , fail, etc
          */
         public MethodReturnResults MoveByWind()
         {
@@ -303,8 +333,8 @@ namespace ABDiSE.Model.AgentClasses
         /**
          * Computes distance between Agent A and B .
          * 
-         * @param Agent target - target agent which will be computed
-         * @return MethodReturnResults - AGENT_CLOSEBY_DISTANCE_LEVEL or failed
+         * @param target - target agent which will be computed
+         * @return MethodReturnResults - AGENT_CLOSEBY_DISTANCE_LEVEL or fail
          */
         public MethodReturnResults AgentDistance(Agent target)
         {
@@ -322,9 +352,9 @@ namespace ABDiSE.Model.AgentClasses
             //
             // debug - print distance
             //
-            Console.WriteLine("({0} , {1}) = {2}", 
+            /*Console.WriteLine("({0} , {1}) = {2}", 
                 this.AgentProperties["Name"], target.AgentProperties["Name"], distance);
-
+            */
             if (distance < Definitions.AGENT_CLOSEBY_DISTANCE_LEVEL_4)
                 return MethodReturnResults.CLOSEBY_DISTANCE_LEVEL_4;
             else if (distance < Definitions.AGENT_CLOSEBY_DISTANCE_LEVEL_3)
@@ -334,7 +364,7 @@ namespace ABDiSE.Model.AgentClasses
             else if (distance < Definitions.AGENT_CLOSEBY_DISTANCE_LEVEL_1)
                 return MethodReturnResults.CLOSEBY_DISTANCE_LEVEL_1;
             else
-                return MethodReturnResults.FAILED;
+                return MethodReturnResults.FAIL;
 
             //
             // check if [X Y Level 0]
