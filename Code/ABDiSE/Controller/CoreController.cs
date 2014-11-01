@@ -1,4 +1,38 @@
-﻿using System;
+﻿/** 
+ *  @file CoreController.cs
+ *  CoreController.cs is the main controller class.
+ *  
+ *  Copyright (c) 2014  OpenISDM
+ *   
+ *  Project Name: 
+ * 
+ *      ABDiSE 
+ *          (Agent-Based Disaster Simulation Environment)
+ *
+ *  Abstract:
+ *
+ *      Corecontroller is the main controller class in the OpenISDM ABDiSE project.
+ *      It interacts with Model and View classes.
+ *          
+ *      Model–view–controller (MVC)  is a software architectural pattern. 
+ *      It divides a given software application into three interconnected parts.
+ *
+ *  Authors:  
+ *
+ *      Tzu-Liang Hsu, Lightorz@gmail.com
+ *
+ *  License:
+ *
+ *      GPL 3.0 This file is subject to the terms and conditions defined 
+ *      in file 'COPYING.txt', which is part of this source code package.
+ *
+ *  Major Revision History:
+ *
+ *      2014/6/11: version 2.0 alpha
+ *      2014/7/01: edit comments for doxygen
+ *
+ */
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,25 +47,60 @@ using System.Collections;
 
 namespace ABDiSE.Controller
 {
+    /**
+     * CoreController is the main controller class, it interacts with Model and View classes 
+     * (in MVC architectural pattern).
+     */
     public class CoreController
     {
+        //
+        /// Pointer to Model.God.
+        //
         public God God;
 
+        //
+        /// Pointer to custom simple thread pool.
+        //
         public SimpleThreadPool STP;
 
+        //
+        /// Configuration strings from agent types in DLL.
+        //
         public List<ConfigStrings> ConfigStrings;
 
         Assembly Assemblies = null;
 
+        //
+        /// All loaded DLL classes
+        //
         public ArrayList Classes;
 
-        //constructor
+        //
+        /// types of agent classes: for xml save/load
+        //
+        public Type[] AllTypes;
+
+        //
+        /// Loaded and selected classes by user
+        //
+        public ArrayList SelectedClasses;
+
+        //
+        /// Providing xml save/load functions
+        //
+        public XMLHandler XMLController;
+
+        /**
+         * Initialize environment and load DLLs dynamically
+         */ 
         public CoreController()
         {
-            this.God = new God();
+            this.God = new God(this);
+
+            this.XMLController = new XMLHandler(this);
 
             Console.WriteLine
-                ("Welcome to ABDiSE 2.0 - Agent-Based Model Simulation World !");
+                ("Welcome to ABDiSE 2.0 - An Agent-Based Disaster Simulation Environment");
 
             //create default Environment
             ABDiSE.Model.Environment HsinchuCity = 
@@ -42,7 +111,9 @@ namespace ABDiSE.Controller
                     9.2, 
                     45.1, 
                     23.3, 
-                    422554,
+                    431029,
+                    4138.44,
+                    2014,
                     "Sunny");
 
             //add to global environments
@@ -59,6 +130,8 @@ namespace ABDiSE.Controller
             
 
             Classes = GetAllTypesFromDLLstring(DLLName);
+            
+            SelectedClasses = Classes;
 
             //remove the last useless item
             //Classes.RemoveAt( Classes.Count - 1);
@@ -86,7 +159,7 @@ namespace ABDiSE.Controller
                 //print methods
                 foreach (var jj in Methods)
                 {
-                    Console.WriteLine(jj + "----Methods: " + jj.ToString());
+                    Console.WriteLine("----Methods: " + jj.ToString());
 
                 }
 
@@ -115,40 +188,17 @@ namespace ABDiSE.Controller
             }
             
 
-            //debug
-            /*
-            if(ConfigStrings.Count >0)
-            {
-                ConfigStrings[0].Print();
-                ConfigStrings[1].Print();
-            }*/
-
-            // debug
-            // create agent with args
-            /*
-            for (int ii = 0; ii < Classes.Count; ii++) 
-            {
-                Agent agent;
-                Object[] args = new Object[] {};
-
-                
-
-                agent = CreateDLLInstance(Classes[ii].ToString(), );
-
-                God.AddToAgentList(agent); 
-            
-            }*/
-
         }
 
         #region Dynamic Loading DLL Controller
 
 
-        /// <summary>
-        /// Return all types loaded from desired DLL
-        /// </summary>
-        /// <param name="dllName">The DLL in which to parse and get the types from</param>
-        /// <returns>A filled ArrayList object containing all types </returns>
+        /**
+         * Return all types loaded from desired DLL
+         * 
+         * @param   dllName The DLL in which to parse and get the types from
+         * @return  A filled ArrayList object containing all types
+         */
         public ArrayList GetAllTypesFromDLLstring(string dllName)
         {
             
@@ -165,11 +215,11 @@ namespace ABDiSE.Controller
                 return _Quit;
             }
 
-            Type[] _AllTypes = Assemblies.GetTypes();
+            AllTypes = Assemblies.GetTypes();
 
             ArrayList _Temp = new ArrayList();
 
-            foreach (Type t in _AllTypes)
+            foreach (Type t in AllTypes)
             {
                 _Temp.Add(t.ToString());
             }
@@ -177,12 +227,15 @@ namespace ABDiSE.Controller
             return _Temp;
         }
 
-        /// <summary>
-        /// Returns all method names from desired DLL/Class
-        /// </summary>
-        /// <param name="dllName">The DLL in which to parse for desired class</param>
-        /// <param name="className">The class in which to parse for all methods</param>
-        /// <returns>An ArrayList of each method from desired class</returns>
+
+        /**
+         * Returns all method names from desired DLL/Class
+         * 
+         * @param dllName   The DLL in which to parse for desired class
+         * @param className The class in which to parse for all methods
+         * 
+         * @return  An ArrayList of each method from desired class
+         */
         public ArrayList GetAllTypesFromClass(string dllName, string className)
         {
             //Assembly _Assemblies = Assembly.Load(dllName);
@@ -212,12 +265,15 @@ namespace ABDiSE.Controller
             return _Temp;
         }
 
-        /// <summary>
-        /// Runs target Method from target Class from target DLL.
-        /// </summary>
-        /// <param name="dllName">The DLL to load and use parse for methods</param>
-        /// <param name="className">The class to load from specific DLL</param>
-        /// <param name="methodName">The method to call from class</param>
+        /**
+         * Runs target Method from target Class from target DLL.
+         * 
+         * @param dllName The DLL to load and use parse for methods
+         * @param className The class to load from specific DLL
+         * @param methodName The method to call from class
+         * 
+         * @return object reference
+         */
         public object RunClass(string dllName, string className, string methodName)
         {
             object ReturnObj;
@@ -265,74 +321,16 @@ namespace ABDiSE.Controller
             return ReturnObj;
         }
 
-        /// <summary>
-        /// Create target Agent from target Class from target DLL.
-        /// Call the constructor of target Agent class
-        /// </summary>
-        /// <param name="className">The class to load from specific DLL</param>
-        /// <param name="args">The arguments to create instance</param>
-        public object CreateDLLInstance(
-            string className, 
-            CoreController coreContorller, 
-            Dictionary<string, string> properties, 
-            PointLatLng latLng, 
-            ABDiSE.Model.Environment env
-            )
-        {
 
-
-            // Get the type that we want from the assemblies.
-            //  IE: This would be the fully qualified class name (including namespace)
-            //  Example: 
-            //  "Reflectionism.Examples.Example1" or "Reflectionism.Examples.Example2"
-            Type _Type = null;
-            try
-            {
-                _Type = Assemblies.GetType(className);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine
-                    ("\n\nError - couldn't obtain classrd from " + className);
-                Console.WriteLine
-                    ("EXCEPTION OUTPUT\n" + ex.Message + "\n" + 
-                    ex.InnerException);
-
-                return null;
-            }
-
-
-            Object args = new Object[] { coreContorller, properties, latLng, env };
-            Object args2 = new Object[] { coreContorller, latLng };
-
-            // The first parameter to pass into the Invoke Method coming up.
-            // args means arguments array
-            Object _ObjectRef = new Object();
-            try
-            {
-                _ObjectRef = (Object)Activator.CreateInstance
-                    (_Type, coreContorller, properties, latLng, env);
-            }
-            catch(MissingMemberException ex)
-            {
-                throw ex;
-
-            }
-            // This calls the target method ("DisplayMyself").
-            //  NOTE: I'm not passing any arguments down to the method being invoked.
-            //  Therefore, I'm passing null as my argument, otherwise Invoke takes an
-            //  array of Objects.
-            //ReturnObj = _MethodInfo.Invoke(_InvokeParam1, null);
-
-            return _ObjectRef;
-        }
-
-        /// <summary>
-        /// Create target Agent from target Class from target DLL.
-        /// Call the constructor of target Agent class
-        /// </summary>
-        /// <param name="className">The class to load from specific DLL</param>
-        /// <param name="args">The arguments to create instance</param>
+        /**
+         * Create target Agent from target Class from target DLL.
+         * Call the constructor of target Agent class.
+         * 
+         * @param className The class to load from specific DLL
+         * @param args The arguments to create instance
+         * 
+         * @return created object reference
+         */
         public object CreateDLLInstance(string className, params object[] args)
         {
            
@@ -380,31 +378,16 @@ namespace ABDiSE.Controller
         }
 
 
-        public MethodReturnResults Create(
-            Dictionary<string, string> properties,
-            PointLatLng latLng,
-            ABDiSE.Model.Environment targetEnvironment
-            ) 
-        {
-
-            return MethodReturnResults.FAILED;
-        }
-
         #endregion
 
+
         #region GMap Markers Controll
-        /* 
-            * public void EnableMarkerAnimation()
-            * 
-            * Description:
-            *      Enable all the marker's animation
-            *      turn on "IsAnimated = true"      
-            *      
-            * Arguments:     
-            *      void
-            * Return Value:
-            *      void
-            */
+
+
+        /**
+         * Enable all the marker's animation
+           Turn on "IsAnimated = true"    
+         */
         public void EnableMarkerAnimation()
         {
             for (int ii = 0; ii < God.AgentNumber; ii++)
@@ -420,18 +403,11 @@ namespace ABDiSE.Controller
             return;
         }
 
-        /* 
-        * public void DisableMarkerAnimation()
-        * 
-        * Description:
-        *      Enable all the marker's animation
-        *      turn on "IsAnimated = true"      
-        *      
-        * Arguments:     
-        *      void
-        * Return Value:
-        *      void
-        */
+
+        /**
+         * disable all the marker's animation
+         * turn off "IsAnimated"  
+         */
         public void DisableMarkerAnimation()
         {
             for (int ii = 0; ii < God.AgentNumber; ii++)
@@ -447,17 +423,10 @@ namespace ABDiSE.Controller
             return;
         }
 
-        /* 
-         * public void DeselectMarkers()
-         * 
-         * Description:
-         *      This method cancels selection of all markers. 
-         *      use for refreshing gMapExplorer's agents and joined agents
-         *      
-         * Arguments:     
-         *      void
-         * Return Value:
-         *      void
+
+        /**
+         * This method cancels all markers' selection. 
+         * Use for refreshing gMapExplorer's agents and joined agents
          */
         public void DeselectMarkers()
         {
@@ -474,26 +443,19 @@ namespace ABDiSE.Controller
 
             }
 
-          
-
         }
         #endregion 
 
         #region STP
 
-        /*  
-        * public void StartThreadPool()
-        *   
-        * 
-        * Description:
-        *      create SimpleThreadPool     
-        *      
-        *      
-        * Arguments:     
-        *      void
-        * Return Value:
-        *      void
-        */
+
+        /**
+         * create SimpleThreadPool with parameters in GUI
+         * 
+         * @param ThreadsNum   number of threads
+         * @param IdleTimeout  idle time for timeout
+         * @param ExecuteTime  execution time for testing workitems
+         */
         public void StartThreadPool(int ThreadsNum, int IdleTimeout, int ExecuteTime)
         {
 

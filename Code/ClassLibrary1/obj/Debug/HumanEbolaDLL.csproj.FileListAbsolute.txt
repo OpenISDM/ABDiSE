@@ -1,0 +1,11 @@
+D:\Dropbox\GITLAB\abdise_agent-based-simulator\Code\ClassLibrary1\bin\Debug\ABDiSE 2.0.dll
+D:\Dropbox\GITLAB\abdise_agent-based-simulator\Code\ClassLibrary1\bin\Debug\GMap.NET.Core.dll
+D:\Dropbox\GITLAB\abdise_agent-based-simulator\Code\ClassLibrary1\bin\Debug\GMap.NET.WindowsForms.dll
+D:\Dropbox\GITLAB\abdise_agent-based-simulator\Code\ClassLibrary1\bin\Debug\ABDiSE 2.0.pdb
+D:\Dropbox\GITLAB\abdise_agent-based-simulator\Code\ClassLibrary1\bin\Debug\GMap.NET.Core.xml
+D:\Dropbox\GITLAB\abdise_agent-based-simulator\Code\ClassLibrary1\bin\Debug\GMap.NET.WindowsForms.xml
+D:\Dropbox\GITLAB\abdise_agent-based-simulator\Code\ClassLibrary1\bin\Debug\AgentDLL.dll
+D:\Dropbox\GITLAB\abdise_agent-based-simulator\Code\ClassLibrary1\bin\Debug\AgentDLL.pdb
+D:\Dropbox\GITLAB\abdise_agent-based-simulator\Code\ClassLibrary1\obj\Debug\AgentDLL.dll
+D:\Dropbox\GITLAB\abdise_agent-based-simulator\Code\ClassLibrary1\obj\Debug\AgentDLL.pdb
+D:\Dropbox\GITLAB\abdise_agent-based-simulator\Code\ClassLibrary1\obj\Debug\HumanEbolaDLL.csprojResolveAssemblyReference.cache

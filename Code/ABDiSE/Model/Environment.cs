@@ -1,23 +1,34 @@
-﻿/*
-    Project Name: ABDiSE
-                  (Agent-Based Disaster Simulation Environment)
-
-    Version:      pre-alpha
-    
-    File Name:    Environment.cs
-
-    SVN $Revision: $
-
-    Abstract:     this class can create “target environment”
-                  according to custom class Map, or other GIS data format
-                  A local environment of a region in the world is a set of parameters that affects the objects in the region
- 
-    Authors:      T.L. Hsu 
-  
-    Contacts:     Lightorz@gmail.com
-     
-    Major Revision History:
-*/
+﻿/** 
+ *  @file Environment.cs
+ *  Environment class can create “target environment”in ABDiSE.
+ *  A local environment of a region in the world is a set of parameters that affects the objects in the region.
+ *  
+ *  Copyright (c) 2014  OpenISDM
+ *   
+ *  Project Name: 
+ * 
+ *      ABDiSE 
+ *          (Agent-Based Disaster Simulation Environment)
+ *
+ *  Abstract:
+ *
+ *      Environment class can create “target environment”in ABDiSE.
+ *      A local environment of a region in the world is a set of parameters that affects the objects in the region.
+ *
+ *  Authors:  
+ *
+ *      Tzu-Liang Hsu, Lightorz@gmail.com
+ *
+ *  License:
+ *
+ *      GPL 3.0 This file is subject to the terms and conditions defined 
+ *      in file 'COPYING.txt', which is part of this source code package.
+ *
+ *  Major Revision History:
+ *
+ *      2014/7/02: edit comments for doxygen
+ *
+ */
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,55 +39,42 @@ using ABDiSE.Model.AgentClasses;
 
 namespace ABDiSE.Model
 {
-    /*  
-    * public class Environment
-    * 
-    * Description:
-    *   Agents interact with environment. An environment is defined 
-    *   by a set of parameters. In general, the values of the parameters 
-    *   are functions of time and space.
-    *      
-    */
+    /** 
+     *   Environment class can create “target environment”in ABDiSE.
+     *   
+     *   An Environment is defined by a set of parameters. Agents can interact with environment.
+     *   In general, the values of the parameters are functions of time and space.    
+     *   A local environment of a region in the world is a set of parameters that affects the objects in the region.
+     */
     public class Environment
     {
 
-        // reference of agents, recorded by environment
-        // this list is used for searching
-        // agents in this list are not created by environment
+        /**
+         *  Reference of agents, recorded by environment.
+         *  This list is used for searching agents in this list are not created by environment
+         */
         public Agent[] AgentPointers;
-        
-        // detail properties of agent
-        /* include:
-            // average altitude of this local environment
-            double AvgAltitude;
 
-            // rain fall data
-            double RainFall;
-
-            // wind speed data
-            double WindSpeed;
-
-            // wind direction data, maybe 0 ~ 360 degree
-            double WindDirection;
-
-            // local air temperature
-            double Temperature;
-
-            // local citizen's and animal's population 
-            int Population;
-          
-            String Weather;
+        /**
+         *  Detail properties of agent.
          */
         public Dictionary<string, string> EnvProperties;
 
 
-        /* TODO: edit new GUI
-        public void SetMainWindow(MainWindow MainWindow)
-        {
-            this.MainWindow = MainWindow;
-        }
-        */
-
+        /**
+         *  constrouter of Environment.
+         *  
+         *  @param maxNumberOfAgents    Maximum number of agents
+         *  @param avgAltitude          average alititude of this local environment
+         *  @param rainFall             rainfall data
+         *  @param windSpeed            wind speed data 
+         *  @param windDirection        wind direction data, 0~360 degree
+         *  @param temperature          local air temperature 
+         *  @param population           local citizen's and animal's population
+         *  @param populationDensity    local population density
+         *  @param mobility             mobility
+         *  @param weather              weather status
+         */
         public Environment(
             int maxNumberOfAgents, 
             double avgAltitude,
@@ -84,7 +82,9 @@ namespace ABDiSE.Model
             double windSpeed,
             double windDirection, 
             double temperature, 
-            int population, 
+            int population,
+            double populationDensity,
+            double mobility,
             string weather
             )
         {
@@ -100,24 +100,22 @@ namespace ABDiSE.Model
             EnvProperties.Add("WindDirection", windDirection.ToString());
             EnvProperties.Add("Temperature", temperature.ToString());
             EnvProperties.Add("Population", population.ToString());
+            EnvProperties.Add("PopulationDensity", populationDensity.ToString());
+            EnvProperties.Add("Mobility", mobility.ToString());
             EnvProperties.Add("Weather", weather.ToString());
 
         }
 
-        // update during simulation
-        /*
-        public void updateData(...)
-        {
-            this.RainFall = ...;
-        }
-        */
-
-        // get information string of the environment
+        /**
+         * Get information string of the environment
+         * 
+         * @return DisplayString information string of Environment
+         */
         public string CreateEnvironmentPropertiesString()
         {
 
             string DisplayString = string.Format(
-                "Weather:{0}  WindSpeed: {1}  WindDirection:{2}  RainFall:{3} ", 
+                "Weather:{0}  WindSpeed: {1}  \nWindDirection:{2}  RainFall:{3} ", 
                 EnvProperties["Weather"], EnvProperties["WindSpeed"], 
                 EnvProperties["WindDirection"], EnvProperties["RainFall"] );
             

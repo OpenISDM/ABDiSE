@@ -30,7 +30,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ABDiSE 2.0">
+    <Reference Include="ABDiSE 2.0, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\ABDiSE\bin\Debug\ABDiSE 2.0.dll</HintPath>
     </Reference>
     <Reference Include="BSE.Windows.Forms">
@@ -54,11 +55,19 @@
   <ItemGroup>
     <Compile Include="Model\AgentClasses\Building.cs" />
     <Compile Include="Model\AgentClasses\BuildingJoinedFire.cs" />
+    <Compile Include="Model\AgentClasses\Disease.cs" />
+    <Compile Include="Model\AgentClasses\Flood.cs" />
+    <Compile Include="Model\AgentClasses\Human.cs" />
+    <Compile Include="Model\AgentClasses\HumanJoinedDisease.cs" />
+    <Compile Include="Model\AgentClasses\TreeJoinedFire.cs" />
     <Compile Include="Model\AgentClasses\Smoke.cs" />
     <Compile Include="Model\AgentClasses\Tree.cs" />
     <Compile Include="Model\AgentClasses\Fire.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Model\AgentClasses\BuildingJoinedFlood.cs" />
+    <Compile Include="Model\AgentClasses\TreeJoinedFlood.cs" />
+    <Compile Include="Model\AgentClasses\Tornado.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

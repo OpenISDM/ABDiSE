@@ -1,22 +1,39 @@
-﻿/*
-    Project Name: ABDiSE
-                  (Agent-Based Disaster Simulation Environment)
+﻿/*++
+    Copyright (c) 2014  OpenISDM
 
-    Version:      pre-alpha
-    
-    File Name:    GUI.cs
+    Project Name: 
 
-    SVN $Revision: $
+        ABDiSE
+             (Agent-Based Disaster Simulation Environment)
 
-    Abstract:     GUI "MainWindow" (C# windows form) of ABDiSE
-                  controls GUI and ABDiSE
- 
-    Authors:      T.L. Hsu 
-  
-    Contacts:     Lightorz@gmail.com
-     
+    Version:
+
+        2.0
+
+    File Name:
+
+        ABDiSE 2.0 GUI.cs
+
+    Abstract:
+
+        ABDiSE 2.0 GUI.cs is a c# windows form in the OpenISDM ABDiSE project.
+        It handles form controls (button, listbox, label, etc...) and GMap.NET controls.
+        This componet interacts with ABDiSE CoreController.
+
+    Authors:  
+
+        Tzu-Liang Hsu, Lightorz@gmail.com
+
+    License:
+
+        GPL 3.0 This file is subject to the terms and conditions defined 
+        in file 'COPYING.txt', which is part of this source code package.
+
     Major Revision History:
-*/
+
+        2014/5/28: version 2.0 alpha
+--*/
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -44,43 +61,105 @@ namespace ABDiSE.View
 
     #region 2.0 GUI
 
-    /* 
-     * public partial class MainWindow : Form
-     * 
-     * Description:
-     *      MainWindow is the GUI of ABDiSE, controls gMap, listboxes, etc.
-     *      
-     */
+    /*++
+        Class:
+
+            public partial class MainWindow : Form
+
+        Summary:
+
+            MainWindow is the GUI of ABDiSE, controls GMap.NET, listboxes, buttons, etc.
+            The background worker is also included in this class.
+
+        Methods:
+            //TODO: 
+
+    --*/
     public partial class MainWindow : Form
     {
+        //
         // pointer to controller
+        //
         CoreController CoreController;
 
-        //GMap.NET controls
+        //
+        // GMap.NET controls
+        //
         GMapOverlay OverlayMouse;
         GMapOverlay OverlayAgents;
 
-        //GMap markers selection controls
+        //
+        // GMap markers selection controls
+        //
         GMapMarker CurrentMouseOnMarker = null;
         GMapMarker SelectedMarker = null;
 
         #region BackgroundWorker
 
-        //background worker
+        //
+        // background worker
+        //
         private BackgroundWorker bw;
 
         private enum workerType { stepSim, createTPTest, stepsSim};
 
+        /*++
+            Function Name:
+
+                private void initBackgroundWorker()
+
+            Function Description:
+
+                This method initialize the background worker in ABDiSE.
+                Because GUI should not do the heavy computaion or simulation.
+
+            Parameters:
+
+                void
+
+            Returned Value:
+
+                void
+
+            Possible Error Code or Exception:
+
+                Service is not available 
+        --*/
         private void initBackgroundWorker()
         {
             bw = new BackgroundWorker();
             bw.WorkerReportsProgress = true;
             bw.WorkerSupportsCancellation = true;
             bw.DoWork += new DoWorkEventHandler(bw_DoWork);
-            bw.ProgressChanged += new ProgressChangedEventHandler(bw_ProgressChanged);
-            bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_RunWorkerCompleted);
+            bw.ProgressChanged += 
+                new ProgressChangedEventHandler(bw_ProgressChanged);
+            bw.RunWorkerCompleted += 
+                new RunWorkerCompletedEventHandler(bw_RunWorkerCompleted);
         }
 
+        /*++
+            Function Name:
+
+                private void bw_DoWork(object sender, DoWorkEventArgs e)
+
+            Function Description:
+
+                This method will be called by the background worker in ABDiSE.
+                It executes different methods according to different argument.
+
+            Parameters:
+
+                object sender - refers to the object that invoked the event
+                DoWorkEventArgs e - the Event Argument of the object, contains the event data.
+
+            Returned Value:
+
+                void
+
+            Possible Error Code or Exception:
+
+                Service is not available 
+        --*/
         private void bw_DoWork(object sender, DoWorkEventArgs e)
         {
             int argument = (int)e.Argument;
@@ -112,18 +191,68 @@ namespace ABDiSE.View
 
         }
 
-        private void bw_ProgressChanged(object sender, ProgressChangedEventArgs e)
+
+        /*++
+            Function Name:
+
+                private void bw_ProgressChanged(object sender, ProgressChangedEventArgs e)
+
+            Function Description:
+
+                This method handles progress in background worker.
+                
+
+            Parameters:
+
+                object sender - refers to the object that invoked the event
+                ProgressChangedEventArgs e - the Event Argument of the object, contains the event data.
+
+            Returned Value:
+
+                void
+
+            Possible Error Code or Exception:
+
+                Service is not available 
+        --*/
+        private void bw_ProgressChanged
+            (object sender, ProgressChangedEventArgs e)
         {
             progressBar_steps.Value = e.ProgressPercentage;
             Console.WriteLine(e.ProgressPercentage.ToString());
         }
 
-        private void bw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+
+        /*++
+            Function Name:
+
+                private void bw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+
+            Function Description:
+
+                This method handles insturctions after background worker completed.
+                
+
+            Parameters:
+
+                object sender - refers to the object that invoked the event
+                RunWorkerCompletedEventArgs e - the Event Argument of the object, contains the event data.
+
+            Returned Value:
+
+                void
+
+            Possible Error Code or Exception:
+
+                Service is not available 
+        --*/
+        private void bw_RunWorkerCompleted
+            (object sender, RunWorkerCompletedEventArgs e)
         {
 
             if ((e.Cancelled == true))
             {
-                Console.WriteLine("bw 取消!");
+                Console.WriteLine("bw cancelled!");
             }
 
             else if (!(e.Error == null))
@@ -133,8 +262,15 @@ namespace ABDiSE.View
 
             else
             {
-                Console.WriteLine("bw 完成!");
+                Console.WriteLine("bw completed!");
             }
+
+            //
+            //after background worker is finished
+            //
+            RefreshAgentList();
+            RefreshJoinedAgentList();
+            RefreshGMapMarkers();
 
             button_StepSim.Enabled = true;
 
@@ -142,57 +278,89 @@ namespace ABDiSE.View
 
         #endregion 
 
-        /* 
-         * public MainWindow(God god)
-         * 
-         * Description:
-         *      Constructor of MainWindow.
-         *      
-         * Arguments:     
-         *      god - the pointer to ABDiSE core, god, to call some method
-         *      of it (for example, create, access agent list, etc)
-         */
+
+        /*++
+            Constructor Name:
+
+                public MainWindow(CoreController CC)
+
+            Constructor Description:
+
+                This is the constructor of MainWindow.
+                It initializes necessary objects.
+
+            Parameters:
+
+                CoreController CC - pointer of exist core controller (of ABDiSE)
+
+            Possible Error Code or Exception:
+
+                Service is not available 
+        --*/
         public MainWindow(CoreController CC)
         {
+            //
             // assign pointer
+            //
             this.CoreController = CC;
 
-            //C# windows form initilizing
+            //
+            // C# windows form initilizing
+            //
             InitializeComponent();
 
+            //
             // pause button disabled
+            //
             button_Pause.Enabled = false;
 
 
             RefreshAgentTypeOptions();
 
-            //init ToolTip
+            //
+            // init ToolTip
+            //
             setToolTips();
+
+            //
+            // init environment label (bottom center UI)
+            //
+            environmentTextBoxes_TextChanged(null, null);
 
         }
 
         #region gMapExplorer
 
-        /* 
-         * private void gMapExplorer_Load(object sender, EventArgs e)
-         * 
-         * Description:
-         *      load of gMapExplorer, for use of GMap.NET initialization
-         *      (GMapExplorer is the map in the center of MainWindow)
-         *      
-         * Arguments:     
-         *      sender - refers to the object that invoked the event
-         *      e - the Event Argument of the object, contains the event data.
-         * Return Value:
-         *      void
-         */
+
+        /*++
+            Function Name:
+
+                private void gMapExplorer_Load(object sender, EventArgs e)
+
+            Function Description:
+
+                This is the load method of GMap Explorer.
+                (GMapExplorer is the map in the center of MainWindow)
+
+            Parameters:
+
+                object sender - refers to the object that invoked the event
+                EventArgs e - the Event Argument of the object, contains the event data.
+
+            Possible Error Code or Exception:
+
+                Service is not available 
+        --*/
         private void gMapExplorer_Load(object sender, EventArgs e)
         { 
-
-            //initialize map center (hsinchu)
+            //
+            // initialize map center (hsinchu)
+            //
             gMapExplorer.Position = new PointLatLng(24.797332, 120.995304);
 
-            //configuration
+            //
+            // configuration
+            //
             GMapProvider.Language = LanguageType.ChineseTraditional;
             gMapExplorer.MapProvider = GMapProviders.OpenStreetMap;
             gMapExplorer.MinZoom = 3;
@@ -202,11 +370,15 @@ namespace ABDiSE.View
             gMapExplorer.MarkersEnabled = true;
             //gMapExplorer.Dock = DockStyle.Fill;
             
-            //label text
+            //
+            // label text
+            //
             label_LatLng.Text = "Lng : " + gMapExplorer.Position.Lng.ToString() 
                 + "   Lat : " + gMapExplorer.Position.Lat.ToString();
 
+            //
             // GMap overlay init
+            //
             OverlayMouse = new GMapOverlay(gMapExplorer, "OverlayMouse");
             OverlayAgents = new GMapOverlay(gMapExplorer, "OverlayAgents");
 
@@ -215,18 +387,24 @@ namespace ABDiSE.View
 
             //gMapExplorer.DragButton = MouseButtons.Left;
 
-            //cursor init
+            //
+            // cursor initialization
+            //
             Cursor.Current = Cursors.WaitCursor;
             var current = new PointLatLng(gMapExplorer.Position.Lat, 
                 gMapExplorer.Position.Lng);
 
-            //double click cursor (current marker)
+            //
+            // double click cursor (current marker)
+            //
             var currentMark = new GMap.NET.WindowsForms.Markers.
                 GMapMarkerGoogleGreen(current);
 
             Cursor.Current = Cursors.Default;
 
-            //controls of GMapExplorer
+            //
+            // controls of GMapExplorer
+            //
             gMapExplorer.MouseDoubleClick += new MouseEventHandler
                 (gMapExplorer_MouseDoubleClick);
             gMapExplorer.OnMarkerEnter += new MarkerEnter
@@ -239,20 +417,27 @@ namespace ABDiSE.View
                 (gMapExplorer_OnMouseDown);
         }
 
-        /* 
-         * private void gMapExplorer_MouseDoubleClick
-         *  (object sender, MouseEventArgs e)
-         * 
-         * Description:
-         *      mouse double click event of gMapExplorer, 
-         *      create marker (looks like cross sign +)
-         *      
-         * Arguments:     
-         *      sender - refers to the object that invoked the event
-         *      e - the Event Argument of the object, contains the event data.
-         * Return Value:
-         *      void
-         */
+
+        /*++
+            Function Name:
+
+                private void gMapExplorer_MouseDoubleClick
+                    (object sender, MouseEventArgs e)
+
+            Function Description:
+
+                mouse double click event of gMapExplorer, 
+                create marker (looks like plus sign +)
+
+            Parameters:
+
+                object sender - refers to the object that invoked the event
+                MouseEventArgs e - the Event Argument of the object, contains the event data.
+
+            Possible Error Code or Exception:
+
+                Service is not available 
+        --*/
         private void gMapExplorer_MouseDoubleClick
             (object sender, MouseEventArgs e)
         {
@@ -260,17 +445,23 @@ namespace ABDiSE.View
             {
                 Cursor.Current = Cursors.WaitCursor;
                 
-                //set position 
+                //
+                // set position 
+                //
                 PointLatLng latLng = gMapExplorer.FromLocalToLatLng(e.X, e.Y);
 
+                //
                 // current position
+                //
                 var current = new PointLatLng
                     (Math.Abs(latLng.Lat), latLng.Lng);
 
                 var currentMark = new 
                     GMap.NET.WindowsForms.Markers.GMapMarkerCross(current);
 
-                //refresh overlays and markers
+                //
+                // refresh overlays and markers
+                //
                 gMapExplorer.MarkersEnabled = false;
                 OverlayMouse.Markers.Clear();
 
@@ -280,58 +471,83 @@ namespace ABDiSE.View
                 gMapExplorer.MarkersEnabled = true;
                 Cursor.Current = Cursors.Hand;
 
-                //update label infomation
+                //
+                // update label infomation
+                //
                 label_LatLng.Text =
                     "Lng : " + latLng.Lng.ToString()
                     + "   Lat : " + latLng.Lat.ToString();
 
+                //
                 // auto fill value to "create agent" gui part
+                //
                 textBox_AgentLng.Text = latLng.Lng.ToString();
                 textBox_AgentLat.Text = latLng.Lat.ToString();
             }
         }
 
-        /* 
-         * private void gMapExplorer_OnMouseDown
-         *   (object sender, MouseEventArgs e)
-         * 
-         * Description:
-         *      on mouse down event of gMapExplorer, 
-         *      for selecting markers, and searching which agent it belongs to.
-         *      
-         * Arguments:     
-         *      sender - refers to the object that invoked the event
-         *      e - the Event Argument of the object, contains the event data.
-         * Return Value:
-         *      void
-         */
+        /*++
+            Function Name:
+
+                private void gMapExplorer_OnMouseDown
+                     (object sender, MouseEventArgs e)
+
+            Function Description:
+
+                on mouse down event of gMapExplorer, 
+                for selecting markers, and searching which agent it belongs to.
+
+            Parameters:
+
+                object sender - refers to the object that invoked the event
+                MouseEventArgs e - the Event Argument of the object, 
+                                    contains the event data.
+
+            Possible Error Code or Exception:
+
+                Service is not available 
+        --*/
         private void gMapExplorer_OnMouseDown(object sender, MouseEventArgs e)
         {
+            //
             // your mouse must be on certain marker
+            //
             if (CurrentMouseOnMarker != null)
             {
+                //
                 // select this marker
+                //
                 SelectedMarker = CurrentMouseOnMarker;
                 GMapMarkerCircle marker = (GMapMarkerCircle)SelectedMarker;
 
+                //
                 // cancel all marker's selection 
+                //
                 CoreController.DeselectMarkers();
 
+                //
                 // select this one
+                //
                 marker.IsSelected = true;
 
-                //search target agent according to this marker
-                for (int ii = 0; ii <= CoreController.God.AgentNumber; ii++)
+                //
+                // search target agent according to this marker
+                //
+                for (int ii = 0; ii < CoreController.God.AgentNumber; ii++)
                 {
                     Agent target = CoreController.God.WorldAgentList[ii];
                     
                     if (target == null)
                         continue;
                     
-                    //found!
+                    //
+                    // found!
+                    //
                     if (target.Marker.Equals(marker))
                     {
-                        //find index in listBoxAgentList, and highlight it
+                        //
+                        // find index in listBoxAgentList, and highlight it
+                        //
                         for (int jj = 0; jj < listBoxAgentList.Items.Count; 
                             jj++)
                         {
@@ -345,7 +561,10 @@ namespace ABDiSE.View
                             }
                         }
 
-                        //find index in listBox(Joined)AgentList, and highlight it
+                        //
+                        // find index in listBox(Joined)AgentList
+                        // and highlight it
+                        //
                         for (int jj = 0; jj < listBoxJoinedAgentList.Items.Count;
                             jj++)
                         {
@@ -365,113 +584,157 @@ namespace ABDiSE.View
             }          
         }
 
-        /* 
-         * private void gMapExplorer_OnMarkerEnter(GMapMarker m)
-         * 
-         * Description:
-         *      on marker enter event of gMapExplorer, 
-         *      for detecting mouse status about markers.
-         *      
-         * Arguments:     
-         *      m - the marker which is entered
-         * Return Value:
-         *      void
-         */
+
+        /*++
+            Function Name:
+
+                private void gMapExplorer_OnMarkerEnter(GMapMarker m)
+
+            Function Description:
+
+                on marker enter event of gMapExplorer, 
+                for detecting mouse status about markers.
+
+            Parameters:
+
+                GMapMarker m - the marker which is entered by mouse
+
+            Possible Error Code or Exception:
+
+                Service is not available 
+        --*/
         private void gMapExplorer_OnMarkerEnter(GMapMarker m)
         {
+            //
             // correct class of marker
+            //
             if (m is GMapMarkerCircle)
             {
+                //
                 // current marker pointer points to it
+                //
                 CurrentMouseOnMarker = m;
 
                 GMapMarkerCircle circle = (GMapMarkerCircle)m;
                 
+                //
                 // change diameter
+                //
                 circle.CircleDiameter = 
                     (int)CircleDiameterTypes.IntActiveDiameter;
 
-            }       
+            } 
+      
+            //
             // update label status text
+            //
             label_MouseStatus.Text = "OnMarkerEnter";
         }
 
-        /* 
-         * private void gMapExplorer_OnMarkerLeave(GMapMarker m)
-         * 
-         * Description:
-         *      on marker leave event of gMapExplorer, 
-         *      for detecting mouse status about markers.
-         *      
-         * Arguments:     
-         *      m - the marker mouse leaves
-         * Return Value:
-         *      void
-         */
+        /*++
+            Function Name:
+
+                private void gMapExplorer_OnMarkerLeave(GMapMarker m)
+
+            Function Description:
+
+                on marker leave event of gMapExplorer, 
+                for detecting mouse status about markers.
+
+            Parameters:
+
+                GMapMarker m - the marker which mouse leaves
+
+            Possible Error Code or Exception:
+
+                Service is not available 
+        --*/
         private void gMapExplorer_OnMarkerLeave(GMapMarker m)
         {
+            //
             // correct class of marker
+            //
             if (m is GMapMarkerCircle)
             {
+                //
                 // current marker pointer points to null
+                //
                 CurrentMouseOnMarker = null;
 
                 GMapMarkerCircle circle = (GMapMarkerCircle)m;
                 
+                //
                 // change diameter
+                //
                 circle.CircleDiameter = 
                     (int)CircleDiameterTypes.IntPassiveDiameter;
 
             }
+            //
             // update label status text
+            //
             label_MouseStatus.Text = "OnMarkerLeave";
         }
 
-        /* 
-         * private void gMapExplorer_MouseUp(object sender, MouseEventArgs e)
-         * 
-         * Description:
-         *      mouse up event of gMapExplorer, 
-         *      for detecting mouse status.
-         *      
-         * Arguments:     
-         *      sender - refers to the object that invoked the event
-         *      e - the Event Argument of the object, contains the event data.
-         * Return Value:
-         *      void
-         */
+        /*++
+            Function Name:
+
+                private void gMapExplorer_MouseUp
+                    (object sender, MouseEventArgs e)
+
+            Function Description:
+
+                mouse up event of gMapExplorer, 
+                for detecting mouse status.
+
+            Parameters:
+
+                sender - refers to the object that invoked the event
+                e - the Event Argument of the object, contains the event data.
+
+            Possible Error Code or Exception:
+
+                Service is not available 
+        --*/
         private void gMapExplorer_MouseUp(object sender, MouseEventArgs e)
         {
+            //
             // update label status text
+            //
             label_MouseStatus.Text = "MouseUp";
         }
         
         #endregion
 
-        
 
-        /* 
-         * public void RefreshGMapMarkers()
-         * 
-         * Description:
-         *      This method redraws all markers on gMapExplorer. 
-         *      use for refreshing gMapExplorer's agents and joined agents
-         *      
-         * Arguments:     
-         *      void
-         * Return Value:
-         *      void
-         */
+        /*++
+            Function Name:
+
+                public void RefreshGMapMarkers()
+
+            Function Description:
+
+                This method redraws all markers on gMapExplorer. 
+                use for refreshing gMapExplorer's agents
+
+            Possible Error Code or Exception:
+
+                Service is not available 
+        --*/
         public void RefreshGMapMarkers()
         {
+            //
             // refresh overlays and markers
             // initialize
+            //
             gMapExplorer.MarkersEnabled = false;
             OverlayMouse.Markers.Clear();
             OverlayAgents.Markers.Clear();
             gMapExplorer.Overlays.Clear();
 
-            // add each agent
+            //
+            // add (draw) each agent
+            //
             for (int ii = 0; ii <= CoreController.God.AgentNumber; ii++)
             {
                 Agent currentAgent = CoreController.God.WorldAgentList[ii];
@@ -479,13 +742,13 @@ namespace ABDiSE.View
                 if (currentAgent == null)
                     continue;
 
+                //
                 // add new target marker to GMap
+                //
                 OverlayAgents.Markers.Add(currentAgent.Marker);
                 
 
             }
-
-           
 
             gMapExplorer.Overlays.Add(OverlayMouse);
             gMapExplorer.Overlays.Add(OverlayAgents);
@@ -493,29 +756,35 @@ namespace ABDiSE.View
 
         }
 
+        /*++
+            Function Name:
 
-        /* 
-        * public void RefreshAgentTypeOptions()
-        * 
-        * Description:
-        *      This method fills agent types in GUI.
-        *      (according to DLL functions)          
-        *      
-        *      
-        * Arguments:     
-        *      void
-        * Return Value:
-        *      void
-        */
+                public void RefreshAgentTypeOptions()
+
+            Function Description:
+
+                This method fills agent types in GUI.
+                (according to DLL functions)     
+
+            Possible Error Code or Exception:
+
+                Service is not available 
+        --*/
         public void RefreshAgentTypeOptions() 
         {
+            //
             //agent list box configuration 
+            //
             listBoxAgentType.SelectionMode = SelectionMode.One;
 
+            listBoxAgentType.Items.Clear();
+
+            //
             //dynamically add agent types in .dll
-            for (int ii = 0; ii < CoreController.Classes.Count; ii++)
+            //
+            for (int ii = 0; ii < CoreController.SelectedClasses.Count; ii++)
             {
-                string agentType = CoreController.Classes[ii].ToString();
+                string agentType = CoreController.SelectedClasses[ii].ToString();
 
 
                 if (agentType.Contains("ABDiSE.Model.AgentClasses."))
@@ -524,7 +793,7 @@ namespace ABDiSE.View
 
                 }
 
-                agentType = agentType.ToUpper();
+                //agentType = agentType.ToUpper();
 
                 listBoxAgentType.Items.Add(agentType);
 
@@ -532,44 +801,87 @@ namespace ABDiSE.View
         
         }
 
-        /* 
-        * public void RefreshAgentDataOptions()
-        * 
-        * Description:
-        *      This method fills agent types in GUI.
-        *      (according to list box index)          
-        *      use for refreshing "create agent" status if index is changed.
-        *      
-        * Arguments:     
-        *      void
-        * Return Value:
-        *      void
-        */
+        
+        public int AgentTypeIndexTransform(int index) 
+        {
+            string type = listBoxAgentType.Items[index].ToString();
+            string fullName = "ABDiSE.Model.AgentClasses.";
+            fullName += type;
+
+            int correctIndex = -1;
+            for (int ii = 0; ii < CoreController.Classes.Count; ii++)
+            {
+                //
+                // find the correct index of 
+                // selected item(type)
+                //
+                if (fullName.Equals(CoreController.Classes[ii].ToString()))
+                {
+                    correctIndex = ii;
+                    break;
+                }
+
+            }
+
+            return correctIndex;
+        }
+
+
+        /*++
+            Function Name:
+
+                public void RefreshAgentDataOptions()
+
+            Function Description:
+
+                This method fills agent data in GUI,
+                according to list box agent type.
+                use for refreshing "create agent" status if index is changed.  
+
+            Possible Error Code or Exception:
+
+                Service is not available 
+        --*/
         public void RefreshAgentDataOptions()
         {
+            //
             // current selected index
+            //
+            // TODO: index change 座標轉換 因為可以選dll造成index不一樣
             int index = listBoxAgentType.SelectedIndex;
 
+            //
             //index do not exist
+            //
             if (index < 0)
+            {
                 return;
+            }
 
-            // current agent type
-            string type = listBoxAgentType.Items[index].ToString();
+            //
+            // index transform
+            //
+            int correctIndex = AgentTypeIndexTransform(index);            
 
-            //initialize
+            //
+            // initialize
+            //
             listBoxAgentControl.Items.Clear();
 
                 
-            if(type!= "")
+            if(correctIndex >= 0)
             {
-                for (int ii = 0; ii < CoreController.ConfigStrings[index].SubTypes.Count; ii++)
+                for (int ii = 0; 
+                    ii < CoreController.ConfigStrings[correctIndex].SubTypes.Count; 
+                    ii++)
                 {
-                    string subTypes = CoreController.ConfigStrings[index].SubTypes[ii].AgentSubType;
+                    string subTypes = 
+                        CoreController.ConfigStrings[correctIndex].SubTypes[ii].AgentSubType;
 
                     if (subTypes.Contains("ABDiSE.Model.AgentClasses."))
                     {
-                        subTypes = subTypes.Remove(0, "ABDiSE.Model.AgentClasses.".Length);
+                        subTypes = 
+                            subTypes.Remove(0, "ABDiSE.Model.AgentClasses.".Length);
 
                     }
                     listBoxAgentControl.Items.Add(subTypes);
@@ -579,32 +891,35 @@ namespace ABDiSE.View
             else
             {
                 listBoxAgentControl.Items.Add("NULL error");
-                listBoxAgentControl.Items.Add("ADD");
+                listBoxAgentControl.Items.Add("check");
                 listBoxAgentControl.Items.Add("OPETIONS");
                 listBoxAgentControl.Items.Add("IN");
-                listBoxAgentControl.Items.Add("RefreshAgent");
-                listBoxAgentControl.Items.Add("DataOptions()");
+                listBoxAgentControl.Items.Add("agent dll code");
+                
             }   
 
         }
 
-        /* 
-        * public void RefreshAgentData()
-        * 
-        * Description:
-        *      This method fills agent details in GUI.
-        *      (according to list box index)          
-        *      use for refreshing "create agent" status if index is changed.
-        *      
-        * Arguments:     
-        *      sender - refers to the object that invoked the event
-        *      e - the Event Argument of the object, contains the event data.
-        * Return Value:
-        *      void
-        */
+        /*++
+            Function Name:
+
+                public void RefreshAgentData()
+
+            Function Description:
+
+                This method fills agent details in GUI.
+                (according to ConfigStrings)          
+                use for refreshing "create agent" status if index is changed.
+
+            Possible Error Code or Exception:
+
+                Service is not available 
+        --*/
         public void RefreshAgentData()
         {
+            //
             // initiallize with blank 
+            //
             textBox_K01.Text = "";
             textBox_V01.Text = "";
             textBox_K02.Text = "";
@@ -619,63 +934,91 @@ namespace ABDiSE.View
             textBox_V06.Text = "";
 
             int index = listBoxAgentType.SelectedIndex;
-            //index do not exist
+            
+            //
+            // index do not exist
+            //
             if (index < 0) 
                 return;
 
-            //string type = listBoxAgentType.Items[index].ToString();
+            int index1 = AgentTypeIndexTransform(index);
 
             int index2 = listBoxAgentControl.SelectedIndex;
-            //do not exist
-            if (index2 < 0)
+
+            //
+            // do not exist
+            //
+            if (index2 < 0 || index1 < 0)
                 return;
                        
-          
+            //
             // fill properties in UI
-            if (CoreController.ConfigStrings[index].Keys.Count>0){
-                textBox_K01.Text = CoreController.ConfigStrings[index].Keys[0];
-                textBox_V01.Text = CoreController.ConfigStrings[index].SubTypes[index2].Values[0];
+            //
+            if (CoreController.ConfigStrings[index1].Keys.Count > 0)
+            {
+                textBox_K01.Text =
+                    CoreController.ConfigStrings[index1].Keys[0];
+                textBox_V01.Text =
+                    CoreController.ConfigStrings[index1].SubTypes[index2].Values[0];
             }
-            if (CoreController.ConfigStrings[index].Keys.Count>1){
-                textBox_K02.Text = CoreController.ConfigStrings[index].Keys[1];
-                textBox_V02.Text = CoreController.ConfigStrings[index].SubTypes[index2].Values[1];
+            if (CoreController.ConfigStrings[index1].Keys.Count > 1)
+            {
+                textBox_K02.Text =
+                    CoreController.ConfigStrings[index1].Keys[1];
+                textBox_V02.Text =
+                    CoreController.ConfigStrings[index1].SubTypes[index2].Values[1];
             }
-            if (CoreController.ConfigStrings[index].Keys.Count>2){
-                textBox_K03.Text = CoreController.ConfigStrings[index].Keys[2];
-                textBox_V03.Text = CoreController.ConfigStrings[index].SubTypes[index2].Values[2];
+            if (CoreController.ConfigStrings[index1].Keys.Count > 2)
+            {
+                textBox_K03.Text =
+                    CoreController.ConfigStrings[index1].Keys[2];
+                textBox_V03.Text =
+                    CoreController.ConfigStrings[index1].SubTypes[index2].Values[2];
             }
-            if (CoreController.ConfigStrings[index].Keys.Count>3){
-                textBox_K04.Text = CoreController.ConfigStrings[index].Keys[3];
-                textBox_V04.Text = CoreController.ConfigStrings[index].SubTypes[index2].Values[3];
+            if (CoreController.ConfigStrings[index1].Keys.Count > 3)
+            {
+                textBox_K04.Text =
+                    CoreController.ConfigStrings[index1].Keys[3];
+                textBox_V04.Text =
+                    CoreController.ConfigStrings[index1].SubTypes[index2].Values[3];
             }
-            if (CoreController.ConfigStrings[index].Keys.Count>4){
-                textBox_K05.Text = CoreController.ConfigStrings[index].Keys[4];
-                textBox_V05.Text = CoreController.ConfigStrings[index].SubTypes[index2].Values[4];
+            if (CoreController.ConfigStrings[index1].Keys.Count > 4)
+            {
+                textBox_K05.Text =
+                    CoreController.ConfigStrings[index1].Keys[4];
+                textBox_V05.Text =
+                    CoreController.ConfigStrings[index1].SubTypes[index2].Values[4];
             }
-            if (CoreController.ConfigStrings[index].Keys.Count>5){
-                textBox_K06.Text = CoreController.ConfigStrings[index].Keys[5];
-                textBox_V06.Text = CoreController.ConfigStrings[index].SubTypes[index2].Values[5];
+            if (CoreController.ConfigStrings[index1].Keys.Count > 5)
+            {
+                textBox_K06.Text =
+                    CoreController.ConfigStrings[index1].Keys[5];
+                textBox_V06.Text =
+                    CoreController.ConfigStrings[index1].SubTypes[index2].Values[5];
             }
 
         }
 
-        /* 
-        * public void RefreshAgentList()
-        * 
-        * Description:
-        *      This method update/refresh agent list in GUI.
-        *      (according to God.WorldAgentList )          
-        *      use for refreshing after agent creation
-        *      
-        * Arguments:     
-        *      void
-        * Return Value:
-        *      void
-        */
+        /*++
+            Function Name:
+
+                public void RefreshAgentList()
+
+            Function Description:
+
+                This method update/refresh agent list in GUI (right side).
+                (according to God.WorldAgentList )          
+                use for refreshing after agent creation or deletion
+
+            Possible Error Code or Exception:
+
+                Service is not available 
+        --*/
         public void RefreshAgentList()
         {
-
+            //
             //world agent list box
+            //
             listBoxAgentList.Items.Clear();
 
             for (int ii = 0; ii < CoreController.God.AgentNumber; ii++ )
@@ -685,7 +1028,8 @@ namespace ABDiSE.View
                 if (target == null)
                     continue;
 
-                if (target.AgentProperties.ContainsKey("Name") && target.IsJoinedAgent == false)
+                if (target.AgentProperties.ContainsKey("Name") &&
+                    target.IsJoinedAgent == false)
                 {
                     listBoxAgentList.Items.Add(
                         CoreController.God.WorldAgentList[ii].AgentProperties["Name"]);
@@ -693,30 +1037,38 @@ namespace ABDiSE.View
                 }
             }
 
+            //
             // clear selected markers
+            //
             CoreController.DeselectMarkers();
+
+            //
             //for refresh markers
+            //
             RefreshGMapMarkers();
 
         }
 
-        /* 
-        * public void RefreshJoinedAgentList()
-        * 
-        * Description:
-        *      This method update/refresh joined agent list in GUI.
-        *      (according to God.WorldJoinedAgentList )          
-        *      use for refreshing after joined agent creation
-        *      
-        * Arguments:     
-        *      void
-        * Return Value:
-        *      void
-        */
+        /*++
+            Function Name:
+
+                public void RefreshJoinedAgentList()
+
+            Function Description:
+
+                This method update/refresh joined agent list in GUI.
+                (according to God.WorldAgentList )          
+                use for refreshing after joined agent creation or deletion
+
+            Possible Error Code or Exception:
+
+                Service is not available 
+        --*/
         public void RefreshJoinedAgentList()
         {
-
+            //
             //world joind agent list box
+            //
             listBoxJoinedAgentList.Items.Clear();
             int ii;
 
@@ -736,34 +1088,46 @@ namespace ABDiSE.View
                 }
             }
 
+            //
             // clear selected markers
+            //
             CoreController.DeselectMarkers();
+
+            //
             //for refresh markers
+            //
             RefreshGMapMarkers();
         }
 
-        delegate void SetTextCallback(string text);
 
-       
+        /*++
+            Function Name:
 
-        /* 
-        * public void CreateAgent()
-        * 
-        * Description:
-        *      This method uses data in GUI to call God.create(...)
-        *      
-        * Arguments:     
-        *      void
-        * Return Value:
-        *      void
-        */
-        //this method let UI can call God.create (internal)
+                public void CreateAgent()
+
+            Function Description:
+
+                This method uses data in GUI(left side) 
+                to call constructor in agent
+           
+            Returned Value:
+
+                MethodReturnResults - succeed or failed
+         
+            Possible Error Code or Exception:
+
+                Service is not available 
+        --*/
         public MethodReturnResults CreateAgent()
         {
+            //
             // current position in gMap
+            //
             PointLatLng LatLng = new PointLatLng();
 
+            //
             // input PointLatLng null
+            //
             if (textBox_AgentLat.Text == "" || textBox_AgentLng.Text == "")
                 return MethodReturnResults.FAILED;
 
@@ -774,7 +1138,9 @@ namespace ABDiSE.View
             Dictionary<string, string> Properties = 
                 new Dictionary<string, string>();
 
+            //
             // check if null
+            //
             if (!Properties.ContainsKey(textBox_K01.Text) && 
                 textBox_K01.Text!="")
                 Properties.Add(textBox_K01.Text, textBox_V01.Text);
@@ -797,20 +1163,26 @@ namespace ABDiSE.View
 
             int currentIndex = listBoxAgentType.SelectedIndex;
 
-            //no selection
+            //
+            // no selection
+            //
             if (currentIndex < 0)
                 return MethodReturnResults.FAILED;
 
-            //string agentClass = listBoxAgentType.Items[currentIndex].ToString();
+            int newIndex = AgentTypeIndexTransform(currentIndex);
 
-            //create arguments
-            /*Object args = new Object[] 
-                { CoreController, Properties, LatLng, CoreController.God.WorldEnvironmentList[0] };
-            */
-            string agentClass = CoreController.ConfigStrings[currentIndex].ClassFullName;
+            if (newIndex < 0)
+                return MethodReturnResults.FAILED;
 
+            //
+            // create agent instance
+            //
+            string agentClass = CoreController.ConfigStrings[newIndex].ClassFullName;
+
+            //
             // call DLL to create agent instance
             // ***important
+            //
             CoreController.CreateDLLInstance(
                 agentClass, 
                 CoreController, 
@@ -820,22 +1192,29 @@ namespace ABDiSE.View
                 );
 
 
-            return MethodReturnResults.FAILED;
+            return MethodReturnResults.SUCCEED;
         }
 
-        /* 
-        * private void buttonCreate_Click(object sender, EventArgs e)
-        * 
-        * Description:
-        *      click event of button "create agent" in GUI.
-        *      use for "create agent".
-        *      
-        * Arguments:     
-        *      sender - refers to the object that invoked the event
-        *      e - the Event Argument of the object, contains the event data.
-        * Return Value:
-        *      void
-        */
+
+        /*++
+            Function Name:
+
+                private void buttonCreate_Click(object sender, EventArgs e)
+
+            Function Description:
+
+                click event of button "create agent" in GUI.
+                use for "create agent".
+
+            Parameters:
+
+                object sender - refers to the object that invoked the event
+                EventArgs e - the Event Argument of the object, contains the event data.
+            
+            Possible Error Code or Exception:
+
+                Service is not available 
+        --*/
         private void buttonCreate_Click(object sender, EventArgs e)
         {
 
@@ -844,23 +1223,32 @@ namespace ABDiSE.View
             RefreshAgentList();
             RefreshJoinedAgentList();
 
+            //
+            // clear lat and lng info
+            //
             textBox_AgentLat.Text = "";
             textBox_AgentLng.Text = "";
         }
+        
+        /*++
+            Function Name:
 
-        /* 
-        * private void buttonStart_Click(object sender, EventArgs e)
-        * 
-        * Description:
-        *      click event of button "start simulation" in GUI.
-        *      use for starting timer.
-        *      
-        * Arguments:     
-        *      sender - refers to the object that invoked the event
-        *      e - the Event Argument of the object, contains the event data.
-        * Return Value:
-        *      void
-        */
+                private void buttonStart_Click(object sender, EventArgs e)
+
+            Function Description:
+
+                click event of button "start simulation" in GUI.
+                use for starting timer.
+
+            Parameters:
+
+                object sender - refers to the object that invoked the event
+                EventArgs e - the Event Argument of the object, contains the event data.
+            
+            Possible Error Code or Exception:
+
+                Service is not available 
+        --*/
         private void buttonStart_Click(object sender, EventArgs e)
         {
             button_Pause.Enabled = true;
@@ -879,19 +1267,25 @@ namespace ABDiSE.View
             //CoreController.DisableMarkerAnimation();
         }
 
-        /* 
-        * private void buttonPause_Click(object sender, EventArgs e)
-        * 
-        * Description:
-        *      click event of button "puase simulation" in GUI.
-        *      use for stoping timer.
-        *      
-        * Arguments:     
-        *      sender - refers to the object that invoked the event
-        *      e - the Event Argument of the object, contains the event data.
-        * Return Value:
-        *      void
-        */
+        /*++
+            Function Name:
+
+                private void buttonPause_Click(object sender, EventArgs e)
+
+            Function Description:
+
+                click event of button "puase simulation" in GUI.
+                use for stoping timer.
+
+            Parameters:
+
+                object sender - refers to the object that invoked the event
+                EventArgs e - the Event Argument of the object, contains the event data.
+            
+            Possible Error Code or Exception:
+
+                Service is not available 
+        --*/
         private void buttonPause_Click(object sender, EventArgs e)
         {
             
@@ -905,69 +1299,85 @@ namespace ABDiSE.View
         }
 
         
+        /*++
+            Function Name:
 
-        /* 
-        * private void MainWindow_Load(object sender, EventArgs e)
-        * 
-        * Description:
-        *      load event of MainWindow in GUI.
-        *      use for initializing.
-        *      
-        * Arguments:     
-        *      sender - refers to the object that invoked the event
-        *      e - the Event Argument of the object, contains the event data.
-        * Return Value:
-        *      void
-        */
+                private void MainWindow_Load(object sender, EventArgs e)
+
+            Function Description:
+
+                load event of MainWindow in GUI.
+                use for initializing.
+
+            Parameters:
+
+                object sender - refers to the object that invoked the event
+                EventArgs e - the Event Argument of the object, contains the event data.
+            
+            Possible Error Code or Exception:
+
+                Service is not available 
+        --*/
         private void MainWindow_Load(object sender, EventArgs e)
         {
+
             RefreshAgentData();
             RefreshAgentList();
             RefreshJoinedAgentList();
 
             initBackgroundWorker();
 
-            //TODO: temperarly disable steps simulation
-            //TODO: on
             button_SimStart.Enabled = true;
         }
 
 
-        /* 
-        * private void textBox_C0X_KeyPress
-        *   (object sender, KeyPressEventArgs e)
-        * 
-        * Description:
-        *      key press event of textBox_C0X in GUI.
-        *      use for inputing only digits.
-        *      
-        * Arguments:     
-        *      sender - refers to the object that invoked the event
-        *      e - the Event Argument of the object, contains the event data.
-        * Return Value:
-        *      void
-        */
+        /*++
+            Function Name:
+
+                private void textBox_C0X_KeyPress(object sender, EventArgs e)
+
+            Function Description:
+
+                key press event of textBox_C0X in GUI.
+                this function limits user who can only input digits.
+          
+            Parameters:
+
+                object sender - refers to the object that invoked the event
+                EventArgs e - the Event Argument of the object, contains the event data.
+            
+            Possible Error Code or Exception:
+
+                Service is not available 
+        --*/
         private void textBox_C0X_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar))
                 e.Handled = true;
         }
 
-        /* 
-        * private void listBoxAgentList_SelectedIndexChanged
-        *   (object sender, EventArgs e)
-        * 
-        * Description:
-        *      SelectedIndexChanged event of listBoxAgentList in GUI.
-        *      for searching agent (by name) in GUI.
-        *      every name of agent is unique.      
-        *      
-        * Arguments:     
-        *      sender - refers to the object that invoked the event
-        *      e - the Event Argument of the object, contains the event data.
-        * Return Value:
-        *      void
-        */
+
+        /*++
+            Function Name:
+
+                private void listBoxAgentList_SelectedIndexChanged
+                    (object sender, EventArgs e)
+
+            Function Description:
+
+                SelectedIndexChanged event of listBoxAgentList in GUI.
+                for searching agent (by name) in GUI.
+                every name of agent should be unique.   
+          
+            Parameters:
+
+                object sender - refers to the object that invoked the event
+                EventArgs e - the Event Argument of the object, contains the event data.
+            
+            Possible Error Code or Exception:
+
+                Service is not available 
+        --*/
         private void listBoxAgentList_SelectedIndexChanged(
             object sender, EventArgs e)
         {
@@ -977,15 +1387,12 @@ namespace ABDiSE.View
                 return;
 
             string name =  listBoxAgentList.Items[index].ToString();
-            /*
-            MyPrintf(string.Format(
-                "selectedIndexChanged: AgentList[{0}]", name)
-                );
-            */
 
             Agent target = null;
 
-            // searching world agent list
+            //
+            // search world agent list
+            //
             for(int ii=0; ii< CoreController.God.AgentNumber; ii++)
             {
                 if (CoreController.God.WorldAgentList[ii] == null)
@@ -998,60 +1405,76 @@ namespace ABDiSE.View
                 if (name.Equals(
                     CoreController.God.WorldAgentList[ii].AgentProperties["Name"].ToString()))
                 {
-                    //found!
+                    //
+                    // found target
+                    //
                     target = CoreController.God.WorldAgentList[ii];
 
-                    //clear markers
+                    //
+                    // clear markers
+                    //
                     CoreController.DeselectMarkers();
-                    //select what we found
+                    
                     target.Marker.IsSelected = true;
-                    //refresh GUI
                     RefreshGMapMarkers();
 
                     break;
                 }
             }
 
-            //not found
+            //
+            // target not found
+            //
             if (target == null)
                 return;
             
+            //
             // updating label text
+            //
             label_AgentProperties.Text = string.Format(
-                "{0}\n{1}\n\nIsActivated:{2}\nIsDead:{3}\n\n", 
+                "{0}\n{1}\n\nIsActivated:{2}\nIsDead:{3}\nCurrentStep:{4}\n", 
                 target.LatLng.Lat, target.LatLng.Lng,
-                target.IsActivated, target.IsDead);
+                target.IsActivated, target.IsDead, target.CurrentStep);
 
-            //display properties
+            //
+            // display properties
+            //
             foreach (KeyValuePair<string, string> item
                 in target.AgentProperties)
             {
 
                 label_AgentProperties.Text += 
-                    string.Format("{0}\n  {1}\n\n", item.Key, item.Value);
+                    string.Format("{0} :  \t{1}\n", item.Key, item.Value);
             }
 
-            //MyPrintf(string.Format("Text : {0}", Text));
-
+            //
             //clear another listbox
+            //
             listBoxJoinedAgentList.ClearSelected();
 
         }
 
-        /* 
-        * private void listBoxAgentType_SelectedIndexChanged
-        *   (object sender, EventArgs e)
-        * 
-        * Description:
-        *      SelectedIndexChanged event of listBoxAgentType in GUI.
-        *      for filling data of selected agent type.    
-        *      
-        * Arguments:     
-        *      sender - refers to the object that invoked the event
-        *      e - the Event Argument of the object, contains the event data.
-        * Return Value:
-        *      void
-        */
+
+        /*++
+            Function Name:
+
+                private void listBoxAgentType_SelectedIndexChanged
+                    (object sender, EventArgs e)
+
+            Function Description:
+
+                SelectedIndexChanged event of listBoxAgentType in GUI.
+                for filling data of selected agent type.   
+          
+            Parameters:
+
+                object sender - refers to the object that invoked the event
+                EventArgs e - the Event Argument of the object, contains the event data.
+            
+            Possible Error Code or Exception:
+
+                Service is not available 
+        --*/
         private void listBoxAgentType_SelectedIndexChanged(
             object sender, EventArgs e)
         {
@@ -1060,41 +1483,53 @@ namespace ABDiSE.View
 
         }
 
-        /* 
-        * private void listBoxAgentControl_SelectedIndexChanged
-        *   (object sender, EventArgs e)
-        * 
-        * Description:
-        *      SelectedIndexChanged event of listBoxAgentControl in GUI.
-        *      for filling data of selected agent type and class.    
-        *      
-        * Arguments:     
-        *      sender - refers to the object that invoked the event
-        *      e - the Event Argument of the object, contains the event data.
-        * Return Value:
-        *      void
-        */
+        /*++
+            Function Name:
+
+                private void listBoxAgentControl_SelectedIndexChanged
+                    (object sender, EventArgs e)
+
+            Function Description:
+
+                SelectedIndexChanged event of listBoxAgentControl in GUI.
+                for filling data of selected agent type and class. 
+          
+            Parameters:
+
+                object sender - refers to the object that invoked the event
+                EventArgs e - the Event Argument of the object, contains the event data.
+            
+            Possible Error Code or Exception:
+
+                Service is not available 
+        --*/
         private void listBoxAgentControl_SelectedIndexChanged
             (object sender, EventArgs e)
         {
             RefreshAgentData();
         }
 
-        /* 
-        * private void listBoxJoinedAgentList_SelectedIndexChanged
-        *   (object sender, EventArgs e)
-        * 
-        * Description:
-        *      SelectedIndexChanged event of listBoxJoinedAgentList in GUI.
-        *      for searching joined agent (by name) in GUI.
-        *      every name of agent is unique.   
-        *      
-        * Arguments:     
-        *      sender - refers to the object that invoked the event
-        *      e - the Event Argument of the object, contains the event data.
-        * Return Value:
-        *      void
-        */
+        /*++
+            Function Name:
+
+                private void listBoxJoinedAgentList_SelectedIndexChanged
+                    (object sender, EventArgs e)
+
+            Function Description:
+
+                SelectedIndexChanged event of listBoxJoinedAgentList in GUI.
+                for searching joined agent (by name) in GUI.
+                every name of agent should be unique.  
+          
+            Parameters:
+
+                object sender - refers to the object that invoked the event
+                EventArgs e - the Event Argument of the object, contains the event data.
+            
+            Possible Error Code or Exception:
+
+                Service is not available 
+        --*/
         private void listBoxJoinedAgentList_SelectedIndexChanged
             (object sender, EventArgs e)
         {
@@ -1141,16 +1576,16 @@ namespace ABDiSE.View
 
             // update label text
             label_AgentProperties.Text = string.Format(
-                "({0}\n{1})\n\nIsActivated:{2}\nIsDead:{3}\n",
+                "{0}\n{1}\n\nIsActivated:{2}\nIsDead:{3}\nCurrentStep:{4}\n",
                 target.LatLng.Lat, target.LatLng.Lng,
-                target.IsActivated, target.IsDead);
+                target.IsActivated, target.IsDead, target.CurrentStep);
 
             foreach (KeyValuePair<string, string> item
                 in target.AgentProperties)
             {
 
                 label_AgentProperties.Text +=
-                    string.Format(" {0}\n {1}\n\n", item.Key, item.Value);
+                    string.Format("{0} : \t{1}\n", item.Key, item.Value);
             }
 
             //clear another listbox
@@ -1158,255 +1593,90 @@ namespace ABDiSE.View
         }
 
 
+        //
+        // agent lock for multi-thread version
+        //
         private Object ClearDeadAgentLock = new Object();
 
 
-        /*  
-        * private void SimulationTimer_Tick
-        *   (object sender, EventArgs e)
-        * 
-        * Description:
-        *      tick event of SimulationTimer.
-        *      (time-driven version)
-        *      
-        *      
-        * Arguments:     
-        *      sender - refers to the object that invoked the event
-        *      e - the Event Argument of the object, contains the event data.
-        * Return Value:
-        *      void
-        */
+        /*++
+            Function Name:
+
+                private void SimulationTimer_Tick
+                    (object sender, EventArgs e)
+
+            Function Description:
+
+                tick event of SimulationTimer.
+                (time-driven version)
+          
+            Parameters:
+
+                object sender - refers to the object that invoked the event
+                EventArgs e - the Event Argument of the object, contains the event data.
+            
+            Possible Error Code or Exception:
+
+                Service is not available 
+        --*/
         private void SimulationTimer_Tick(object sender, EventArgs e)
         {
+
+
+
+        }
+
+
+        /*++
+            Function Name:
+
+                private void buttonCreateTP_Click
+                    (object sender, EventArgs e)
+
+            Function Description:
+
+                click event for buttonCreateTP
+                this method queue test workitems into new SimpleThreadPool  
+          
+            Parameters:
+
+                object sender - refers to the object that invoked the event
+                EventArgs e - the Event Argument of the object, contains the event data.
             
-        }
+            Possible Error Code or Exception:
 
-
-
-        //TODO: priory thread queue
-        /*  
-        * public void StartSimulationSteps()
-        * 
-        * Description:
-        *      run simulation
-        *      this method simulate certain steps of all the agents/joined agents
-        *      1. start thread pool
-        *      2. for(steps)
-        *          queue workitems
-        *      3. end pool
-        *      
-        * Arguments:     
-        *      void
-        * Return Value:
-        *      void
-        */
-        public void stepsSimulation()
-        {
-
-            //init
-            CoreController.StartThreadPool(
-                (int)numericUpDown_STPThreadsNum.Value,
-                (int)numericUpDown_STPIdleTime.Value,
-                (int)numericUpDown_STPExecuteTime.Value
-
-                );
-
-            //step N : stage 2
-
-            for (int count = 0; count < 
-                (int)numericUpDown_SimSteps.Value; count++ )
-            {
-                bw.ReportProgress(count);
-
-                CoreController.God.CurrentStep++;
-                /*label_GodCurrentStep.Text = 
-                    CoreController.God.CurrentStep.ToString();
-                */
-                //queue joined agent 
-                if (CoreController.God.AgentCount > 0)
-                {
-                    /*// One event is used for each object
-                    ManualResetEvent[] doneEvents =
-                        new ManualResetEvent[God.JoinedAgentNumber];*/
-                    Console.WriteLine
-                        ("launching Joined Agent tasks..");
-
-
-                    Agent joinedAgent = null;
-
-                    //every joined agent runs update() itself
-                    // put workitems into threadpool
-                    for (int ii = 0; 
-                        ii < CoreController.God.AgentNumber; ii++)
-                    {
-
-                        joinedAgent = CoreController.God.WorldAgentList[ii];
-                        
-                        if (joinedAgent != null && joinedAgent.IsJoinedAgent)
-                        {
-                            //if need update
-                            if (joinedAgent.CurrentStep <= 
-                                CoreController.God.CurrentStep)
-                            {
-                                //TODO
-                                /*
-                                //update
-                                CoreController.STP.QueueUserWorkItem
-                                    (joinedAgent.ThreadPoolCallback, ii.ToString());
-                                 * */
-                                //joinedAgent.update();
-                            }
-                            else
-                            {
-                                //wait until next step
-                                continue;
-                            }
-
-                            /*doneEvents[ii] = new ManualResetEvent(false);
-                            // do self update check
-                            joinedAgent.SetDoneEvent(doneEvents[ii]);*/
-
-
-
-                        }
-                        else
-                        {
-                            //doneEvents[ii] = new ManualResetEvent(true);
-                            continue;
-                        }
-                    }
-                    // Wait for all threads in pool to calculation...
-                    //WaitHandle.WaitAll(doneEvents);
-                    /*Console.WriteLine
-                        ("after WaitAll: All calculations are complete.");*/
-                }
-
-                /*
-                //barrier
-                while (God.SimpleTP.WorkitemNumber > 0)
-                {
-                    //TODO: change this while 0 busy waiting
-                }
-                */
-
-                //queue agent
-                if (CoreController.God.AgentCount > 0)
-                {
-                    // One event is used for each object
-                    /*ManualResetEvent[] doneEvents =
-                        new ManualResetEvent[God.AgentNumber];*/
-                    Console.WriteLine
-                        ("launching {0} Agent tasks..", CoreController.God.AgentNumber);
-
-                    Agent agent = null;
-
-                    //every agent runs update() itself
-                    for (int ii = 0; ii < CoreController.God.AgentNumber; ii++)
-                    {
-                        agent = CoreController.God.WorldAgentList[ii];
-                        if (agent != null && agent.IsJoinedAgent != true)
-                        {
-
-                            //if need update
-                            if (agent.CurrentStep <= 
-                                CoreController.God.CurrentStep)
-                            {
-                                //TODO
-                                // do self update check
-                                /*
-                                CoreController.STP.QueueUserWorkItem
-                                    (agent.ThreadPoolCallback, ii.ToString());
-                                */
-                                // check whole world agents attachment
-                                // TODO: search for nearby environments(grids) only 
-                                //God.CheckAgentAttachment(agent);
-
-
-                            }
-                            else
-                            {
-                                //wait until next step
-                                continue;
-                            }
-
-
-                        }
-                        else
-                            continue;
-
-                    }
-                }
-
-                /*
-                //barrier
-                while (God.SimpleTP.WorkitemNumber > 0)
-                {
-                    //TODO: change this while 0 busy waiting
-                }
-                */
-                lock (ClearDeadAgentLock)
-                {
-                    // clear IsDead == true
-                    CoreController.God.ClearDeadAgent();
-                    // refresh GUI
-                    //RefreshGMapMarkers();
-                    RefreshAgentList();
-                    RefreshJoinedAgentList();
-
-                    
-                }
-
-                //set delay time
-                //Thread.Sleep((int)numericUpDown_SimDelay.Value);
-            }
-
-
-            CoreController.STP.EndPool();           
-
-        }
-
-
-        /*  
-        * private void buttonCreateTP_Click
-        *   (object sender, EventArgs e)
-        * 
-        * Description:
-        *      click event for buttonCreateTP
-        *      this method queue test workitems into new SimpleThreadPool     
-        *      
-        *      
-        * Arguments:     
-        *      sender - refers to the object that invoked the event
-        *      e - the Event Argument of the object, contains the event data.
-        * Return Value:
-        *      void
-        */
+                Service is not available 
+        --*/
         private void buttonCreateTP_Click(object sender, EventArgs e)
         {
-            //disable this button before this method complete
+            //
+            // disable this button before this method complete
+            //
             button_CreateTP.Enabled = false;
 
-            //CreateSTPTest();
-            //int argu = (int)workerType.createTPTest;
+
+            // 
+            // call background worker
+            //
             bw.RunWorkerAsync(workerType.createTPTest);
 
             button_CreateTP.Enabled = true;
         }
 
+        /*++
+            Function Name:
 
-        /*  
-        * private void CreateSTPTest()
-        * 
-        * Description:
-        *      click event for buttonCreateTP
-        *      this method queue test workitems into new SimpleThreadPool     
-        *      
-        *      
-        * Arguments:     
-        *      void
-        * Return Value:
-        *      void
-        */
+                private void CreateSTPTest()
+
+            Function Description:
+
+                click event for buttonCreateTP
+                this method queues test workitems into new SimpleThreadPool 
+            
+            Possible Error Code or Exception:
+
+                Service is not available 
+        --*/
         private void createSTPTest()
         {
             CoreController.StartThreadPool(
@@ -1442,73 +1712,90 @@ namespace ABDiSE.View
         }
 
 
+        /*++
+            Function Name:
 
-        /*  
-        * private void button_EndPool_Click
-        *   (object sender, EventArgs e)
-        * 
-        * Description:
-        *      click event for button_EndPool
-        *      this method simply calls EndPool     
-        *      
-        *      
-        * Arguments:     
-        *      sender - refers to the object that invoked the event
-        *      e - the Event Argument of the object, contains the event data.
-        * Return Value:
-        *      void
-        */
+                private void button_EndPool_Click
+                    (object sender, EventArgs e)
+
+            Function Description:
+
+                click event for button_EndPool
+                this method calls EndPool 
+          
+            Parameters:
+
+                object sender - refers to the object that invoked the event
+                EventArgs e - the Event Argument of the object, contains the event data.
+            
+            Possible Error Code or Exception:
+
+                Service is not available 
+        --*/
         private void button_EndPool_Click(object sender, EventArgs e)
         {
             CoreController.STP.EndPool(false);
         }
 
-        /*  
-        * private void button_EndPool_Click
-        *   (object sender, EventArgs e)
-        * 
-        * Description:
-        *      click event for button_EndPool
-        *      this method simply calls CancelPool     
-        *      
-        *      
-        * Arguments:     
-        *      sender - refers to the object that invoked the event
-        *      e - the Event Argument of the object, contains the event data.
-        * Return Value:
-        *      void
-        */
+        /*++
+            Function Name:
+
+                private void button_CancelPool_Click
+                    (object sender, EventArgs e)
+
+            Function Description:
+
+                click event for button_CancelPool_Click
+                this method calls CancelPool
+          
+            Parameters:
+
+                object sender - refers to the object that invoked the event
+                EventArgs e - the Event Argument of the object, contains the event data.
+            
+            Possible Error Code or Exception:
+
+                Service is not available 
+        --*/
         private void button_CancelPool_Click(object sender, EventArgs e)
         {
             CoreController.STP.EndPool(true);
         }
 
-        /*  
-        * private void button_StepSim_Click
-        *   (object sender, EventArgs e)
-        * 
-        * Description:
-        *      click event for button_StepSim
-        *      this method simulate one step of all the agents/joined agents
-        *      1. start thread pool
-        *      2. queue workitems
-        *      3. end pool
-        *      
-        * Arguments:     
-        *      sender - refers to the object that invoked the event
-        *      e - the Event Argument of the object, contains the event data.
-        * Return Value:
-        *      void
-        */
+
+        /*++
+            Function Name:
+
+                private void button_StepSim_Click
+                    (object sender, EventArgs e)
+
+            Function Description:
+
+                click event for button_StepSim
+                this method simulates one step of all the agents
+                1. start thread pool
+                2. queue workitems
+                3. end pool
+          
+            Parameters:
+
+                object sender - refers to the object that invoked the event
+                EventArgs e - the Event Argument of the object, contains the event data.
+            
+            Possible Error Code or Exception:
+
+                Service is not available 
+        --*/
         private void button_StepSim_Click(object sender, EventArgs e)
         {
-            //disable this button until
+            //
+            // disable this button until STP completed
+            //
             button_StepSim.Enabled = false;
 
 
             if (bw.IsBusy == false)
             {
-                //stepSimulation(); 
                 bw.RunWorkerAsync(workerType.stepSim);
             }
             else
@@ -1520,9 +1807,9 @@ namespace ABDiSE.View
 
             lock (ClearDeadAgentLock)
             {
-                // clear IsDead == true
+
                 CoreController.God.ClearDeadAgent();
-                // refresh GUI
+
                 //RefreshGMapMarkers();
                 RefreshAgentList();
                 RefreshJoinedAgentList();
@@ -1530,11 +1817,8 @@ namespace ABDiSE.View
 
                 CoreController.God.CurrentStep++;
 
-                //update label
                 label_GodCurrentStep.Text = CoreController.God.CurrentStep.ToString();
 
-
-                //Console.WriteLine("God.CurrentStep = " + God.CurrentStep);
 
             }
 
@@ -1543,25 +1827,28 @@ namespace ABDiSE.View
         }
 
 
-        /*  
-        * private void stepSimulation() 
-        * 
-        * Description:
-        *      click event for button_StepSim
-        *      this method simulate one step of all the agents/joined agents
-        *      1. start thread pool
-        *      2. queue workitems
-        *      3. end pool
-        *      
-        * Arguments:     
-        *      void
-        * Return Value:
-        *      void
-        */
+        /*++
+            Function Name:
+
+                private void stepSimulation()
+
+            Function Description:
+
+                click event for button_StepSim
+                this method simulates one step of all the agents
+                1. start thread pool
+                2. queue workitems
+                3. end pool
+          
+            Possible Error Code or Exception:
+
+                Service is not available 
+        --*/
         private void stepSimulation() 
         {
-
-            //start new round
+            //
+            // start new round (one step) of simulation
+            //
             CoreController.StartThreadPool(
                 (int)numericUpDown_STPThreadsNum.Value,
                 (int)numericUpDown_STPIdleTime.Value,
@@ -1569,13 +1856,9 @@ namespace ABDiSE.View
 
                 );
 
+            //
             //step N : stage 2
-
-
-            /*// One event is used for each object
-            ManualResetEvent[] doneEvents =
-                new ManualResetEvent[God.JoinedAgentNumber];*/
-
+            //
 
             Console.WriteLine
                 ("Step[" + CoreController.God.CurrentStep +
@@ -1584,129 +1867,162 @@ namespace ABDiSE.View
 
             Agent joinedAgent = null;
             
-            //every joined agent runs update() itself
+            //
+            // every joined agent runs update() by itself
             // put workitems into threadpool
+            //
             for (int ii = 0; ii < CoreController.God.AgentNumber; ii++)
             {
 
                 joinedAgent = CoreController.God.WorldAgentList[ii];
+
+                //
+                // check IsJoinedAgent property
+                //
                 if (joinedAgent != null && joinedAgent.IsJoinedAgent)
                 {
-                    //if need update
-                    if (joinedAgent.CurrentStep <= CoreController.God.CurrentStep)
+                    //
+                    // if need update
+                    //
+                    if (joinedAgent.CurrentStep < CoreController.God.CurrentStep)
                     {
+                        //
                         //update
-                        
+                        //
                         CoreController.STP.QueueUserWorkItem
                             (joinedAgent.ThreadPoolCallback, ii.ToString());
                         
                     }
                     else
                     {
+                        //
                         //wait until next step
+                        //
                         continue;
                     }
-
-                    //doneEvents[ii] = new ManualResetEvent(false);
-                    // do self update check
-                    //joinedAgent.SetDoneEvent(doneEvents[ii]);*/
-
-
 
                 }
                 else
                 {
-                    //doneEvents[ii] = new ManualResetEvent(true);
                     continue;
                 }
             }
+            //
             // Wait for all threads in pool to calculation...
-            
-            //WaitHandle.WaitAll(doneEvents);
+            //
 
-            /*Console.WriteLine
-                ("after WaitAll: All calculations are complete.");*/
 
             //TODO: barrier between two stages
 
+            //
             // compute agent
-
-            // One event is used for each object
-            /*ManualResetEvent[] doneEvents =
-                new ManualResetEvent[God.AgentNumber];*/
-
+            //
 
             Agent agent = null;
 
-            //every agent runs update() itself
+            //
+            // every agent runs update() by itself
+            //
             for (int ii = 0; ii < CoreController.God.AgentNumber; ii++)
             {
                 agent = CoreController.God.WorldAgentList[ii];
-                if (agent != null)
-                {
 
-                    //if need update
-                    if (agent.CurrentStep <= CoreController.God.CurrentStep)
+                //
+                // check IsJoinedAgent is false
+                //
+                if (agent != null && agent.IsJoinedAgent != true)
+                {
+                    //
+                    // if need update
+                    //
+                    if (agent.CurrentStep < CoreController.God.CurrentStep)
                     {
-                        //TODO
-                        
+                        //
                         // do self update
+                        //
                         CoreController.STP.QueueUserWorkItem
                             (agent.ThreadPoolCallback, ii.ToString());
 
-                            
-                        // check whole world agents attachment
-                        // TODO: search for nearby environments(grids) only 
-                        //CoreController.God.CheckAgentAttachment(agent);
-                            
-                            
                     }
                     else
                     {
-                        //wait until next step
+                        //
+                        // wait until next step
+                        //
                         continue;
                     }
-
-
                 }
                 else
+                {
+                    //
+                    // check next agent
+                    //
                     continue;
+                }
 
             }
 
 
             CoreController.STP.EndPool();
 
-
-
+            CoreController.God.ClearDeadAgent();
         
         }
 
-        /*  
-        * private void setToolTips()
-        * 
-        * Description:
-        *      this method sets default tooltip for certain control units
-        *      for example: label , textbox, etc.
-        *      
-        * Arguments:     
-        *      void
-        * Return Value:
-        *      void
-        */
+        /*++
+            Function Name:
+
+                private void setToolTips
+
+            Function Description:
+
+                this method sets default tooltip for certain control units
+                for example: label , textbox, etc.
+          
+            Possible Error Code or Exception:
+
+                Service is not available 
+        --*/
         private void setToolTips()
         {
             ToolTip label_AgentCoordTitleTip = new ToolTip();
             label_AgentCoordTitleTip.SetToolTip(
                 label_AgentCoordTitle, 
-                "雙擊地圖兩下以自動取得LatLng資訊"
+                "雙擊地圖兩下以自動取得LatLng資訊\nDouble click to autofill Lat and Lng"
                 );
 
         }
 
+        /*++
+            Function Name:
+
+                private void environmentRadioButtons_CheckedChanged
+                    (object sender, EventArgs e)
+
+            Function Description:
+
+                records environment data in GUI
+                saves it to ABDiSE.Model.God
+          
+                updates while radio button is changed.
+          
+            Parameters:
+
+                object sender - refers to the object that invoked the event
+                EventArgs e - the Event Argument of the object, contains the event data.
+            
+            Possible Error Code or Exception:
+
+                Service is not available 
+        --*/
         private void environmentRadioButtons_CheckedChanged(object sender, EventArgs e)
         {
             ABDiSE.Model.Environment targetEnv;
+
+            //
+            // TODO: dynamic change environment 
+            // (now the simulation world only has one environment)
+            //
             targetEnv = CoreController.God.WorldEnvironmentList[0];
 
 
@@ -1715,7 +2031,6 @@ namespace ABDiSE.View
                 targetEnv.EnvProperties.Remove("Weather");
 
             }
-
             if (radioButton_Cloudy.Checked)
             {
                 targetEnv.EnvProperties.Add("Weather", "Cloudy");
@@ -1737,6 +2052,28 @@ namespace ABDiSE.View
                     CreateEnvironmentPropertiesString();
         }
 
+        /*++
+            Function Name:
+
+                private void environmentTextBoxes_TextChanged
+                    (object sender, EventArgs e)
+
+            Function Description:
+
+                records environment data in GUI
+                saves it to ABDiSE.Model.God
+          
+                updates while text in textboxes is changed.
+          
+            Parameters:
+
+                object sender - refers to the object that invoked the event
+                EventArgs e - the Event Argument of the object, contains the event data.
+            
+            Possible Error Code or Exception:
+
+                Service is not available 
+        --*/
         private void environmentTextBoxes_TextChanged(object sender, EventArgs e)
         {
             double windDir = 0;
@@ -1744,7 +2081,9 @@ namespace ABDiSE.View
                 textBox_Env_WindDirection.Text,
                 out windDir
                 );
+            //
             //TODO: check 
+            //
             CoreController.God.WorldEnvironmentList[0].EnvProperties["WindDirection"] = windDir.ToString();
 
             double windSpeed = 0;
@@ -1752,7 +2091,9 @@ namespace ABDiSE.View
                 textBox_Env_WindSpeed.Text,
                 out windSpeed
                 );
+            //
             //TODO: check 
+            //
             CoreController.God.WorldEnvironmentList[0].EnvProperties["WindSpeed"] = windSpeed.ToString();
 
             double rainFall = 0;
@@ -1760,13 +2101,52 @@ namespace ABDiSE.View
                 textBox_Env_RainFall.Text,
                 out rainFall
                 );
+            //
             //TODO: check 
-            CoreController.God.WorldEnvironmentList[0].EnvProperties["RainFall"] = windSpeed.ToString();
+            //
+            CoreController.God.WorldEnvironmentList[0].EnvProperties["RainFall"] = rainFall.ToString();
 
-            //display number 0 environment
+            //
+            // display number 0 environment
+            //
             label_EnvironmentProperties.Text =
                 CoreController.God.WorldEnvironmentList[0].CreateEnvironmentPropertiesString();
             
+        }
+
+        /*++
+            Function Name:
+
+                private void button_SelectDLL_Click
+                    (object sender, EventArgs e)
+
+            Function Description:
+
+                This function calls a new form for selecting needed DLL (agent types)
+
+            Parameters:
+
+                object sender - refers to the object that invoked the event
+                EventArgs e - the Event Argument of the object, contains the event data.
+
+            Possible Error Code or Exception:
+
+                Service is not available 
+        --*/
+        private void button_SelectDLL_Click(object sender, EventArgs e)
+        {
+            SelectDLLForm newForm = new SelectDLLForm(CoreController);
+
+
+            newForm.LoadDLLClasses(CoreController.Classes);
+            newForm.ShowDialog(this);
+
+            newForm.Dispose();
+
+            //
+            // refresh agent types (according to selected dlls)
+            //
+            RefreshAgentTypeOptions();
         }
 
     }
@@ -1784,10 +2164,9 @@ namespace ABDiSE.View
     *      this class extends GMapMarker
     *      use for drawing custom circle marker      
     *      
-    *      reuse internet open source code, few edit by Lightorz
+    *      reuse internet open source code, edit by Lightorz
     *      
     */
-
     public class GMapMarkerCircle : GMap.NET.WindowsForms.GMapMarker
     {
 

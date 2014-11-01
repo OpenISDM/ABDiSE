@@ -1,4 +1,31 @@
-﻿using System;
+﻿/** 
+ *  @file Tree.cs
+ *  Tree is an Agent type in the OpenISDM ABDiSE project.
+ *  It is one of the basic AttachableObjectAgentTypes object.
+ *  Detail information is in the SetDefaultConfigStrings method.
+ *  
+ *  Copyright (c) 2014  OpenISDM
+ *   
+ *  Project Name: 
+ * 
+ *      ABDiSE 
+ *          (Agent-Based Disaster Simulation Environment)
+ *          
+ *  Authors:  
+ *
+ *      Tzu-Liang Hsu, Lightorz@gmail.com
+ *
+ *  License:
+ *
+ *      GPL 3.0 This file is subject to the terms and conditions defined 
+ *      in file 'COPYING.txt', which is part of this source code package.
+ *
+ *  Major Revision History:
+ *
+ *      2014/9/1: edit comments for doxygen
+ *
+ */
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,10 +36,16 @@ using System.Drawing;
 
 namespace ABDiSE.Model.AgentClasses
 {
+    /**
+     *  Tree is an Agent type in the OpenISDM ABDiSE project.
+     *  It is one of the basic AttachableObjectAgentTypes object.
+     *  Detail information is in the SetDefaultConfigStrings method.
+     */
     public class Tree : Agent
     {
-        // definitions
-        
+        /**
+         *  No parameter consturctor for testing.
+         */ 
         public Tree()
             : base()
         {
@@ -20,6 +53,14 @@ namespace ABDiSE.Model.AgentClasses
 
         }
 
+        /**
+         *  Constructor of Tree. Assign parameters to its data structure.
+         *  
+         *  @param CoreController - Pointer to CoreController
+         *  @param Properties - Dictionary form data structure
+         *  @param LatLng - Coordinates of Building Agent
+         *  @param AgentEnvironment - Environment of Building
+         */
         public Tree(
             CoreController CoreController,
             Dictionary<string, string> Properties,
@@ -55,6 +96,11 @@ namespace ABDiSE.Model.AgentClasses
 
         }
 
+        /**
+         *  Set defualt configuration of Building agent as a sample.
+         *  
+         *  @return ConfigStrings data structure
+         */
         public override ConfigStrings SetDefaultConfigStrings()
         {
             this.ConfigStrings = new ConfigStrings();
@@ -117,48 +163,41 @@ namespace ABDiSE.Model.AgentClasses
             return ConfigStrings;
         }
 
+        /**
+         *  Update() will be executed in every simulation steps. (time-driven mode)
+         *  User can customize this method to model different agent behaviors.
+         */ 
         public override void Update()
         {
-            //do nothing
+            //
+            // terminate, if this agent has been updated
+            //
+            if (this.CurrentStep >= CoreController.God.CurrentStep)
+                return;
+
+
+            this.CurrentStep = CoreController.God.CurrentStep;
         }
 
+        /**
+         *  Building can not attach other agents.
+         *  Different situation will be handled by different code.
+         *  User can freely edit the code.
+         *  
+         *  @param B - the attach target agent
+         *  @return - succeed or fail
+         */ 
         public override MethodReturnResults Attach(Agent B)
         {
-            //not activated
-            if (this.IsActivated == false || B.IsActivated == false)
-                return MethodReturnResults.FAILED;
-            //already dead
-            if (this.IsDead == true || B.IsDead == true)
-                return MethodReturnResults.FAILED;
 
-
-
-            //closeby level
-            if (B.AgentDistance(this) != MethodReturnResults.FAILED)
-            {
-
-                Console.WriteLine("Attach close by ({0} attaches{1})",
-                    this.AgentProperties["Name"].ToString(),
-                    B.AgentProperties["Name"].ToString());
-
-                //create new joinedAgent
-                //AgentB.AttachedBy(this);
-
-                //wait to be disposed(free)
-                this.IsActivated = false;
-                this.IsDead = true;
-
-                //succeed method status
-                return MethodReturnResults.SUCCEED;
-            }
-            else
-            {
-                //nothing happens
-                return MethodReturnResults.FAILED;
-            }
+            // if you want to create new rule, please see Fire.cs for more information
+            return MethodReturnResults.FAIL;
 
         }
 
+        /**
+         *  Customizing marker format for better display in GUI.
+         */ 
         public override void SetMarkerFormat()
         {
             Marker.IsCircle = true;

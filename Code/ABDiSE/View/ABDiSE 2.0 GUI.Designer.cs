@@ -84,6 +84,7 @@
             this.numericUpDown_SimSteps = new System.Windows.Forms.NumericUpDown();
             this.label_SimStepsTitle = new System.Windows.Forms.Label();
             this.groupBox_AgentCreation = new System.Windows.Forms.GroupBox();
+            this.button_SelectDLL = new System.Windows.Forms.Button();
             this.groupBox_STP = new System.Windows.Forms.GroupBox();
             this.groupBox_SimControl = new System.Windows.Forms.GroupBox();
             this.progressBar_steps = new System.Windows.Forms.ProgressBar();
@@ -170,16 +171,16 @@
             this.listBoxAgentType.ItemHeight = 12;
             this.listBoxAgentType.Location = new System.Drawing.Point(10, 33);
             this.listBoxAgentType.Name = "listBoxAgentType";
-            this.listBoxAgentType.Size = new System.Drawing.Size(66, 100);
+            this.listBoxAgentType.Size = new System.Drawing.Size(142, 100);
             this.listBoxAgentType.TabIndex = 6;
             this.listBoxAgentType.SelectedIndexChanged += new System.EventHandler(this.listBoxAgentType_SelectedIndexChanged);
             // 
             // textBox_K01
             // 
-            this.textBox_K01.Location = new System.Drawing.Point(11, 155);
+            this.textBox_K01.Location = new System.Drawing.Point(12, 205);
             this.textBox_K01.Margin = new System.Windows.Forms.Padding(1);
             this.textBox_K01.Name = "textBox_K01";
-            this.textBox_K01.Size = new System.Drawing.Size(88, 22);
+            this.textBox_K01.Size = new System.Drawing.Size(141, 22);
             this.textBox_K01.TabIndex = 7;
             this.textBox_K01.Text = "Name";
             // 
@@ -197,7 +198,7 @@
             // 
             this.label_AgentPropertiesTitle.AutoSize = true;
             this.label_AgentPropertiesTitle.Font = new System.Drawing.Font("新細明體", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label_AgentPropertiesTitle.Location = new System.Drawing.Point(7, 136);
+            this.label_AgentPropertiesTitle.Location = new System.Drawing.Point(8, 186);
             this.label_AgentPropertiesTitle.Name = "label_AgentPropertiesTitle";
             this.label_AgentPropertiesTitle.Size = new System.Drawing.Size(126, 12);
             this.label_AgentPropertiesTitle.TabIndex = 9;
@@ -205,50 +206,50 @@
             // 
             // textBox_V01
             // 
-            this.textBox_V01.Location = new System.Drawing.Point(101, 155);
+            this.textBox_V01.Location = new System.Drawing.Point(159, 205);
             this.textBox_V01.Margin = new System.Windows.Forms.Padding(1);
             this.textBox_V01.Name = "textBox_V01";
-            this.textBox_V01.Size = new System.Drawing.Size(110, 22);
+            this.textBox_V01.Size = new System.Drawing.Size(144, 22);
             this.textBox_V01.TabIndex = 10;
             // 
             // textBox_V02
             // 
-            this.textBox_V02.Location = new System.Drawing.Point(101, 179);
+            this.textBox_V02.Location = new System.Drawing.Point(159, 229);
             this.textBox_V02.Margin = new System.Windows.Forms.Padding(1);
             this.textBox_V02.Name = "textBox_V02";
-            this.textBox_V02.Size = new System.Drawing.Size(110, 22);
+            this.textBox_V02.Size = new System.Drawing.Size(144, 22);
             this.textBox_V02.TabIndex = 12;
             // 
             // textBox_K02
             // 
-            this.textBox_K02.Location = new System.Drawing.Point(11, 179);
+            this.textBox_K02.Location = new System.Drawing.Point(12, 229);
             this.textBox_K02.Margin = new System.Windows.Forms.Padding(1);
             this.textBox_K02.Name = "textBox_K02";
-            this.textBox_K02.Size = new System.Drawing.Size(88, 22);
+            this.textBox_K02.Size = new System.Drawing.Size(141, 22);
             this.textBox_K02.TabIndex = 11;
             this.textBox_K02.Text = "Year";
             // 
             // textBox_V03
             // 
-            this.textBox_V03.Location = new System.Drawing.Point(101, 203);
+            this.textBox_V03.Location = new System.Drawing.Point(159, 253);
             this.textBox_V03.Margin = new System.Windows.Forms.Padding(1);
             this.textBox_V03.Name = "textBox_V03";
-            this.textBox_V03.Size = new System.Drawing.Size(110, 22);
+            this.textBox_V03.Size = new System.Drawing.Size(144, 22);
             this.textBox_V03.TabIndex = 14;
             // 
             // textBox_K03
             // 
-            this.textBox_K03.Location = new System.Drawing.Point(11, 203);
+            this.textBox_K03.Location = new System.Drawing.Point(12, 253);
             this.textBox_K03.Margin = new System.Windows.Forms.Padding(1);
             this.textBox_K03.Name = "textBox_K03";
-            this.textBox_K03.Size = new System.Drawing.Size(88, 22);
+            this.textBox_K03.Size = new System.Drawing.Size(141, 22);
             this.textBox_K03.TabIndex = 13;
             // 
             // label_AgentCoordTitle
             // 
             this.label_AgentCoordTitle.AutoSize = true;
             this.label_AgentCoordTitle.Font = new System.Drawing.Font("新細明體", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label_AgentCoordTitle.Location = new System.Drawing.Point(6, 299);
+            this.label_AgentCoordTitle.Location = new System.Drawing.Point(7, 349);
             this.label_AgentCoordTitle.Name = "label_AgentCoordTitle";
             this.label_AgentCoordTitle.Size = new System.Drawing.Size(104, 12);
             this.label_AgentCoordTitle.TabIndex = 15;
@@ -256,7 +257,7 @@
             // 
             // textBox_AgentLat
             // 
-            this.textBox_AgentLat.Location = new System.Drawing.Point(44, 320);
+            this.textBox_AgentLat.Location = new System.Drawing.Point(45, 370);
             this.textBox_AgentLat.Name = "textBox_AgentLat";
             this.textBox_AgentLat.Size = new System.Drawing.Size(155, 22);
             this.textBox_AgentLat.TabIndex = 16;
@@ -266,7 +267,7 @@
             // 
             this.label_CurrentLatTitle.AutoSize = true;
             this.label_CurrentLatTitle.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label_CurrentLatTitle.Location = new System.Drawing.Point(14, 320);
+            this.label_CurrentLatTitle.Location = new System.Drawing.Point(15, 370);
             this.label_CurrentLatTitle.Name = "label_CurrentLatTitle";
             this.label_CurrentLatTitle.Size = new System.Drawing.Size(27, 17);
             this.label_CurrentLatTitle.TabIndex = 19;
@@ -274,7 +275,7 @@
             // 
             // textBox_AgentLng
             // 
-            this.textBox_AgentLng.Location = new System.Drawing.Point(44, 343);
+            this.textBox_AgentLng.Location = new System.Drawing.Point(45, 393);
             this.textBox_AgentLng.Name = "textBox_AgentLng";
             this.textBox_AgentLng.Size = new System.Drawing.Size(155, 22);
             this.textBox_AgentLng.TabIndex = 20;
@@ -284,7 +285,7 @@
             // 
             this.label_AgentListTitle.AutoSize = true;
             this.label_AgentListTitle.Font = new System.Drawing.Font("新細明體", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label_AgentListTitle.Location = new System.Drawing.Point(702, 7);
+            this.label_AgentListTitle.Location = new System.Drawing.Point(779, 14);
             this.label_AgentListTitle.Name = "label_AgentListTitle";
             this.label_AgentListTitle.Size = new System.Drawing.Size(59, 12);
             this.label_AgentListTitle.TabIndex = 30;
@@ -295,7 +296,7 @@
             this.listBoxAgentList.FormattingEnabled = true;
             this.listBoxAgentList.HorizontalScrollbar = true;
             this.listBoxAgentList.ItemHeight = 12;
-            this.listBoxAgentList.Location = new System.Drawing.Point(711, 22);
+            this.listBoxAgentList.Location = new System.Drawing.Point(788, 29);
             this.listBoxAgentList.Name = "listBoxAgentList";
             this.listBoxAgentList.Size = new System.Drawing.Size(216, 88);
             this.listBoxAgentList.TabIndex = 31;
@@ -305,7 +306,7 @@
             // 
             this.label_SelectedAgentPropertiesTitle.AutoSize = true;
             this.label_SelectedAgentPropertiesTitle.Font = new System.Drawing.Font("新細明體", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label_SelectedAgentPropertiesTitle.Location = new System.Drawing.Point(702, 256);
+            this.label_SelectedAgentPropertiesTitle.Location = new System.Drawing.Point(776, 243);
             this.label_SelectedAgentPropertiesTitle.Name = "label_SelectedAgentPropertiesTitle";
             this.label_SelectedAgentPropertiesTitle.Size = new System.Drawing.Size(98, 12);
             this.label_SelectedAgentPropertiesTitle.TabIndex = 32;
@@ -314,68 +315,68 @@
             // label_AgentProperties
             // 
             this.label_AgentProperties.AutoSize = true;
-            this.label_AgentProperties.Location = new System.Drawing.Point(709, 277);
+            this.label_AgentProperties.Location = new System.Drawing.Point(783, 264);
             this.label_AgentProperties.MaximumSize = new System.Drawing.Size(300, 0);
             this.label_AgentProperties.Name = "label_AgentProperties";
-            this.label_AgentProperties.Size = new System.Drawing.Size(74, 12);
+            this.label_AgentProperties.Size = new System.Drawing.Size(82, 12);
             this.label_AgentProperties.TabIndex = 34;
-            this.label_AgentProperties.Text = "properties here";
+            this.label_AgentProperties.Text = "Agent Properties";
             // 
             // textBox_V04
             // 
-            this.textBox_V04.Location = new System.Drawing.Point(101, 227);
+            this.textBox_V04.Location = new System.Drawing.Point(159, 277);
             this.textBox_V04.Margin = new System.Windows.Forms.Padding(1);
             this.textBox_V04.Name = "textBox_V04";
-            this.textBox_V04.Size = new System.Drawing.Size(110, 22);
+            this.textBox_V04.Size = new System.Drawing.Size(144, 22);
             this.textBox_V04.TabIndex = 37;
             // 
             // textBox_K04
             // 
-            this.textBox_K04.Location = new System.Drawing.Point(11, 227);
+            this.textBox_K04.Location = new System.Drawing.Point(12, 277);
             this.textBox_K04.Margin = new System.Windows.Forms.Padding(1);
             this.textBox_K04.Name = "textBox_K04";
-            this.textBox_K04.Size = new System.Drawing.Size(88, 22);
+            this.textBox_K04.Size = new System.Drawing.Size(141, 22);
             this.textBox_K04.TabIndex = 36;
             // 
             // textBox_V05
             // 
-            this.textBox_V05.Location = new System.Drawing.Point(101, 251);
+            this.textBox_V05.Location = new System.Drawing.Point(159, 301);
             this.textBox_V05.Margin = new System.Windows.Forms.Padding(1);
             this.textBox_V05.Name = "textBox_V05";
-            this.textBox_V05.Size = new System.Drawing.Size(110, 22);
+            this.textBox_V05.Size = new System.Drawing.Size(144, 22);
             this.textBox_V05.TabIndex = 39;
             // 
             // textBox_K05
             // 
-            this.textBox_K05.Location = new System.Drawing.Point(11, 251);
+            this.textBox_K05.Location = new System.Drawing.Point(12, 301);
             this.textBox_K05.Margin = new System.Windows.Forms.Padding(1);
             this.textBox_K05.Name = "textBox_K05";
-            this.textBox_K05.Size = new System.Drawing.Size(88, 22);
+            this.textBox_K05.Size = new System.Drawing.Size(141, 22);
             this.textBox_K05.TabIndex = 38;
             // 
             // textBox_V06
             // 
-            this.textBox_V06.Location = new System.Drawing.Point(101, 275);
+            this.textBox_V06.Location = new System.Drawing.Point(159, 325);
             this.textBox_V06.Margin = new System.Windows.Forms.Padding(1);
             this.textBox_V06.Name = "textBox_V06";
-            this.textBox_V06.Size = new System.Drawing.Size(110, 22);
+            this.textBox_V06.Size = new System.Drawing.Size(144, 22);
             this.textBox_V06.TabIndex = 41;
             // 
             // textBox_K06
             // 
-            this.textBox_K06.Location = new System.Drawing.Point(11, 275);
+            this.textBox_K06.Location = new System.Drawing.Point(12, 325);
             this.textBox_K06.Margin = new System.Windows.Forms.Padding(1);
             this.textBox_K06.Name = "textBox_K06";
-            this.textBox_K06.Size = new System.Drawing.Size(88, 22);
+            this.textBox_K06.Size = new System.Drawing.Size(141, 22);
             this.textBox_K06.TabIndex = 40;
             // 
             // listBoxAgentControl
             // 
             this.listBoxAgentControl.FormattingEnabled = true;
             this.listBoxAgentControl.ItemHeight = 12;
-            this.listBoxAgentControl.Location = new System.Drawing.Point(82, 33);
+            this.listBoxAgentControl.Location = new System.Drawing.Point(158, 33);
             this.listBoxAgentControl.Name = "listBoxAgentControl";
-            this.listBoxAgentControl.Size = new System.Drawing.Size(129, 100);
+            this.listBoxAgentControl.Size = new System.Drawing.Size(144, 100);
             this.listBoxAgentControl.TabIndex = 42;
             this.listBoxAgentControl.SelectedIndexChanged += new System.EventHandler(this.listBoxAgentControl_SelectedIndexChanged);
             // 
@@ -384,9 +385,9 @@
             this.listBoxJoinedAgentList.FormattingEnabled = true;
             this.listBoxJoinedAgentList.HorizontalScrollbar = true;
             this.listBoxJoinedAgentList.ItemHeight = 12;
-            this.listBoxJoinedAgentList.Location = new System.Drawing.Point(711, 128);
+            this.listBoxJoinedAgentList.Location = new System.Drawing.Point(788, 140);
             this.listBoxJoinedAgentList.Name = "listBoxJoinedAgentList";
-            this.listBoxJoinedAgentList.Size = new System.Drawing.Size(216, 124);
+            this.listBoxJoinedAgentList.Size = new System.Drawing.Size(216, 100);
             this.listBoxJoinedAgentList.TabIndex = 44;
             this.listBoxJoinedAgentList.SelectedIndexChanged += new System.EventHandler(this.listBoxJoinedAgentList_SelectedIndexChanged);
             // 
@@ -394,7 +395,7 @@
             // 
             this.label_JoinedAgentListTitle.AutoSize = true;
             this.label_JoinedAgentListTitle.Font = new System.Drawing.Font("新細明體", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label_JoinedAgentListTitle.Location = new System.Drawing.Point(702, 113);
+            this.label_JoinedAgentListTitle.Location = new System.Drawing.Point(779, 120);
             this.label_JoinedAgentListTitle.Name = "label_JoinedAgentListTitle";
             this.label_JoinedAgentListTitle.Size = new System.Drawing.Size(95, 12);
             this.label_JoinedAgentListTitle.TabIndex = 45;
@@ -406,7 +407,7 @@
             this.gMapExplorer.CanDragMap = true;
             this.gMapExplorer.GrayScaleMode = false;
             this.gMapExplorer.LevelsKeepInMemmory = 5;
-            this.gMapExplorer.Location = new System.Drawing.Point(238, 22);
+            this.gMapExplorer.Location = new System.Drawing.Point(323, 12);
             this.gMapExplorer.MarkersEnabled = true;
             this.gMapExplorer.MaxZoom = 2;
             this.gMapExplorer.MinZoom = 2;
@@ -425,7 +426,7 @@
             // label_LatLng
             // 
             this.label_LatLng.AutoSize = true;
-            this.label_LatLng.Location = new System.Drawing.Point(253, 385);
+            this.label_LatLng.Location = new System.Drawing.Point(321, 382);
             this.label_LatLng.Name = "label_LatLng";
             this.label_LatLng.Size = new System.Drawing.Size(61, 12);
             this.label_LatLng.TabIndex = 47;
@@ -435,7 +436,7 @@
             // 
             this.label_CurrentLngTitle.AutoSize = true;
             this.label_CurrentLngTitle.Font = new System.Drawing.Font("微軟正黑體", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label_CurrentLngTitle.Location = new System.Drawing.Point(14, 343);
+            this.label_CurrentLngTitle.Location = new System.Drawing.Point(15, 393);
             this.label_CurrentLngTitle.Name = "label_CurrentLngTitle";
             this.label_CurrentLngTitle.Size = new System.Drawing.Size(31, 17);
             this.label_CurrentLngTitle.TabIndex = 19;
@@ -444,7 +445,7 @@
             // label_MouseStatusTitle
             // 
             this.label_MouseStatusTitle.AutoSize = true;
-            this.label_MouseStatusTitle.Location = new System.Drawing.Point(513, 382);
+            this.label_MouseStatusTitle.Location = new System.Drawing.Point(628, 382);
             this.label_MouseStatusTitle.Name = "label_MouseStatusTitle";
             this.label_MouseStatusTitle.Size = new System.Drawing.Size(69, 12);
             this.label_MouseStatusTitle.TabIndex = 48;
@@ -454,7 +455,7 @@
             // label_MouseStatus
             // 
             this.label_MouseStatus.AutoSize = true;
-            this.label_MouseStatus.Location = new System.Drawing.Point(588, 382);
+            this.label_MouseStatus.Location = new System.Drawing.Point(703, 382);
             this.label_MouseStatus.Name = "label_MouseStatus";
             this.label_MouseStatus.Size = new System.Drawing.Size(63, 12);
             this.label_MouseStatus.TabIndex = 49;
@@ -732,6 +733,7 @@
             // 
             // groupBox_AgentCreation
             // 
+            this.groupBox_AgentCreation.Controls.Add(this.button_SelectDLL);
             this.groupBox_AgentCreation.Controls.Add(this.label_AgentTypeTitle);
             this.groupBox_AgentCreation.Controls.Add(this.label_AgentPropertiesTitle);
             this.groupBox_AgentCreation.Controls.Add(this.listBoxAgentControl);
@@ -757,10 +759,20 @@
             this.groupBox_AgentCreation.Location = new System.Drawing.Point(9, 4);
             this.groupBox_AgentCreation.Margin = new System.Windows.Forms.Padding(1);
             this.groupBox_AgentCreation.Name = "groupBox_AgentCreation";
-            this.groupBox_AgentCreation.Size = new System.Drawing.Size(216, 377);
+            this.groupBox_AgentCreation.Size = new System.Drawing.Size(310, 425);
             this.groupBox_AgentCreation.TabIndex = 61;
             this.groupBox_AgentCreation.TabStop = false;
             this.groupBox_AgentCreation.Text = "New Agent Setting";
+            // 
+            // button_SelectDLL
+            // 
+            this.button_SelectDLL.Location = new System.Drawing.Point(10, 136);
+            this.button_SelectDLL.Name = "button_SelectDLL";
+            this.button_SelectDLL.Size = new System.Drawing.Size(142, 31);
+            this.button_SelectDLL.TabIndex = 43;
+            this.button_SelectDLL.Text = "Select DLL";
+            this.button_SelectDLL.UseVisualStyleBackColor = true;
+            this.button_SelectDLL.Click += new System.EventHandler(this.button_SelectDLL_Click);
             // 
             // groupBox_STP
             // 
@@ -777,7 +789,7 @@
             this.groupBox_STP.Controls.Add(this.label_STPIdleTimeTitle);
             this.groupBox_STP.Controls.Add(this.numericUpDown_STPThreadsNum);
             this.groupBox_STP.Controls.Add(this.numericUpDown_STPExecuteTime);
-            this.groupBox_STP.Location = new System.Drawing.Point(9, 385);
+            this.groupBox_STP.Location = new System.Drawing.Point(9, 433);
             this.groupBox_STP.Name = "groupBox_STP";
             this.groupBox_STP.Size = new System.Drawing.Size(164, 227);
             this.groupBox_STP.TabIndex = 62;
@@ -797,7 +809,7 @@
             this.groupBox_SimControl.Controls.Add(this.button_StepSim);
             this.groupBox_SimControl.Controls.Add(this.label_GodCurrentStep);
             this.groupBox_SimControl.Controls.Add(this.label_CurrentStepTitle);
-            this.groupBox_SimControl.Location = new System.Drawing.Point(238, 426);
+            this.groupBox_SimControl.Location = new System.Drawing.Point(323, 420);
             this.groupBox_SimControl.Name = "groupBox_SimControl";
             this.groupBox_SimControl.Size = new System.Drawing.Size(443, 110);
             this.groupBox_SimControl.TabIndex = 63;
@@ -824,9 +836,9 @@
             this.groupBox_Environment.Controls.Add(this.radioButton_Rainy);
             this.groupBox_Environment.Controls.Add(this.radioButton_Cloudy);
             this.groupBox_Environment.Controls.Add(this.radioButton_Sunny);
-            this.groupBox_Environment.Location = new System.Drawing.Point(238, 542);
+            this.groupBox_Environment.Location = new System.Drawing.Point(323, 572);
             this.groupBox_Environment.Name = "groupBox_Environment";
-            this.groupBox_Environment.Size = new System.Drawing.Size(689, 92);
+            this.groupBox_Environment.Size = new System.Drawing.Size(443, 92);
             this.groupBox_Environment.TabIndex = 64;
             this.groupBox_Environment.TabStop = false;
             this.groupBox_Environment.Text = "Environment Controller";
@@ -834,7 +846,7 @@
             // label_EnvironmentProperties
             // 
             this.label_EnvironmentProperties.AutoSize = true;
-            this.label_EnvironmentProperties.Location = new System.Drawing.Point(316, 27);
+            this.label_EnvironmentProperties.Location = new System.Drawing.Point(253, 32);
             this.label_EnvironmentProperties.MaximumSize = new System.Drawing.Size(300, 0);
             this.label_EnvironmentProperties.Name = "label_EnvironmentProperties";
             this.label_EnvironmentProperties.Size = new System.Drawing.Size(74, 12);
@@ -843,7 +855,7 @@
             // 
             // textBox_Env_WindSpeed
             // 
-            this.textBox_Env_WindSpeed.Location = new System.Drawing.Point(202, 65);
+            this.textBox_Env_WindSpeed.Location = new System.Drawing.Point(158, 63);
             this.textBox_Env_WindSpeed.Margin = new System.Windows.Forms.Padding(1);
             this.textBox_Env_WindSpeed.Name = "textBox_Env_WindSpeed";
             this.textBox_Env_WindSpeed.Size = new System.Drawing.Size(88, 22);
@@ -855,7 +867,7 @@
             // 
             this.label_EnvironmentPropertiesTitle.AutoSize = true;
             this.label_EnvironmentPropertiesTitle.Font = new System.Drawing.Font("新細明體", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.label_EnvironmentPropertiesTitle.Location = new System.Drawing.Point(306, 14);
+            this.label_EnvironmentPropertiesTitle.Location = new System.Drawing.Point(253, 15);
             this.label_EnvironmentPropertiesTitle.Name = "label_EnvironmentPropertiesTitle";
             this.label_EnvironmentPropertiesTitle.Size = new System.Drawing.Size(137, 12);
             this.label_EnvironmentPropertiesTitle.TabIndex = 65;
@@ -864,7 +876,7 @@
             // label_Env_WindSpeedTitle
             // 
             this.label_Env_WindSpeedTitle.AutoSize = true;
-            this.label_Env_WindSpeedTitle.Location = new System.Drawing.Point(124, 68);
+            this.label_Env_WindSpeedTitle.Location = new System.Drawing.Point(79, 66);
             this.label_Env_WindSpeedTitle.MaximumSize = new System.Drawing.Size(300, 0);
             this.label_Env_WindSpeedTitle.Name = "label_Env_WindSpeedTitle";
             this.label_Env_WindSpeedTitle.Size = new System.Drawing.Size(62, 12);
@@ -873,7 +885,7 @@
             // 
             // textBox_Env_WindDirection
             // 
-            this.textBox_Env_WindDirection.Location = new System.Drawing.Point(202, 41);
+            this.textBox_Env_WindDirection.Location = new System.Drawing.Point(157, 41);
             this.textBox_Env_WindDirection.Margin = new System.Windows.Forms.Padding(1);
             this.textBox_Env_WindDirection.Name = "textBox_Env_WindDirection";
             this.textBox_Env_WindDirection.Size = new System.Drawing.Size(88, 22);
@@ -884,7 +896,7 @@
             // label_Env_WindDirTitle
             // 
             this.label_Env_WindDirTitle.AutoSize = true;
-            this.label_Env_WindDirTitle.Location = new System.Drawing.Point(124, 46);
+            this.label_Env_WindDirTitle.Location = new System.Drawing.Point(79, 44);
             this.label_Env_WindDirTitle.MaximumSize = new System.Drawing.Size(300, 0);
             this.label_Env_WindDirTitle.Name = "label_Env_WindDirTitle";
             this.label_Env_WindDirTitle.Size = new System.Drawing.Size(74, 12);
@@ -894,7 +906,7 @@
             // label_Env_RainFallTitle
             // 
             this.label_Env_RainFallTitle.AutoSize = true;
-            this.label_Env_RainFallTitle.Location = new System.Drawing.Point(124, 22);
+            this.label_Env_RainFallTitle.Location = new System.Drawing.Point(81, 22);
             this.label_Env_RainFallTitle.MaximumSize = new System.Drawing.Size(300, 0);
             this.label_Env_RainFallTitle.Name = "label_Env_RainFallTitle";
             this.label_Env_RainFallTitle.Size = new System.Drawing.Size(73, 12);
@@ -903,7 +915,7 @@
             // 
             // textBox_Env_RainFall
             // 
-            this.textBox_Env_RainFall.Location = new System.Drawing.Point(202, 17);
+            this.textBox_Env_RainFall.Location = new System.Drawing.Point(158, 18);
             this.textBox_Env_RainFall.Margin = new System.Windows.Forms.Padding(1);
             this.textBox_Env_RainFall.Name = "textBox_Env_RainFall";
             this.textBox_Env_RainFall.Size = new System.Drawing.Size(88, 22);
@@ -950,7 +962,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(931, 637);
+            this.ClientSize = new System.Drawing.Size(1043, 664);
             this.Controls.Add(this.groupBox_Environment);
             this.Controls.Add(this.groupBox_SimControl);
             this.Controls.Add(this.groupBox_STP);
@@ -1063,6 +1075,7 @@
         private System.Windows.Forms.TextBox textBox_Env_RainFall;
         private System.Windows.Forms.TextBox textBox_Env_WindSpeed;
         private System.Windows.Forms.Label label_Env_WindSpeedTitle;
+        private System.Windows.Forms.Button button_SelectDLL;
     }
 }
 

@@ -21,3 +21,15 @@ D:\Dropbox\[CS]\ABDiSE 2.0\AgentDLL\bin\Debug\GMap.NET.WindowsForms.xml
 D:\Dropbox\[CS]\ABDiSE 2.0\AgentDLL\obj\Debug\AgentDLL.dll
 D:\Dropbox\[CS]\ABDiSE 2.0\AgentDLL\obj\Debug\AgentDLL.pdb
 D:\Dropbox\[CS]\ABDiSE 2.0\AgentDLL\obj\Debug\AgentDLL.csprojResolveAssemblyReference.cache
+D:\Dropbox\GITLAB\abdise_agent-based-simulator\Code\AgentDLL\bin\Debug\AgentDLL.dll
+D:\Dropbox\GITLAB\abdise_agent-based-simulator\Code\AgentDLL\bin\Debug\AgentDLL.pdb
+D:\Dropbox\GITLAB\abdise_agent-based-simulator\Code\AgentDLL\bin\Debug\BSE.Windows.Forms.dll
+D:\Dropbox\GITLAB\abdise_agent-based-simulator\Code\AgentDLL\bin\Debug\GMap.NET.Core.dll
+D:\Dropbox\GITLAB\abdise_agent-based-simulator\Code\AgentDLL\bin\Debug\GMap.NET.WindowsForms.dll
+D:\Dropbox\GITLAB\abdise_agent-based-simulator\Code\AgentDLL\bin\Debug\GMap.NET.Core.xml
+D:\Dropbox\GITLAB\abdise_agent-based-simulator\Code\AgentDLL\bin\Debug\GMap.NET.WindowsForms.xml
+D:\Dropbox\GITLAB\abdise_agent-based-simulator\Code\AgentDLL\obj\Debug\AgentDLL.dll
+D:\Dropbox\GITLAB\abdise_agent-based-simulator\Code\AgentDLL\obj\Debug\AgentDLL.pdb
+D:\Dropbox\GITLAB\abdise_agent-based-simulator\Code\AgentDLL\bin\Debug\ABDiSE 2.0.dll
+D:\Dropbox\GITLAB\abdise_agent-based-simulator\Code\AgentDLL\bin\Debug\ABDiSE 2.0.pdb
+D:\Dropbox\GITLAB\abdise_agent-based-simulator\Code\AgentDLL\obj\Debug\AgentDLL.csprojResolveAssemblyReference.cache
