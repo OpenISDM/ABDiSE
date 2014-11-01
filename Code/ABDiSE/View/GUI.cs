@@ -104,7 +104,7 @@ namespace ABDiSE.View
         {
             bw = new BackgroundWorker();
             bw.WorkerReportsProgress = true;
-            bw.WorkerSupportsCancellation = true;
+            bw.WorkerSupportsCancellation = false;
             bw.DoWork += new DoWorkEventHandler(bw_DoWork);
             bw.ProgressChanged += 
                 new ProgressChangedEventHandler(bw_ProgressChanged);
@@ -128,7 +128,7 @@ namespace ABDiSE.View
             {
                 
                 case (int)workerType.stepsSim:
-                    //stepsSimulation();
+                    multistepSimulation();
                     break;
 
                 case (int)workerType.stepSim:
@@ -162,7 +162,25 @@ namespace ABDiSE.View
             (object sender, ProgressChangedEventArgs e)
         {
             progressBar_steps.Value = e.ProgressPercentage;
-            Console.WriteLine(e.ProgressPercentage.ToString());
+            //Console.WriteLine(e.ProgressPercentage.ToString());
+
+            lock (ClearDeadAgentLock)
+            {
+
+                CoreController.God.ClearDeadAgent();
+
+                //RefreshGMapMarkers();
+                RefreshAgentList();
+                RefreshJoinedAgentList();
+                RefreshGMapMarkers();
+
+                CoreController.God.CurrentStep++;
+
+                label_GodCurrentStep.Text = CoreController.God.CurrentStep.ToString();
+
+
+            }
+
         }
 
 
@@ -189,6 +207,8 @@ namespace ABDiSE.View
             else
             {
                 Console.WriteLine("bw completed!");
+                button_SimStart.Enabled = true;
+                CoreController.DisableMarkerAnimation();
             }
 
             //
@@ -222,13 +242,9 @@ namespace ABDiSE.View
             //
             InitializeComponent();
 
-            //
-            // pause button disabled
-            //
-            button_Pause.Enabled = false;
-
-
             RefreshAgentTypeOptions();
+
+            button_SimStart.Text = "Simulate " + numericUpDown_SimSteps.Value + " Steps";
 
             //
             // init ToolTip
@@ -1012,7 +1028,6 @@ namespace ABDiSE.View
          */
         private void buttonStart_Click(object sender, EventArgs e)
         {
-            button_Pause.Enabled = true;
             button_SimStart.Enabled = false;
 
             CoreController.EnableMarkerAnimation();
@@ -1020,31 +1035,12 @@ namespace ABDiSE.View
             
             //TODO: improve it
             //StartSimulationSteps();
-            //progressBar_steps.Maximum = (int)numericUpDown_SimSteps.Value;
-            //bw.RunWorkerAsync(workerType.stepsSim);
+            progressBar_steps.Maximum = (int)numericUpDown_SimSteps.Value;
+            bw.RunWorkerAsync(workerType.stepsSim);
 
 
             //button_SimStart.Enabled = true;
             //CoreController.DisableMarkerAnimation();
-        }
-
-        /**
-         *  Click event of button "puase simulation" in GUI.
-         *  Use for stoping timer.
-         *  
-         *  @param sender - refers to the object that invoked the event
-         *  @param e - the Event Argument of the object, contains the event data.
-         */
-        private void buttonPause_Click(object sender, EventArgs e)
-        {
-            
-            button_Pause.Enabled = false;
-            button_SimStart.Enabled = true;
-
-            //CoreController.STP.EndPool();
-
-            CoreController.DisableMarkerAnimation();
-            
         }
      
         /**
@@ -1372,6 +1368,14 @@ namespace ABDiSE.View
             button_StepSim.Enabled = false;
 
 
+            simulateOneStepByBW();
+
+            //enable this button
+            button_StepSim.Enabled = true;
+        }
+
+        private void simulateOneStepByBW()
+        {
             if (bw.IsBusy == false)
             {
                 bw.RunWorkerAsync(workerType.stepSim);
@@ -1400,8 +1404,6 @@ namespace ABDiSE.View
 
             }
 
-            //enable this button
-            button_StepSim.Enabled = true;
         }
 
         /**
@@ -1480,8 +1482,10 @@ namespace ABDiSE.View
             // Wait for all threads in pool to calculation...
             //
 
-
             //TODO: barrier between two stages
+            TimeSpan interval = TimeSpan.FromMilliseconds(CoreController.God.AgentCount);
+            System.Threading.Thread.Sleep(interval);
+            
 
             //
             // compute agent
@@ -1536,6 +1540,21 @@ namespace ABDiSE.View
 
             CoreController.God.ClearDeadAgent();
         
+        }
+
+        private void multistepSimulation(){
+            
+            //CoreController.STP.CancelPool();
+            TimeSpan interval = TimeSpan.FromMilliseconds((int)numericUpDown_SimDelay.Value);
+
+            for (int ii = 1; ii <= numericUpDown_SimSteps.Value; ii++ )
+            {
+                stepSimulation();
+                
+                
+                System.Threading.Thread.Sleep(interval);
+                bw.ReportProgress(ii);
+            }
         }
 
         /**
@@ -1822,6 +1841,11 @@ namespace ABDiSE.View
         private void button_saveEnvData_Click(object sender, EventArgs e)
         {
             SaveEnvTextboxes();
+        }
+
+        private void numericUpDown_SimSteps_ValueChanged(object sender, EventArgs e)
+        {
+            button_SimStart.Text = "Simulate " + numericUpDown_SimSteps.Value +  " Steps";
         }
 
 

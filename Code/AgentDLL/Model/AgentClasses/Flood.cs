@@ -48,7 +48,7 @@ namespace ABDiSE.Model.AgentClasses
         /// 0 = will not randomly change
         /// 100 = plus or minus 100% 
         //
-        public const double FLOOD_RANDOM_PERCENTAGE = 10;
+        public const int FLOOD_RANDOM_PERCENTAGE = 10;
         public const double FLOOD_MOVEMENT_UNIT = 
             Definitions.AGENT_MOVEMENT_ENVIRONMENT_BASIC_UNIT * 9.2;
 
@@ -302,10 +302,10 @@ namespace ABDiSE.Model.AgentClasses
             //random move
             this.LatLng.Lat -=
                 unit * Math.Sin(seed.Next(0,360))
-                * (1 + 0.001 * range * seed.Next(-10, 10));
+                * (1 + 0.001 * range * seed.Next(-FLOOD_RANDOM_PERCENTAGE, FLOOD_RANDOM_PERCENTAGE));
             this.LatLng.Lng -=
                 unit * Math.Cos(seed.Next(0, 360))
-                * (1 + 0.001 * range * seed.Next(-10, 10));
+                * (1 + 0.001 * range * seed.Next(-FLOOD_RANDOM_PERCENTAGE, FLOOD_RANDOM_PERCENTAGE));
 
             //
             // update marker point

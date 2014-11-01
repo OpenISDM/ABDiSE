@@ -31,7 +31,6 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             this.button_Create = new System.Windows.Forms.Button();
             this.button_SimStart = new System.Windows.Forms.Button();
-            this.button_Pause = new System.Windows.Forms.Button();
             this.numericUpDown_SimDelay = new System.Windows.Forms.NumericUpDown();
             this.listBoxAgentType = new System.Windows.Forms.ListBox();
             this.textBox_K01 = new System.Windows.Forms.TextBox();
@@ -140,22 +139,11 @@
             this.button_SimStart.Font = new System.Drawing.Font("微軟正黑體", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
             this.button_SimStart.Location = new System.Drawing.Point(289, 19);
             this.button_SimStart.Name = "button_SimStart";
-            this.button_SimStart.Size = new System.Drawing.Size(90, 50);
+            this.button_SimStart.Size = new System.Drawing.Size(146, 50);
             this.button_SimStart.TabIndex = 3;
             this.button_SimStart.Text = "Simulate N Steps";
             this.button_SimStart.UseVisualStyleBackColor = true;
             this.button_SimStart.Click += new System.EventHandler(this.buttonStart_Click);
-            // 
-            // button_Pause
-            // 
-            this.button_Pause.Font = new System.Drawing.Font("微軟正黑體", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(136)));
-            this.button_Pause.Location = new System.Drawing.Point(384, 19);
-            this.button_Pause.Name = "button_Pause";
-            this.button_Pause.Size = new System.Drawing.Size(52, 49);
-            this.button_Pause.TabIndex = 4;
-            this.button_Pause.Text = "Pause";
-            this.button_Pause.UseVisualStyleBackColor = true;
-            this.button_Pause.Click += new System.EventHandler(this.buttonPause_Click);
             // 
             // numericUpDown_SimDelay
             // 
@@ -708,6 +696,7 @@
             0,
             0,
             0});
+            this.numericUpDown_SimSteps.ValueChanged += new System.EventHandler(this.numericUpDown_SimSteps_ValueChanged);
             // 
             // label_SimStepsTitle
             // 
@@ -801,7 +790,6 @@
             this.groupBox_SimControl.Controls.Add(this.button_LoadExperiment);
             this.groupBox_SimControl.Controls.Add(this.button_SaveExperiment);
             this.groupBox_SimControl.Controls.Add(this.button_SimStart);
-            this.groupBox_SimControl.Controls.Add(this.button_Pause);
             this.groupBox_SimControl.Controls.Add(this.label_SimStepsTitle);
             this.groupBox_SimControl.Controls.Add(this.numericUpDown_SimDelay);
             this.groupBox_SimControl.Controls.Add(this.numericUpDown_SimSteps);
@@ -1126,7 +1114,6 @@
 
         private System.Windows.Forms.Button button_Create;
         private System.Windows.Forms.Button button_SimStart;
-        private System.Windows.Forms.Button button_Pause;
         private System.Windows.Forms.NumericUpDown numericUpDown_SimDelay;
         private System.Windows.Forms.ListBox listBoxAgentType;
         private System.Windows.Forms.TextBox textBox_K01;

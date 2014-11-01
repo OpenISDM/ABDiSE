@@ -86,7 +86,7 @@ namespace ABDiSE.Controller
             FolderBrowserDialog dialog = new FolderBrowserDialog();
             dialog.ShowDialog();
             string path = dialog.SelectedPath;
-
+            
             loadAgentDirectory(god.WorldAgentList, path);
 
         }

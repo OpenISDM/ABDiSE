@@ -55,7 +55,10 @@
   <ItemGroup>
     <Compile Include="Model\AgentClasses\Building.cs" />
     <Compile Include="Model\AgentClasses\BuildingJoinedFire.cs" />
+    <Compile Include="Model\AgentClasses\Disease.cs" />
     <Compile Include="Model\AgentClasses\Flood.cs" />
+    <Compile Include="Model\AgentClasses\Human.cs" />
+    <Compile Include="Model\AgentClasses\HumanJoinedDisease.cs" />
     <Compile Include="Model\AgentClasses\TreeJoinedFire.cs" />
     <Compile Include="Model\AgentClasses\Smoke.cs" />
     <Compile Include="Model\AgentClasses\Tree.cs" />
